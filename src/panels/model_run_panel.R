@@ -1,4 +1,4 @@
-panel_model_run <- function() {
+panelModelRun <- function() {
     div("",
         h3("Enter model parameters"),
         inputBox("parameter2", "Z", "Number of iterations", value = "500"),

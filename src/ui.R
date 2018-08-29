@@ -9,6 +9,6 @@ ui <- fluidPage(
         )
     ),
     div(class="row main-content",
-        navigation_panel()
+        navigationPanel()
     )
 )

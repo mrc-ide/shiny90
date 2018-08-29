@@ -2,7 +2,6 @@ library(shiny)
 
 server <- function(input, output) {
     output$inputReview_totalNumberOfTests <- renderPlot({
-        Sys.sleep(2)
         plot(faithful$waiting)
         title(main="Total number of tests")
     })

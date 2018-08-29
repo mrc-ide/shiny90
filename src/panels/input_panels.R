@@ -1,4 +1,4 @@
-panel_spectrum <- function() {
+panelSpectrum <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
         class="mb-3"),
@@ -6,7 +6,7 @@ panel_spectrum <- function() {
     )
 }
 
-panel_survey <- function() {
+panelSurvey <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
         class="mb-3"),
@@ -17,7 +17,7 @@ panel_survey <- function() {
     )
 }
 
-panel_review_input <- function() {
+panelReviewInput <- function() {
     div("",
         div("Here's a visualisation of the data you have uploaded so far.
             Please review it, and go back and edit your data if anything doesn't look right",

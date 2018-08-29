@@ -1,17 +1,17 @@
 library(glue)
 
-navigation_panel <- function() {
+navigationPanel <- function() {
     navlistPanel(well=FALSE, widths=c(2, 10),
-        panel_with_title("Upload spectrum file(s)", panel_spectrum()),
-        panel_with_title("Upload survey data", panel_survey()),
-        panel_with_title("Upload programmatic data", panel_survey()),
-        panel_with_title("Review input data", panel_review_input()),
-        panel_with_title("Fit model", panel_model_fit()),
-        panel_with_title("Run model", panel_model_run())
+        panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
+        panelWithTitle("Upload survey data", panelSurvey()),
+        panelWithTitle("Upload programmatic data", panelSurvey()),
+        panelWithTitle("Review input data", panelReviewInput()),
+        panelWithTitle("Fit model", panelModelFit()),
+        panelWithTitle("Run model", panelModelRun())
     )
 }
 
-panel_with_title <- function(title, content) {
+panelWithTitle <- function(title, content) {
     tabPanel(title, div("",
         h1(title),
         content
