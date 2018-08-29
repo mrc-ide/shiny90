@@ -1,16 +1,23 @@
 .header {
     background-color: rgb(110, 193, 242);
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    color: white;
-    font-size: 24pt;
-    text-align: center;
     width: 100%;
     padding: 12px;
     border-bottom: 1px solid rgb(127, 127, 127);
 }
 
+.header .title {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 24pt;
+    text-align: center;
+    color: white;
+}
+
 .header small {
     font-size: 10pt;
+}
+
+.digest-controls {
+    margin-left: 10px;
 }
 
 .main-content {
