@@ -6,6 +6,7 @@ source("server.R")
 
 ui <- fluidPage(
 	includeCSS("style.css"),
+	includeCSS("bootstrap4.css"),
 	div(class="row align-items-center mb-3",
 		div("Shiny 90", class="header",
 			tags$small("", class="pull-right",
