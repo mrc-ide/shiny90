@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 library(shiny)
+library(shinycssloaders)
 
 source("src/server.R")
 source("src/forms.R")

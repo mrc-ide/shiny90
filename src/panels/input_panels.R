@@ -24,16 +24,16 @@ panel_review_input <- function() {
             class="mb-3"
         ),
         div("", class="row",
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_totalNumberOfTests")),
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_numberOfPositiveTests"))
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_totalNumberOfTests"))),
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_numberOfPositiveTests")))
         ),
         div("", class="row",
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentageNegativeOfTested")),
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentagePLHIVOfTested"))
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentageNegativeOfTested"))),
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentagePLHIVOfTested")))
         ),
         div("", class="row",
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentageTested")),
-            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_firstAndSecond90"))
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentageTested"))),
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_firstAndSecond90")))
         )
     )
 }
