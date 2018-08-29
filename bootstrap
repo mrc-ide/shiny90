@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+npm install
+mkdir -p packages
+./bootstrap.R
