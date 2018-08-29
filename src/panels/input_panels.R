@@ -20,8 +20,20 @@ panel_survey <- function() {
 panel_review_input <- function() {
     div("",
         div("Here's a visualisation of the data you have uploaded so far.
-                 Please review it, and go back and edit your data if anything doesn't look right",
-        class="mb-3"),
-        plotOutput(outputId = "inputReview")
+            Please review it, and go back and edit your data if anything doesn't look right",
+            class="mb-3"
+        ),
+        div("", class="row",
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_totalNumberOfTests")),
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_numberOfPositiveTests"))
+        ),
+        div("", class="row",
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentageNegativeOfTested")),
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentagePLHIVOfTested"))
+        ),
+        div("", class="row",
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_percentageTested")),
+            div("", class="col-md-6 col-sm-12", plotOutput(outputId = "inputReview_firstAndSecond90"))
+        )
     )
 }
