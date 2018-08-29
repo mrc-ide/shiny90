@@ -1,3 +1,5 @@
+library(glue)
+
 navigation_panel <- function() { div(class="col-md-3 col-lg-2 col-sm-12 sidebar nopadding",
         tags$ol(class="nav", `data-bind`="foreach: sections",
             tags$li(class="nav-item",
@@ -10,13 +12,17 @@ navigation_panel <- function() { div(class="col-md-3 col-lg-2 col-sm-12 sidebar 
 content_panel <- function() {
     div(class="col-md-9",
         h1(`data-bind`="text: currentSection().name()"),
-        div(`data-bind`="visible: currentSection().id() == 'spectrum'",
-            panel_spectrum()
-        )
+        panel_for("spectrum", panel_spectrum())
     )
 }
 
-panel_spectrum <- function() { 
+panel_for <- function(sectionID, content) {
+    div(`data-bind`=glue("visible: currentSection().id() == '{sectionID}'"),
+        content
+    )
+}
+
+panel_spectrum <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
             class="mb-3"),
