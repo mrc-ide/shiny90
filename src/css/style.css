@@ -17,11 +17,18 @@
     height: calc(100vh - 60px);
 }
 
-.sidebar {
+/* The following styles are working round are inability to directly add
+   classes to navlistPanel's sidebar */
+.main-content > div, .main-content > div > div {
+    height: 100%;
+}
+
+ul.nav.nav-pills.nav-stacked {
+    display: block;
     border-right: 1px solid rgb(127, 127, 127);
     height: 100%;
 }
 
-.col-md-3.sidebar {
-    padding: 0;
+ul.nav.nav-pills.nav-stacked > li.active > a {
+    border-radius: 0;
 }
