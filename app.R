@@ -11,6 +11,6 @@ source("src/panels/input_panels.R")
 source("src/panels/model_fit_panel.R")
 source("src/panels/model_run_panel.R")
 
-options(shiny.autoreload=TRUE)
+options(shiny.autoreload=TRUE, shiny.autoreload.pattern = glob2rx("**/*.R"))
 addResourcePath('images', file.path('images'))
 runApp("src", port=8080)
