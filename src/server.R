@@ -98,7 +98,7 @@ server <- function(input, output) {
     prgm_dat$notes = as.character(prgm_dat$notes)
 
     tableData$program = prgm_dat[prgm_dat$country == "Malawi", ]
-    
+
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
         td.style.textAlign = 'right';
