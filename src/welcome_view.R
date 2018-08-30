@@ -7,7 +7,7 @@ welcomeView <- function() {
                 p("Danish jelly-o brownie tart ice cream chocolate bar jelly beans cheesecake carrot cake. Tart gingerbread sugar plum wafer halvah cookie candy canes danish. Candy canes bear claw cookie caramels. Tootsie roll biscuit dragée gingerbread gummi bears."),
                 div("", class="row align-items-center mt-3",
                     div("", class="col-md-6 welcome-option", style="border-right: 1px solid black",
-                        h3("Open an existing Shiny90 file"),
+                        h3("Open an existing Shiny 90 working set"),
                         div("This will be a file you downloaded from this app previously"),
                         a("", href="#", class="col-md-6 text-center", style="width: 100%",
                             img(id="digest-upload", src="images/cloud-upload.svg", width=64, height=64),
@@ -16,7 +16,7 @@ welcomeView <- function() {
                         )
                     ),
                     div("", class="col-md-6 welcome-option",
-                        h3("Start a new blank data set"),
+                        h3("Start a new blank working set"),
                         div("You will have the option to upload data from Spectrum and other data in a moment", class="mb-3"),
                         inputBox("workingSetName", "Name", "(You can change this later)", type="text", value=""),
                         a("", id="startNewWorkingSet", href="#", class="col-md-6 text-center action-button", style="width: 100%",
