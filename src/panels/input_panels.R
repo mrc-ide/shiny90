@@ -56,7 +56,7 @@ panelReviewInput <- function() {
             class="mb-3"
         ),
         div("",
-            span("Now that the model has been fitted, you can "),
+            span("Once you have reviewed your input data, you may want to "),
             tags$a(href="#", "download a digest file"),
             span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
