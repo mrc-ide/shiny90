@@ -2,10 +2,13 @@
 library(shiny)
 library(shinycssloaders)
 
+# Server
 source("src/server.R")
-source("src/forms.R")
 
-# Nav & panels
+# UI
+source("src/forms.R")
+source("src/main_view.R")
+source("src/welcome_view.R")
 source("src/navigation.R")
 source("src/panels/input_panels.R")
 source("src/panels/model_run_panel.R")

@@ -3,6 +3,14 @@ library(purrr)
 library(glue)
 
 server <- function(input, output) {
+    # ---- Working set ----
+    workingSet <- reactiveVal(
+        list(name=NULL, notes=NULL)
+    )
+    output$workingSetSelected <- reactive({
+        !is.null(workingSet()$name)
+    })
+
     # ---- Upload spectrum files ----
     spectrumFiles <- reactiveVal(character())
     observeEvent(input$spectrumFile, {
@@ -25,7 +33,7 @@ server <- function(input, output) {
     })
     outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
 
-    # ---- renderInputReviewFigures
+    # ---- Render input review figures
     output$inputReview_a <- renderPlot({
         plot(faithful$waiting)
         title(main="Figure A")
