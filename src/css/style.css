@@ -14,25 +14,17 @@
 }
 
 .header {
-    background-color: rgb(110, 193, 242);
     width: 100%;
+    height: 80px;
     padding: 12px;
-    border-bottom: 1px solid rgb(127, 127, 127);
-}
-
-.header .title {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 24pt;
-    text-align: center;
-    color: white;
+    border-bottom: 1px solid black;
 }
 
 .header small {
     font-size: 10pt;
 }
 
-.digest-controls {
-    margin-left: 10px;
+.header .info {
 }
 
 .main-content {
