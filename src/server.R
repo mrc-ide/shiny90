@@ -1,9 +1,10 @@
 library(shiny)
+library(purrr)
+library(glue)
 
 server <- function(input, output) {
     # ---- Upload spectrum files ----
-    spectrumFiles <- reactiveVal(complex())
-    output$spectrumFiles <- reactive({spectrumFiles()})
+    spectrumFiles <- reactiveVal(character())
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
@@ -13,6 +14,12 @@ server <- function(input, output) {
             })
             spectrumFiles(c(spectrumFiles(), inFile$name))
         }
+    })
+    output$spectrumFiles <- reactive({
+        tags <- map(spectrumFiles(), function(file) {
+            tags$li(file)
+        })
+        reduce(tags, function(acc, nxt) { glue("{acc}\n{nxt}") }, .init="")
     })
     outputOptions(output, "spectrumFiles", suspendWhenHidden = FALSE)
 

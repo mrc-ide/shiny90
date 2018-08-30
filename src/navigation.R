@@ -1,5 +1,3 @@
-library(glue)
-
 navigationPanel <- function() {
     navlistPanel(well=FALSE, widths=c(2, 10),
         panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
