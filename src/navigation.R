@@ -6,8 +6,8 @@ navigationPanel <- function() {
         panelWithTitle("Upload survey data", panelSurvey()),
         panelWithTitle("Upload programmatic data", panelSurvey()),
         panelWithTitle("Review input data", panelReviewInput()),
-        panelWithTitle("Fit model", panelModelFit()),
-        panelWithTitle("Run model", panelModelRun())
+        panelWithTitle("Run model", panelModelRun()),
+        panelWithTitle("View model outputs", panelModelOutputs())
     )
 }
 

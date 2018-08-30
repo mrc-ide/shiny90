@@ -2,7 +2,13 @@ panelSpectrum <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
         class="mb-3"),
-        fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
+        fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
+
+        conditionalPanel(
+            condition = "output.spectrumFile",
+            plotOutput(outputId="spectrumReview")
+        )
+        # prevalence trend, ART coverage
     )
 }
 

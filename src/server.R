@@ -1,20 +1,30 @@
 library(shiny)
 
 server <- function(input, output) {
-    # ---- renderModelFittingResults ----
-    output$requestedModelFitting <- reactive({FALSE})
-    observeEvent(input$startModelFitting, {
-        output$requestedModelFitting <- reactive({TRUE})
-        output$modelFittingResults <- renderPlot({
+    # ---- Upload spectrum files ----
+    #spectrumFiles <- reactiveVal(complex())
+    output$spectrumFile <- reactive({FALSE})
+    output$spectrumFile <- reactive({
+        inFile <- input$spectrumFile
+
+        output$spectrumReview <- renderPlot({
             plot(faithful$waiting)
+            title(main="Prevalence trend")
         })
+
+        !is.null(inFile)
+        #spectrumFiles(c(spectrumFiles(), inFile$name))
+        #spectrumFiles()
     })
-    outputOptions(output, "requestedModelFitting", suspendWhenHidden = FALSE)
+    outputOptions(output, "spectrumFile", suspendWhenHidden = FALSE)
 
     # ---- renderModelRunResults ----
     output$requestedModelRun <- reactive({FALSE})
     observeEvent(input$runModel, {
         output$requestedModelRun <- reactive({TRUE})
+        output$modelFittingResults <- renderPlot({
+            plot(faithful$waiting)
+        })
         output$modelRunResults <- renderPlot({
             plot(faithful$waiting)
         })
