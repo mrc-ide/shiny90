@@ -17,6 +17,10 @@
     width: 100%;
     padding: 12px;
     border-bottom: 1px solid black;
+    box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -moz-box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -webkit-box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
 }
 
 .header small {
@@ -33,6 +37,7 @@
     display: inline-block;
     vertical-align: top;
     margin-bottom: 3px;
+    color: #e31837;
 }
 
 .main-content {
@@ -49,11 +54,19 @@ ul.nav.nav-pills.nav-stacked {
     margin-left: -15px;
     display: block;
     border-right: 1px solid rgb(127, 127, 127);
+    border-bottom: 1px solid;
     height: 100%;
+    background: #f8f9fa;
 }
 
-ul.nav.nav-pills.nav-stacked > li.active > a {
+ul.nav.nav-pills.nav-stacked > li.active > a, ul.nav.nav-pills > li.active > a:focus, ul.nav.nav-pills > li.active > a:hover {
     border-radius: 0;
+    background-color: #e31837 !important;
+}
+
+a, a:focus, a:hover {
+    color: #e31837;
+    font-weight: 700;
 }
 
 .btn-sq-lg {
@@ -75,5 +88,5 @@ ul.nav.nav-pills.nav-stacked > li.active > a {
 .btn-sq-xs {
     width: 25px !important;
     height: 25px !important;
-    padding:2px;
+    padding: 2px;
 }

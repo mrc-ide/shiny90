@@ -4,8 +4,12 @@ library(glue)
 library(data.table)
 library(first90)
 library(rhandsontable)
+library(ggplot2)
 
 server <- function(input, output) {
+
+    options(shiny.maxRequestSize=30*1024^2)
+
     # ---- Working set ----
     workingSet <- reactiveVal(
         list(name=NULL, notes=NULL)
@@ -17,10 +21,12 @@ server <- function(input, output) {
     outputOptions(output, "workingSetSelected", suspendWhenHidden = FALSE)
 
     # ---- Upload spectrum files ----
+    pjnz <- reactiveVal("")
     spectrumFiles <- reactiveVal(character())
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
+            pjnz(inFile$datapath)
             filename <- inFile$name
             output[[glue("spectrumReview_{filename}")]] <- renderPlot({
                 plot(faithful$waiting)
@@ -156,4 +162,17 @@ server <- function(input, output) {
             tableData$program <<- hot_to_r(input$hot_program)
         }
     })
+
+    observe({
+        if (nchar(pjnz()) > 0){
+            # out <- everTestOutput(tableData$survey, tableData$program, pjnz())
+            # ggplot(subset(out, year %in% 2000:2020 & outcome == "evertest" & hivstatus == "all"), aes(year, value)) +
+            #     geom_line(color="darkred", width=1.5) +
+            #     geom_point(aes(year, est), tableData$survey, inherit.aes = FALSE) +
+            #     geom_linerange(aes(year, est, ymin=ci_l, ymax=ci_u), tableData$survey, inherit.aes = FALSE) +
+            #     ggtitle("Ever tested among age 15-49y")
+        }
+    })
+
+
 }

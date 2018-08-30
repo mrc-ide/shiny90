@@ -1,5 +1,5 @@
 navigationPanel <- function() {
-    navlistPanel(well=FALSE, widths=c(2, 10),
+    navlistPanel(well=FALSE, widths=c(3, 9),
         panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
         panelWithTitle("Upload survey data", panelSurvey()),
         panelWithTitle("Upload programmatic data", panelProgram()),
