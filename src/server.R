@@ -8,20 +8,22 @@ server <- function(input, output) {
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
-            output$spectrumReview <- renderPlot({
+            filename <- inFile$name
+            output[[glue("spectrumReview_{filename}")]] <- renderPlot({
                 plot(faithful$waiting)
                 title(main="Prevalence trend")
             })
-            spectrumFiles(c(spectrumFiles(), inFile$name))
+            spectrumFiles(c(spectrumFiles(), filename))
         }
     })
-    output$spectrumFiles <- reactive({
-        tags <- map(spectrumFiles(), function(file) {
-            tags$li(file)
+    output$anySpectrumFiles <- reactive({length(spectrumFiles()) > 0})
+    output$spectrumFileTabs <- renderUI({
+        tabs = map(spectrumFiles(), function(filename) {
+            tabPanel(filename, plotOutput(glue("spectrumReview_{filename}")))
         })
-        reduce(tags, function(acc, nxt) { glue("{acc}\n{nxt}") }, .init="")
+        do.call(tabsetPanel, tabs)
     })
-    outputOptions(output, "spectrumFiles", suspendWhenHidden = FALSE)
+    outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
 
     # ---- renderInputReviewFigures
     output$inputReview_a <- renderPlot({

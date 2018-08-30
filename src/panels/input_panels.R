@@ -4,12 +4,9 @@ panelSpectrum <- function() {
         class="mb-3"),
         fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
         conditionalPanel(
-            condition = "output.spectrumFiles",
+            condition = "output.anySpectrumFiles",
             h2("Files uploaded so far"),
-            tags$ul("",
-                htmlOutput("spectrumFiles")
-            ),
-            plotOutput(outputId="spectrumReview")
+            uiOutput('spectrumFileTabs')
         )
     )
 }
