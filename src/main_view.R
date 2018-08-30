@@ -9,13 +9,13 @@ mainView <- function() {
                 ),
                 div("",
                     div("", style="width: 64px; display: inline-block",
-                        a("", href="#", class="digest-button btn-sq btn-sq-sm btn btn-default text-center",
-                            img(id="digest-download", src="images/cloud-download-dark.svg", width=32, height=32),
+                        a("", href="#", class="digest-button btn-sq btn-sq-sm btn btn-red btn-default text-center",
+                            img(id="digest-download", src="images/cloud-download-red.svg", width=32, height=32),
                             tags$br(),
                             tags$label(`for`="digest-download", "Save")
                         ),
-                        a("", href="#", class="digest-button btn-sq btn-sq-sm btn btn-default text-center",
-                            img(id="digest-upload", src="images/cloud-upload-dark.svg", width=32, height=32),
+                        a("", href="#", class="digest-button btn-sq btn-sq-sm btn btn-red btn-default text-center",
+                            img(id="digest-upload", src="images/cloud-upload-red.svg", width=32, height=32),
                             tags$br(),
                             tags$label(`for`="digest-upload", "Load")
                         )
@@ -34,7 +34,7 @@ mainView <- function() {
                             tags$strong("Working set notes:"),
                             textOutput("workingSet_notes", inline=TRUE)
                         ),
-                        div("", style="position: absolute; bottom: 0; left: 0; right: 0; height: 16px; background-color: magenta;
+                        div("", style="position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background-color: magenta;
                         background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);")
                     )
                 )
