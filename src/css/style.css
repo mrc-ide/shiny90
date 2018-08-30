@@ -1,3 +1,18 @@
+.welcome {
+    margin-top: calc(10vh);
+}
+
+.welcome .title {
+    font-size: 48pt;
+    margin-bottom: 20px;
+}
+
+.welcome .welcome-option {
+    height: 300px;
+    margin-top: 30px;
+    padding: 20px 50px;
+}
+
 .header {
     background-color: rgb(110, 193, 242);
     width: 100%;
