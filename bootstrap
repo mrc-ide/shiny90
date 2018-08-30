@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 mkdir -p packages
+if [ ! -f github_token ]; then
+    echo "Please go to your GitHub account, click Developer Settings, and generate"
+    echo "a new access token with full access to your private repos. Save this"
+    echo "token a file named 'github_token' in the root of this repo."
+    exit 1;
+fi
+export GITHUB_PAT=$(<github_token)
 ./bootstrap.R
