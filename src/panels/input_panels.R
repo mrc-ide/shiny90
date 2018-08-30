@@ -30,16 +30,8 @@ panelReviewInput <- function() {
             class="mb-3"
         ),
         div("", class="row",
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_totalNumberOfTests"))),
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_numberOfPositiveTests")))
-        ),
-        div("", class="row",
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentageNegativeOfTested"))),
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentagePLHIVOfTested")))
-        ),
-        div("", class="row",
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_percentageTested"))),
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_firstAndSecond90")))
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_a"))),
+            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_b")))
         )
     )
 }

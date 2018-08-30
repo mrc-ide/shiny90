@@ -18,6 +18,16 @@ server <- function(input, output) {
     })
     outputOptions(output, "spectrumFile", suspendWhenHidden = FALSE)
 
+    # ---- renderInputReviewFigures
+    output$inputReview_a <- renderPlot({
+        plot(faithful$waiting)
+        title(main="Figure A")
+    })
+    output$inputReview_b <- renderPlot({
+        plot(faithful$waiting)
+        title(main="Figure B")
+    })
+
     # ---- renderModelRunResults ----
     output$requestedModelRun <- reactive({FALSE})
     observeEvent(input$runModel, {
@@ -25,35 +35,30 @@ server <- function(input, output) {
         output$modelFittingResults <- renderPlot({
             plot(faithful$waiting)
         })
-        output$modelRunResults <- renderPlot({
+        output$outputs_totalNumberOfTests <- renderPlot({
             plot(faithful$waiting)
+            title(main="Total number of tests")
+        })
+        output$outputs_numberOfPositiveTests <- renderPlot({
+            plot(faithful$waiting)
+            title(main="Number of positive tests (in 1000)")
+        })
+        output$outputs_percentageNegativeOfTested <- renderPlot({
+            plot(faithful$waiting)
+            title(main="% negative of all ever tested")
+        })
+        output$outputs_percentagePLHIVOfTested <- renderPlot({
+            plot(faithful$waiting)
+            title(main="% PLHIV of all ever tested")
+        })
+        output$outputs_percentageTested <- renderPlot({
+            plot(faithful$waiting)
+            title(main="% of population ever tested")
+        })
+        output$outputs_firstAndSecond90 <- renderPlot({
+            plot(faithful$waiting)
+            title(main="First and second 90s")
         })
     })
     outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
-
-    # ---- renderInputReviewFigures
-    output$inputReview_totalNumberOfTests <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Total number of tests")
-    })
-    output$inputReview_numberOfPositiveTests <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Number of positive tests (in 1000)")
-    })
-    output$inputReview_percentageNegativeOfTested <- renderPlot({
-        plot(faithful$waiting)
-        title(main="% negative of all ever tested")
-    })
-    output$inputReview_percentagePLHIVOfTested <- renderPlot({
-        plot(faithful$waiting)
-        title(main="% PLHIV of all ever tested")
-    })
-    output$inputReview_percentageTested <- renderPlot({
-        plot(faithful$waiting)
-        title(main="% of population ever tested")
-    })
-    output$inputReview_firstAndSecond90 <- renderPlot({
-        plot(faithful$waiting)
-        title(main="First and second 90s")
-    })
 }
