@@ -1,12 +1,7 @@
 library(shiny)
 
 server <- function(input, output) {
-    renderModelFittingResults(input, output)
-    renderModelRunResults(input, output)
-    renderInputReviewFigures(input, output)
-}
-
-renderModelFittingResults <- function(input, output) {
+    # ---- renderModelFittingResults ----
     output$requestedModelFitting <- reactive({FALSE})
     observeEvent(input$startModelFitting, {
         output$requestedModelFitting <- reactive({TRUE})
@@ -15,9 +10,8 @@ renderModelFittingResults <- function(input, output) {
         })
     })
     outputOptions(output, "requestedModelFitting", suspendWhenHidden = FALSE)
-}
 
-renderModelRunResults <- function(input, output) {
+    # ---- renderModelRunResults ----
     output$requestedModelRun <- reactive({FALSE})
     observeEvent(input$runModel, {
         output$requestedModelRun <- reactive({TRUE})
@@ -26,9 +20,8 @@ renderModelRunResults <- function(input, output) {
         })
     })
     outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
-}
 
-renderInputReviewFigures <- function(input, output) {
+    # ---- renderInputReviewFigures
     output$inputReview_totalNumberOfTests <- renderPlot({
         plot(faithful$waiting)
         title(main="Total number of tests")
