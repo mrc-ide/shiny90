@@ -67,7 +67,7 @@ server <- function(input, output) {
         })
         output$outputs_numberOfPositiveTests <- renderPlot({
             plot(faithful$waiting)
-            title(main="Number of positive tests (in 1000)")
+            title(main="Number of positive tests (in 1000s)")
         })
         output$outputs_percentageNegativeOfTested <- renderPlot({
             plot(faithful$waiting)
