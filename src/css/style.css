@@ -45,6 +45,7 @@
 }
 
 ul.nav.nav-pills.nav-stacked {
+    margin-left: -15px;
     display: block;
     border-right: 1px solid rgb(127, 127, 127);
     height: 100%;

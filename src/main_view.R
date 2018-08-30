@@ -1,7 +1,8 @@
 mainView <- function() {
     div("",
         div("", class="header",
-            fluidRow(
+            fluidPage(
+                fluidRow(
                 div("", class="col-md-6 col-sm-12",
                     div("", class="info",
                         div("",
@@ -22,16 +23,17 @@ mainView <- function() {
                         img(id="digest-upload", src="images/cloud-upload.svg", width=32, height=32),
                         tags$br(),
                         tags$label(`for`="digest-upload", "Load")
-                    )
-                ),
-                div("", class="col-md-6 col-sm-12 text-right",
-                    tags$small("",
-                        a("About this program and the underlying model", href="#")
+                        )
+                    ),
+                    div("", class="col-md-6 col-sm-12 text-right",
+                        tags$small("",
+                            a("About this program and the underlying model", href="#")
+                        )
                     )
                 )
             )
         ),
-        div("", class="main-content",
+        fluidPage(class="main-content",
             navigationPanel()
         )
     )

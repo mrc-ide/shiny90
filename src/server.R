@@ -94,27 +94,35 @@ server <- function(input, output) {
         sex == "both" &
         outcome == "evertest"])
 
+    prgm_dat$country = as.character(prgm_dat$country)
+    prgm_dat$notes = as.character(prgm_dat$notes)
+
     tableData$program = prgm_dat[prgm_dat$country == "Malawi", ]
+
+    number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.textAlign = 'right';
+    }"
 
     text_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
-        td.style.textAlign = 'right';
     }"
 
     output$hot_survey <- renderRHandsontable({
         rhandsontable(tableData$survey, stretchH = "all") %>%
             hot_col("outcome", allowInvalid = TRUE) %>%
             hot_col("agegr", allowInvalid = TRUE)  %>%
-            hot_col("est", renderer=text_renderer) %>%
-            hot_col("se", renderer=text_renderer) %>%
-            hot_col("ci_l", renderer=text_renderer) %>%
-            hot_col("ci_u", renderer=text_renderer) %>%
+            hot_col("est", renderer=number_renderer) %>%
+            hot_col("se", renderer=number_renderer) %>%
+            hot_col("ci_l", renderer=number_renderer) %>%
+            hot_col("ci_u", renderer=number_renderer) %>%
             hot_col("year", format="0")
     })
 
     output$hot_program <- renderRHandsontable({
         rhandsontable(tableData$program, stretchH = "all") %>%
-            hot_col("number", renderer=text_renderer)
+            hot_col("number", renderer=number_renderer) %>%
+            hot_col("country", renderer=text_renderer)
     })
 
     observeEvent(input$surveyData, {
