@@ -25,6 +25,13 @@
 }
 
 .header .info {
+    display: inline-block;
+    margin-right: 25px;
+}
+
+.header .digest-button {
+    display: inline-block;
+    margin-left: 20px;
 }
 
 .main-content {
