@@ -10,7 +10,7 @@ panelModelRun <- function() {
                 # Weight to programmatic data (dropdown? value?)
             )
         ),
-        actionButton("runModel", "Run model"),
+        actionButtonWithCustomClass("runModel", "Run model", cssClasses="btn-red btn-lg"),
         div("This make take several minutes. Please do not close your browser.", class="mt-3"),
         conditionalPanel(
             condition = "output.requestedModelRun",

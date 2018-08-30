@@ -8,3 +8,11 @@ inputBox <- function(id, label, explanation, type="number", value=0) {
         tags$input(id=id, type=type, value=value, class="form-control shiny-bound-input")
     )
 }
+
+actionButtonWithCustomClass <- function (inputId, label, cssClasses = NULL, ...)
+{
+    value <- restoreInput(id = inputId, default = NULL)
+    tags$button(id = inputId, type = "button",
+    class = paste("btn btn-default action-button ", cssClasses), `data-val` = value,
+    list(label), ...)
+}
