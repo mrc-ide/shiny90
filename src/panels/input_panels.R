@@ -20,7 +20,7 @@ panelSurvey <- function() {
 panelReviewInput <- function() {
     div("",
         div("Here's a visualisation of the data you have uploaded so far.
-            Please review it, and go back and edit your data if anything doesn't look right",
+            Please review it, and go back and edit your data if anything doesn't look right.",
             class="mb-3"
         ),
         div("", class="row",
