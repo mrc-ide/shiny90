@@ -11,8 +11,8 @@ welcomeView <- function() {
                             h3("Open an existing Shiny 90 working set"),
                             div("This will be a file you downloaded from this app previously"),
                             div("", class="text-center pt-4",
-                                a("", href="#", class="btn-sq btn btn-info text-center",
-                                    img(id="digest-upload", src="images/cloud-upload.svg", width=64, height=64),
+                                a("", href="#", class="btn-sq btn btn-red btn-default text-center",
+                                    img(id="digest-upload", src="images/cloud-upload-red.svg", width=64, height=64),
                                     tags$br(),
                                     tags$label(`for`="digest-upload", "Load")
                                 )
@@ -25,7 +25,7 @@ welcomeView <- function() {
                             div("", class="input-group",
                                 HTML("<input name='workingSetName' class='input-lg form-control' placeholder='(you can change this later)' id='workingSetName' type='text'>"),
                                 div("", class="input-group-btn",
-                                    div("Go", id="startNewWorkingSet", class="btn-lg btn btn-info action-button shiny-bound-input")
+                                    div("Go", id="startNewWorkingSet", class="btn-lg btn btn-red btn-default action-button shiny-bound-input")
                                 )
                             )
                         )

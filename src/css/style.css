@@ -3,6 +3,7 @@
 }
 
 .welcome .title {
+    color: #e31837 !important;
     font-size: 48pt;
     margin-bottom: 20px;
 }
@@ -37,7 +38,11 @@
     display: inline-block;
     vertical-align: top;
     margin-bottom: 3px;
-    color: #e31837;
+}
+
+.btn-red {
+    color: #e31837 !important;
+    border-color: #e31837 !important;
 }
 
 .main-content {
