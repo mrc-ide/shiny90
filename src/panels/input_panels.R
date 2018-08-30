@@ -8,6 +8,20 @@ panelSpectrum <- function() {
             h2("Files uploaded so far"),
             uiOutput('spectrumFileTabs')
         )
+
+        # Show country
+        # Summary of combined data set (not per spectrum file):
+        # Figures:
+        # - HIV prevalence
+        # - HIV incidence
+        # - Population size
+        # - Number of people living with HIV
+        # Table:
+        # - Show pop, plhiv, prev, incidence, art coverage
+        # - Pick year from dropdown, default to most recent
+        #
+        # Ability to see list of filenames uploaded
+        # Remove file uploaded by accident
     )
 }
 
@@ -41,9 +55,19 @@ panelReviewInput <- function() {
             Please review it, and go back and edit your data if anything doesn't look right.",
             class="mb-3"
         ),
+        div("",
+            span("Now that the model has been fitted, you can "),
+            tags$a(href="#", "download a digest file"),
+            span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+        ),
         div("", class="row",
             div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_a"))),
             div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_b")))
         )
     )
+
+    # Number tested (as a proportion of the population? / in 1000s?)
+    # Number of positive tests (in 1000s)
+    # Number tested at ante-natal care (ANC, in 1000s)
+    # Number tested positive at ante-natal care (in 1000s)
 }
