@@ -19,7 +19,7 @@ welcomeView <- function() {
                         h3("Start a new blank data set"),
                         div("You will have the option to upload data from Spectrum and other data in a moment", class="mb-3"),
                         inputBox("workingSetName", "Name", "(You can change this later)", type="text", value=""),
-                        a("", href="#", class="col-md-6 text-center", style="width: 100%",
+                        a("", id="startNewWorkingSet", href="#", class="col-md-6 text-center action-button", style="width: 100%",
                             img(id="start-new", src="images/check.svg", width=64, height=64),
                             tags$br(),
                             tags$label(`for`="start-new", "Go")

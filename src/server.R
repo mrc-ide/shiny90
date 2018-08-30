@@ -10,6 +10,10 @@ server <- function(input, output) {
     output$workingSetSelected <- reactive({
         !is.null(workingSet()$name)
     })
+    observeEvent(input$startNewWorkingSet, {
+        workingSet(list(name="test", notes=NULL))
+    })
+    outputOptions(output, "workingSetSelected", suspendWhenHidden = FALSE)
 
     # ---- Upload spectrum files ----
     spectrumFiles <- reactiveVal(character())
