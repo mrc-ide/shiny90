@@ -2,21 +2,19 @@ library(shiny)
 
 server <- function(input, output) {
     # ---- Upload spectrum files ----
-    #spectrumFiles <- reactiveVal(complex())
-    output$spectrumFile <- reactive({FALSE})
-    output$spectrumFile <- reactive({
+    spectrumFiles <- reactiveVal(complex())
+    output$spectrumFiles <- reactive({spectrumFiles()})
+    observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
-
-        output$spectrumReview <- renderPlot({
-            plot(faithful$waiting)
-            title(main="Prevalence trend")
-        })
-
-        !is.null(inFile)
-        #spectrumFiles(c(spectrumFiles(), inFile$name))
-        #spectrumFiles()
+        if (!is.null(inFile)) {
+            output$spectrumReview <- renderPlot({
+                plot(faithful$waiting)
+                title(main="Prevalence trend")
+            })
+            spectrumFiles(c(spectrumFiles(), inFile$name))
+        }
     })
-    outputOptions(output, "spectrumFile", suspendWhenHidden = FALSE)
+    outputOptions(output, "spectrumFiles", suspendWhenHidden = FALSE)
 
     # ---- renderInputReviewFigures
     output$inputReview_a <- renderPlot({
