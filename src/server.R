@@ -1,6 +1,9 @@
 library(shiny)
 library(purrr)
 library(glue)
+library(data.table)
+library(first90)
+library(rhandsontable)
 
 server <- function(input, output) {
     # ---- Upload spectrum files ----
@@ -68,4 +71,71 @@ server <- function(input, output) {
         })
     })
     outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
+
+    # ---- surveyData and programData ----
+    data(survey_hts)
+    data(prgm_dat)
+
+    tableData = reactiveValues()
+
+    tableData$survey = as.data.frame(survey_hts[country == "Malawi" &
+        hivstatus == "all" &
+        agegr == "15-49" &
+        sex == "both" &
+        outcome == "evertest"])
+
+    tableData$program = prgm_dat[prgm_dat$country == "Malawi", ]
+
+    text_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.textAlign = 'right';
+    }"
+
+    output$hot_survey <- renderRHandsontable({
+        rhandsontable(tableData$survey, stretchH = "all") %>%
+            hot_col("outcome", allowInvalid = TRUE) %>%
+            hot_col("agegr", allowInvalid = TRUE)  %>%
+            hot_col("est", renderer=text_renderer) %>%
+            hot_col("se", renderer=text_renderer) %>%
+            hot_col("ci_l", renderer=text_renderer) %>%
+            hot_col("ci_u", renderer=text_renderer) %>%
+            hot_col("year", format="0")
+    })
+
+    output$hot_program <- renderRHandsontable({
+        rhandsontable(tableData$program, stretchH = "all") %>%
+            hot_col("number", renderer=text_renderer)
+    })
+
+    observeEvent(input$surveyData, {
+        inFile <- input$surveyData
+
+        if (is.null(inFile)){
+            return(NULL)
+        }
+
+        tableData$survey <<- read.csv(inFile$datapath)
+    })
+
+    observeEvent(input$programData, {
+        inFile <- input$programData
+
+        if (is.null(inFile)){
+            return(NULL)
+        }
+
+        tableData$program <<- read.csv(inFile$datapath)
+    })
+
+    observe({
+        if(!is.null(input$hot_survey)){
+            tableData$survey <<- hot_to_r(input$hot_survey)
+        }
+    })
+
+    observe({
+        if(!is.null(input$hot_program)){
+            tableData$program <<- hot_to_r(input$hot_program)
+        }
+    })
 }

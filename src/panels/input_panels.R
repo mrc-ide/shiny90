@@ -16,9 +16,22 @@ panelSurvey <- function() {
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
         class="mb-3"),
         h3("Edit data in place"),
-        img(src="images/mock-sheet.png"),
+        div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class="text-muted"),
+        rHandsontableOutput("hot_survey"),
         h3("Or upload new data"),
         fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
+    )
+}
+
+panelProgram <- function() {
+    div("",
+    div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
+    class="mb-3"),
+    h3("Edit data in place"),
+    div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class="text-muted"),
+    rHandsontableOutput("hot_program"),
+    h3("Or upload new data"),
+    fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
     )
 }
 
