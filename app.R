@@ -7,6 +7,7 @@ source("src/server.R")
 
 # UI
 source("src/forms.R")
+source("src/shapes.R")
 source("src/main_view.R")
 source("src/welcome_view.R")
 source("src/navigation.R")

@@ -16,7 +16,7 @@
 
 .header {
     width: 100%;
-    padding: 12px;
+    padding: 12px 0;
     border-bottom: 1px solid black;
     box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
     -moz-box-shadow: 0 6px 20px 0 rgba(0,0,0,0.19) !important;
@@ -28,10 +28,16 @@
     font-size: 10pt;
 }
 
-.header .info {
+.header .working-set {
+    position: relative;
+    border-radius: 2px;
+    vertical-align: top;
+    width: 600px;
     display: inline-block;
-    margin-right: 25px;
-    margin-top: 10px;
+    height: 123px;
+    overflow: hidden;
+    padding: 10px;
+    border: 1px solid rgb(204, 204, 204);
 }
 
 .header .digest-button {
@@ -91,7 +97,7 @@ a, a:focus, a:hover {
 }
 
 .btn-sq-xs {
-    width: 25px !important;
-    height: 25px !important;
+    width: 20px !important;
+    height: 20px !important;
     padding: 2px;
 }
