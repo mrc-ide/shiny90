@@ -14,13 +14,13 @@ mainView <- function() {
                             textOutput("workingSet_notes", inline=TRUE)
                         )
                     ),
-                    a("", href="#", class="digest-button",
-                        img(id="digest-download", src="images/cloud-download.svg", width=32, height=32),
+                    a("", href="#", class="ml-3 digest-button btn-sq btn-sq-sm btn btn-default text-center",
+                        img(id="digest-download", src="images/cloud-download-dark.svg", width=32, height=32),
                         tags$br(),
                         tags$label(`for`="digest-download", "Save")
                     ),
-                    a("", href="#", class="digest-button",
-                        img(id="digest-upload", src="images/cloud-upload.svg", width=32, height=32),
+                    a("", href="#", class="digest-button btn-sq btn-sq-sm btn btn-default text-center",
+                        img(id="digest-upload", src="images/cloud-upload-dark.svg", width=32, height=32),
                         tags$br(),
                         tags$label(`for`="digest-upload", "Load")
                         )
