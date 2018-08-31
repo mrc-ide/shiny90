@@ -18,9 +18,7 @@ panelModelRun <- function() {
                 h2("Modelling fitting results"),
                 span("Now that the model has been fitted, you can "),
                 tags$a(href="#", "download a digest file"),
-                span("containing your input data and results. You can re-upload this file later to view your results again and change your input data."),
-                withSpinner(plotOutput(outputId="modelFittingResults"))
-
+                span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
                 # We want the 6 plots currently on the output page, constrained to the age range
                 # present in the input data and with the original data points plotted
             )
