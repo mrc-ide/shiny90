@@ -18,27 +18,26 @@ welcomeView <- function() {
                                 )
                             )
                         ),
-                        tags$form("",
-                            div("", class="col-md-6 welcome-option form-group",
-                                h3("Start a new blank working set"),
-                                div("You will have the option to upload data from Spectrum and other data in a moment", class="mb-3"),
-                                tags$label("Name:"),
-                                div("", class="input-group",
-                                    HTML("<input name='workingSetName' class='shiny-bound-input input-lg form-control' placeholder='(you can change this later)' id='workingSetName' type='text'>"),
-                                    div("", class="input-group-btn",
-                                        HTML('<button type="submit" id="startNewWorkingSet" class="btn-lg btn btn-red btn-default action-button shiny-bound-input">Go</button>')
-                                    )
-                                ),
-                                conditionalPanel(
-                                    condition="output.workingSet_new_error",
-                                    div("", class="has-error",
-                                        div("", class="help-block error",
-                                            textOutput("workingSet_new_error", inline=TRUE)
-                                        )
+                        div("", class="col-md-6 welcome-option form-group",
+                            h3("Start a new blank working set"),
+                            div("You will have the option to upload data from Spectrum and other data in a moment", class="mb-3"),
+                            tags$label("Name:"),
+                            div("", class="input-group",
+                                HTML("<input name='workingSetName' class='shiny-bound-input input-lg form-control' placeholder='(you can change this later)' id='workingSetName' type='text'>"),
+                                div("", class="input-group-btn",
+                                    actionButtonWithCustomClass("startNewWorkingSet", "Go", cssClasses = "btn-lg btn btn-red")
+                                )
+                            ),
+                            conditionalPanel(
+                                condition="output.workingSet_new_error",
+                                div("", class="has-error",
+                                    div("", class="help-block error",
+                                        textOutput("workingSet_new_error", inline=TRUE)
                                     )
                                 )
                             )
                         )
+
                     )
                 )
             )
