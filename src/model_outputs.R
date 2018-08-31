@@ -9,11 +9,9 @@ prepareProgramInput <- function(program_data) {
     prg_dat
 }
 
-prepareSurveyInput <- function(survey_data) {
+prepareSurveyInput <- function(survey_dt) {
 
     age_group <- c('15-24','25-49')
-
-    survey_dt <- as.data.table(survey_data, keep.rownames=TRUE)
 
     dat_f <- survey_dt[(hivstatus != "all") & (agegr %in% age_group) & sex == "female" & outcome == "evertest"]
 
@@ -27,7 +25,7 @@ prepareSurveyInput <- function(survey_data) {
     dat_mall <- survey_dt[hivstatus == "all" & !(surveyid %in% other_survey) &
         (agegr %in% age_group) & sex == "male" & outcome == "evertest"]
 
-    dat <- dat_test <- rbind(dat_f, dat_m, dat_fall, dat_mall)
+    dat <- rbind(dat_f, dat_m, dat_fall, dat_mall)
     dat
 }
 
@@ -50,11 +48,11 @@ fitModel <- function(survey_data, program_data, pjnz_path){
 
     # Starting parameters
     theta0 <- c(rep(log(0.1), 18), # Males: log of testing rates in 2005, 2010, and 2015
-    rep(log(0.2), 18), # Females: log of testing rates in 2005, 2010, and 2015
-    log(1.5),   # Factor increase among previously tested
-    log(0.8),   # Factor testing among diagnosed, untreated
-    log(0.2),   # Fractor testing among diagnosed, on ART
-    rep(log(0.5), 2)) # Rate ratio for testing in the 25+ age group
+                rep(log(0.2), 18), # Females: log of testing rates in 2005, 2010, and 2015
+                log(1.5),   # Factor increase among previously tested
+                log(0.8),   # Factor testing among diagnosed, untreated
+                log(0.2),   # Fractor testing among diagnosed, on ART
+                rep(log(0.5), 2)) # Rate ratio for testing in the 25+ age group
 
     ll_hts(theta0, theta_fx, fp, likdat)
 
