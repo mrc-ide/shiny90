@@ -34,7 +34,7 @@ mainView <- function() {
                             tags$strong("Working set notes:"),
                             textOutput("workingSet_notes", inline=TRUE)
                         ),
-                        div("", style="position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background-color: magenta;
+                        div("", style="position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
                         background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);")
                     )
                 )
