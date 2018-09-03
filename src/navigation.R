@@ -1,3 +1,6 @@
+library(shiny)
+library(shinyjs)
+
 navigationPanel <- function() {
     navlistPanel(well=FALSE, widths=c(2, 10),
         panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
@@ -14,4 +17,16 @@ panelWithTitle <- function(title, content) {
         h1(title),
         content
     ))
+}
+
+# Server side
+enableNavLinks <- function(input, output, spectrumFilesState) {
+    js$disableTab("Review input data")
+    observe({
+        if (spectrumFilesState$anySpectrumFiles()) {
+            js$enableTab("Review input data")
+        } else {
+            js$disableTab("Review input data")
+        }
+    })
 }

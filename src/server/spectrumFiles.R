@@ -2,29 +2,32 @@ library(shiny)
 library(purrr)
 library(glue)
 
-handleUploadAndReviewOfSpectrumFiles <- function(input, output) {
-    pjnzFilePath <- reactiveVal("")
-    spectrumFiles <- reactiveVal(character())
+spectrumFiles <- function(input, output) {
+    state <- reactiveValues()
+    state$pjnzFilePath <- ""
+    state$spectrumFiles <- character()
+    state$anySpectrumFiles <- reactive({ length(state$spectrumFiles) > 0 })
+
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
-            pjnzFilePath(inFile$datapath)
+            state$pjnzFilePath <- inFile$datapath
             filename <- inFile$name
             output[[glue("spectrumReview_{filename}")]] <- renderPlot({
                 plot(faithful$waiting)
                 title(main="Prevalence trend")
             })
-            spectrumFiles(c(spectrumFiles(), filename))
+            state$spectrumFiles <- c(state$spectrumFiles, filename)
         }
     })
-    output$anySpectrumFiles <- reactive({length(spectrumFiles()) > 0})
+    output$anySpectrumFiles <- reactive({state$anySpectrumFiles})
     output$spectrumFileTabs <- renderUI({
-        tabs = map(spectrumFiles(), function(filename) {
+        tabs = map(state$spectrumFiles, function(filename) {
             tabPanel(filename, plotOutput(glue("spectrumReview_{filename}")))
         })
         do.call(tabsetPanel, tabs)
     })
     outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
 
-    pjnzFilePath
+    state
 }

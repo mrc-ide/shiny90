@@ -1,14 +1,14 @@
 library(shiny)
 library(first90)
 
-modelRun <- function(input, output, pjnzFilePath, surveyAndProgramData) {
+modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     output$requestedModelRun <- reactive({FALSE})
 
     observeEvent(input$runModel, {
 
         output$requestedModelRun <- reactive({TRUE})
 
-        if (nchar(pjnzFilePath()) > 0){
+        if (spectrumFilesState$anySpectrumFiles) {
 
             # the model fitting code expects survey data as a data table and program data as a data frame
             # it could presumably be re-written to deal with survey data as a data frame but for now we're just
