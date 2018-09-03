@@ -2,60 +2,81 @@ library(shiny)
 library(first90)
 
 modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
-    output$requestedModelRun <- reactive({FALSE})
+    state <- reactiveValues()
+    state$state <- "not_run"
+    state$running <- FALSE
+    state$surveyAsDataTable <- NULL
+    state$likdat <- NULL
+    state$fp <- NULL
+    state$mod <- NULL
+    state$out_evertest <- NULL
 
     observeEvent(input$runModel, {
-
-        output$requestedModelRun <- reactive({TRUE})
-
-        if (spectrumFilesState$anySpectrumFiles) {
-
+        state$state <- "begin"
+        state$running = TRUE
+    })
+    output$modelRunning <- reactive({ state$running })
+    output$modelRunState <- reactive({ state$state })
+    observe({
+        if (state$state == "begin") {
+            state$state <- "fitting"
             # the model fitting code expects survey data as a data table and program data as a data frame
             # it could presumably be re-written to deal with survey data as a data frame but for now we're just
             # converting survey data to the expected format
-            surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
+            state$surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
 
-            out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, pjnzFilePath())
-
+            out <- fitModel(state$surveyAsDataTable, surveyAndProgramData$program, spectrumFilesState$pjnzFilePath)
             # model fit results
-            likdat <- out$likdat
-            fp <- out$fp
-            mod <- eppasm::simmod.specfp(fp)
-
-            # model output
-            out_evertest = outEverTest(fp, mod)
-
-            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
-        } else {
-
+            state$likdat <- out$likdat
+            state$fp <- out$fp
+            state$mod <- eppasm::simmod.specfp(state$fp)
+            state$state <- "fitted"
         }
     })
+    observe({
+        if (state$state == "fitted") {
+            state$state <- "running"
 
-    outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
+            # model output
+            state$out_evertest = outEverTest(state$fp, state$mod)
+            state$state <- "run"
+        }
+    })
+    observe({
+        if (state$state == "run") {
+            plotModelRunResults(output, state)
+            state$state <- "finished"
+            state$running <- FALSE
+        }
+    })
+    outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
+    outputOptions(output, "modelRunning", suspendWhenHidden = FALSE)
+
+    state
 }
 
-plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, out_evertest) {
+plotModelRunResults <- function(output, state) {
     output$outputs_totalNumberOfTests <- renderPlot({
-        plotTotalNumberOfTests(fp, mod, likdat)
+        plotTotalNumberOfTests(state$fp, state$mod, state$likdat)
     })
 
     output$outputs_numberOfPositiveTests <- renderPlot({
-        plotNumberOfPositiveTests(fp, mod, likdat)
+        plotNumberOfPositiveTests(state$fp, state$mod, state$likdat)
     })
 
     output$outputs_percentageNegativeOfTested <- renderPlot({
-        plotPercentageNegativeOfTested(surveyAsDataTable, out_evertest)
+        plotPercentageNegativeOfTested(state$surveyAsDataTable, state$out_evertest)
     })
 
     output$outputs_percentagePLHIVOfTested <- renderPlot({
-        plotPercentagePLHIVOfTested(surveyAsDataTable, out_evertest)
+        plotPercentagePLHIVOfTested(state$surveyAsDataTable, state$out_evertest)
     })
 
     output$outputs_percentageTested <- renderPlot({
-        plotPercentageTested(surveyAsDataTable, out_evertest)
+        plotPercentageTested(state$surveyAsDataTable, state$out_evertest)
     })
 
     output$outputs_firstAndSecond90 <- renderPlot({
-        plotFirstAndSecond90(fp, mod, out_evertest)
+        plotFirstAndSecond90(state$fp, state$mod, state$out_evertest)
     })
 }

@@ -12,8 +12,9 @@ panelModelRun <- function() {
         ),
         actionButtonWithCustomClass("runModel", "Run model", cssClasses="btn-red btn-lg"),
         div("This make take several minutes. Please do not close your browser.", class="mt-3"),
+        textOutput("modelRunState"),
         conditionalPanel(
-            condition = "output.requestedModelRun",
+            condition = "output.modelRunState == 'finished'",
             div("", class="mt-3",
                 h2("Modelling fitting results"),
                 span("Now that the model has been fitted, you can "),
