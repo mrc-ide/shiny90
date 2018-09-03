@@ -29,10 +29,10 @@ welcomeView <- function() {
                                 )
                             ),
                             conditionalPanel(
-                                condition="output.workingSet_new_error",
+                                condition="output.workingSet_creation_error",
                                 div("", class="has-error",
                                     div("", class="help-block error",
-                                        textOutput("workingSet_new_error", inline=TRUE)
+                                        textOutput("workingSet_creation_error", inline=TRUE)
                                     )
                                 )
                             )

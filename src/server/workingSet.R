@@ -1,23 +1,25 @@
 library(shiny)
 
 workingSet <- function(input, output) {
-    workingSet <- reactiveVal(
-    list(name=NULL, notes=NULL)
-    )
-    output$workingSetSelected <- reactive({ !is.null(workingSet()$name) })
-    output$workingSet_name <- reactive({ workingSet()$name })
-    output$workingSet_notes <- reactive({ workingSet()$notes })
-    output$workingSet_new_error <- reactive({NULL})
+    workingSet <- reactiveValues()
+    workingSet$name <- NULL
+    workingSet$notes <- NULL
+    workingSet$creation_error <- NULL
+
+    output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
+    output$workingSet_name <- reactive({ workingSet$name })
+    output$workingSet_notes <- reactive({ workingSet$notes })
+    output$workingSet_creation_error <- reactive({ workingSet$creation_error })
+
     observeEvent(input$startNewWorkingSet, {
         if (input$workingSetName != "") {
-            workingSet(list(name=input$workingSetName, notes="Cupcake ipsum dolor sit amet. Dessert gummies tootsie roll croissant pudding. Marzipan cookie jujubes cotton candy lollipop. Dessert ice cream soufflé.
-
-Marzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzipan cookie toffee gingerbread carrot cake gummi bears. Chocolate pastry dessert apple pie liquorice biscuit ice cream pastry macaroon."))
-            output$workingSet_new_error <- reactive({NULL})
+            workingSet$name <- input$workingSetName
+            workingSet$notes <- "Cupcake ipsum dolor sit amet. Dessert gummies tootsie roll croissant pudding. Marzipan cookie jujubes cotton candy lollipop. Dessert ice cream soufflé.\n\nMarzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzipan cookie toffee gingerbread carrot cake gummi bears. Chocolate pastry dessert apple pie liquorice biscuit ice cream pastry macaroon."
+            output$creation_error <- NULL
         } else {
-            output$workingSet_new_error <- reactive({"A name is required"})
+            output$creation_error <- "A name is required"
         }
     })
-    outputOptions(output, "workingSet_new_error", suspendWhenHidden = FALSE)
-    outputOptions(output, "workingSetSelected", suspendWhenHidden = FALSE)
+    outputOptions(output, "workingSet_creation_error", suspendWhenHidden = FALSE)
+    outputOptions(output, "workingSet_selected", suspendWhenHidden = FALSE)
 }
