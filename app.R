@@ -3,8 +3,13 @@ library(shiny)
 library(shinycssloaders)
 
 # Server
-source("src/model_outputs.R")
-source("src/plots.R")
+source("src/server/model_outputs.R")
+source("src/server/plots.R")
+source("src/server/workingSet.R")
+source("src/server/handleUploadAndReviewOfSpectrumFiles.R")
+source("src/server/reviewInputs.R")
+source("src/server/surveyAndProgramData.R")
+source("src/server/modelRun.R")
 source("src/server.R")
 
 # UI
@@ -18,5 +23,7 @@ source("src/panels/model_run_panel.R")
 source("src/panels/model_outputs_panel.R")
 
 options(shiny.autoreload=TRUE, shiny.autoreload.pattern = glob2rx("**/*.R"))
+options(shiny.maxRequestSize=30*1024^2)
+
 addResourcePath('images', file.path('images'))
 runApp("src", port=8080)
