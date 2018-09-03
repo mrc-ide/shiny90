@@ -32,12 +32,12 @@ Marzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzip
     outputOptions(output, "workingSetSelected", suspendWhenHidden = FALSE)
 
     # ---- Upload spectrum files ----
-    pjnz <- reactiveVal("")
+    pjnzFilePath <- reactiveVal("")
     spectrumFiles <- reactiveVal(character())
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
-            pjnz(inFile$datapath)
+            pjnzFilePath(inFile$datapath)
             filename <- inFile$name
             output[[glue("spectrumReview_{filename}")]] <- renderPlot({
                 plot(faithful$waiting)
@@ -65,51 +65,13 @@ Marzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzip
         title(main="Figure B")
     })
 
-    # ---- renderModelRunResults ----
-    output$requestedModelRun <- reactive({FALSE})
-    observeEvent(input$runModel, {
-        output$requestedModelRun <- reactive({TRUE})
-        output$modelFittingResults <- renderPlot({
-            plot(faithful$waiting)
-        })
-        output$outputs_totalNumberOfTests <- renderPlot({
-            plot(faithful$waiting)
-            title(main="Total number of tests")
-        })
-        output$outputs_numberOfPositiveTests <- renderPlot({
-            plot(faithful$waiting)
-            title(main="Number of positive tests (in 1000s)")
-        })
-        output$outputs_percentageNegativeOfTested <- renderPlot({
-            plot(faithful$waiting)
-            title(main="% negative of all ever tested")
-        })
-        output$outputs_percentagePLHIVOfTested <- renderPlot({
-            plot(faithful$waiting)
-            title(main="% PLHIV of all ever tested")
-        })
-        output$outputs_percentageTested <- renderPlot({
-            plot(faithful$waiting)
-            title(main="% of population ever tested")
-        })
-        output$outputs_firstAndSecond90 <- renderPlot({
-            plot(faithful$waiting)
-            title(main="First and second 90s")
-        })
-    })
-    outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
-
     # ---- surveyData and programData ----
     data(survey_hts)
     data(prgm_dat)
 
     tableData = reactiveValues()
 
-    tableData$survey = as.data.frame(survey_hts[country == "Malawi" &
-        hivstatus == "all" &
-        agegr == "15-49" &
-        sex == "both" &
-        outcome == "evertest"])
+    tableData$survey = as.data.frame(survey_hts[country == "Malawi"])
 
     prgm_dat$country = as.character(prgm_dat$country)
     prgm_dat$notes = as.character(prgm_dat$notes)
@@ -174,16 +136,59 @@ Marzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzip
         }
     })
 
-    observe({
-        if (nchar(pjnz()) > 0){
-            # out <- everTestOutput(tableData$survey, tableData$program, pjnz())
-            # ggplot(subset(out, year %in% 2000:2020 & outcome == "evertest" & hivstatus == "all"), aes(year, value)) +
-            #     geom_line(color="darkred", width=1.5) +
-            #     geom_point(aes(year, est), tableData$survey, inherit.aes = FALSE) +
-            #     geom_linerange(aes(year, est, ymin=ci_l, ymax=ci_u), tableData$survey, inherit.aes = FALSE) +
-            #     ggtitle("Ever tested among age 15-49y")
+    # ---- renderModelRunResults ----
+    output$requestedModelRun <- reactive({FALSE})
+
+    observeEvent(input$runModel, {
+
+        output$requestedModelRun <- reactive({TRUE})
+
+        if (nchar(pjnzFilePath()) > 0){
+
+            # the model fitting code expects survey data as a data table and program data as a data frame
+            # it could presumably be re-written to deal with survey data as a data frame but for now we're just
+            # converting survey data to the expected format
+            survey_dt <- as.data.table(tableData$survey, keep.rownames=TRUE)
+
+            out <- fitModel(survey_dt, tableData$program, pjnzFilePath())
+
+            # model fit results
+            likdat <- out$likdat
+            fp <- out$fp
+            mod <- eppasm::simmod.specfp(fp)
+
+            # model output
+            out_evertest = outEverTest(fp, mod)
+
+            output$outputs_totalNumberOfTests <- renderPlot({
+                plotTotalNumberOfTests(fp, mod, likdat)
+            })
+
+            output$outputs_numberOfPositiveTests <- renderPlot({
+                plotNumberOfPositiveTests(fp, mod, likdat)
+            })
+
+            output$outputs_percentageNegativeOfTested <- renderPlot({
+                plotPercentageNegativeOfTested(survey_dt, out_evertest)
+            })
+
+            output$outputs_percentagePLHIVOfTested <- renderPlot({
+                plotPercentagePLHIVOfTested(survey_dt, out_evertest)
+            })
+
+            output$outputs_percentageTested <- renderPlot({
+                plotPercentageTested(survey_dt, out_evertest)
+            })
+
+            output$outputs_firstAndSecond90 <- renderPlot({
+               plotFirstAndSecond90(fp, mod, out_evertest)
+            })
+        }
+        else{
+
         }
     })
 
+    outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
 
 }

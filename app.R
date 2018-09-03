@@ -3,6 +3,8 @@ library(shiny)
 library(shinycssloaders)
 
 # Server
+source("src/model_outputs.R")
+source("src/plots.R")
 source("src/server.R")
 
 # UI
