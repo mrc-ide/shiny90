@@ -1,5 +1,5 @@
 shinyjs.disableTab = function(name) {
-    var tab = $('.nav li a[data-value=' + name + ']');
+    var tab = $('.nav li a[data-value="' + name[0] + '"]');
     tab.bind('click.tab', function(e) {
         e.preventDefault();
         return false;
@@ -8,7 +8,7 @@ shinyjs.disableTab = function(name) {
 };
 
 shinyjs.enableTab = function(name) {
-    var tab = $('.nav li a[data-value=' + name + ']');
+    var tab = $('.nav li a[data-value="' + name[0] + '"]');
     tab.unbind('click.tab');
     tab.removeClass('disabled');
 };

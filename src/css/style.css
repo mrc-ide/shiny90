@@ -81,10 +81,8 @@ a, a:focus, a:hover {
 }
 
 .nav li a.disabled {
-    background-color: #aaa !important;
-    color: #333 !important;
+    color: rgb(200, 200, 200) !important;
     cursor: not-allowed !important;
-    border-color: #aaa !important;
 }
 
 .btn-sq-lg {

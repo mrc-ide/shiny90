@@ -21,12 +21,18 @@ panelWithTitle <- function(title, content) {
 
 # Server side
 enableNavLinks <- function(input, output, spectrumFilesState) {
-    js$disableTab("Review input data")
+    enableTabWhen("Review input data", function() { spectrumFilesState$anySpectrumFiles() })
+    enableTabWhen("Run model", function() { spectrumFilesState$anySpectrumFiles() })
+    enableTabWhen("View model outputs", function() { spectrumFilesState$anySpectrumFiles() })
+}
+
+enableTabWhen <- function(tabTitle, condition) {
+    js$disableTab(tabTitle)
     observe({
-        if (spectrumFilesState$anySpectrumFiles()) {
-            js$enableTab("Review input data")
+        if (condition()) {
+            js$enableTab(tabTitle)
         } else {
-            js$disableTab("Review input data")
+            js$disableTab(tabTitle)
         }
     })
 }
