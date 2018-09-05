@@ -1,13 +1,14 @@
 #!/usr/bin/env Rscript
 library(shiny)
+library(shinyjs)
 library(shinycssloaders)
 
 # Server
 source("src/server/model_outputs.R")
 source("src/server/plots.R")
 source("src/server/workingSet.R")
-source("src/server/handleUploadAndReviewOfSpectrumFiles.R")
-source("src/server/reviewInputs.R")
+source("src/server/spectrumFiles.R")
+source("src/server/plotInputs.R")
 source("src/server/surveyAndProgramData.R")
 source("src/server/modelRun.R")
 source("src/server.R")

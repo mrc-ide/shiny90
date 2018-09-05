@@ -1,37 +1,36 @@
 library(shiny)
 library(first90)
 
-modelRun <- function(input, output, pjnzFilePath, surveyAndProgramData) {
-    output$requestedModelRun <- reactive({FALSE})
+modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
+    state <- reactiveValues()
+    state$state <- "not_run"
 
     observeEvent(input$runModel, {
 
-        output$requestedModelRun <- reactive({TRUE})
+        # the model fitting code expects survey data as a data table and program data as a data frame
+        # it could presumably be re-written to deal with survey data as a data frame but for now we're just
+        # converting survey data to the expected format
+        surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
 
-        if (nchar(pjnzFilePath()) > 0){
+        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, spectrumFilesState$pjnzFilePath)
 
-            # the model fitting code expects survey data as a data table and program data as a data frame
-            # it could presumably be re-written to deal with survey data as a data frame but for now we're just
-            # converting survey data to the expected format
-            surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
+        # model fit results
+        likdat <- out$likdat
+        fp <- out$fp
+        mod <- eppasm::simmod.specfp(fp)
 
-            out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, pjnzFilePath())
+        # model output
+        out_evertest = outEverTest(fp, mod)
 
-            # model fit results
-            likdat <- out$likdat
-            fp <- out$fp
-            mod <- eppasm::simmod.specfp(fp)
+        plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
 
-            # model output
-            out_evertest = outEverTest(fp, mod)
-
-            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
-        } else {
-
-        }
+        state$state <- "finished"
     })
 
-    outputOptions(output, "requestedModelRun", suspendWhenHidden = FALSE)
+    output$modelRunState <- reactive({ state$state })
+    outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
+
+    state
 }
 
 plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, out_evertest) {

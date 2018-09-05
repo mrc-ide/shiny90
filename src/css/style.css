@@ -80,6 +80,11 @@ a, a:focus, a:hover {
     font-weight: 700;
 }
 
+.nav li a.disabled {
+    color: rgb(200, 200, 200) !important;
+    cursor: not-allowed !important;
+}
+
 .btn-sq-lg {
     width: 150px !important;
     height: 150px !important;
