@@ -15,13 +15,22 @@ panelSpectrum <- function() {
                 span("PJNZ data (combined)")
             ),
 
-            fluidRow(
-                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
-                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
-            ),
-            fluidRow(
-                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
-                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
+            tabsetPanel(
+                tabPanel("Figures",
+                    fluidRow(
+                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
+                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
+                    ),
+                    fluidRow(
+                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
+                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
+                    )
+                ),
+                tabPanel("Data",
+                    div("", class="mt-3",
+                        dataTableOutput("spectrum_combinedData")
+                    )
+                )
             )
         )
 

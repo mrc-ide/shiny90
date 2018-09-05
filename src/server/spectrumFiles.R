@@ -6,6 +6,15 @@ spectrumFiles <- function(input, output) {
     state <- reactiveValues()
     state$files <- list()
     state$anyFiles <- reactive({ length(state$files) > 0 })
+    state$combinedData <- {
+        years <- c(2007, 2008)
+        population <- c(1000, 1200)
+        peopleLivingWithHIV <- c(25, 30)
+        prevalence <- c(0.025, 0.026)
+        incidence <- c(4, 5)
+        artCoverage <- c(0.5, 0.55)
+        data.frame(years, population, peopleLivingWithHIV, prevalence, incidence, artCoverage)
+    }
 
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
@@ -20,6 +29,8 @@ spectrumFiles <- function(input, output) {
         })
     })
     output$spectrumFilesCountry <- reactive({ "Malawi" })
+    output$spectrum_combinedData <- renderDataTable(state$combinedData)
+
     renderSpectrumPlots(output)
 
     outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
