@@ -2,33 +2,39 @@ panelSpectrum <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
         class="mb-3"),
-        fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
+        div("", class="mt-3 mb-5",
+            fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
+        ),
         conditionalPanel(
             condition = "output.anySpectrumFiles",
-            h3("Uploaded PJNZ files"),
-            tags$ul(
-                uiOutput("spectrumFileList")
+            div("", class="mb-5",
+                h3("Uploaded PJNZ files", class="mt-5"),
+                tags$ul("", class="list-group",
+                    uiOutput("spectrumFileList")
+                )
             ),
 
-            h3("",
-                textOutput("spectrumFilesCountry", inline=TRUE),
-                span("PJNZ data (combined)")
-            ),
-
-            tabsetPanel(
-                tabPanel("Figures",
-                    fluidRow(
-                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
-                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
-                    ),
-                    fluidRow(
-                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
-                        div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
-                    )
+            div("",
+                h3("", class="mt-5",
+                    textOutput("spectrumFilesCountry", inline=TRUE),
+                    span("PJNZ data (combined)")
                 ),
-                tabPanel("Data",
-                    div("", class="mt-3",
-                        dataTableOutput("spectrum_combinedData")
+
+                tabsetPanel(
+                    tabPanel("Figures",
+                        fluidRow(
+                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
+                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
+                        ),
+                        fluidRow(
+                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
+                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
+                        )
+                    ),
+                    tabPanel("Data",
+                        div("", class="mt-3",
+                            dataTableOutput("spectrum_combinedData")
+                        )
                     )
                 )
             )

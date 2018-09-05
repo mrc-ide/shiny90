@@ -13,6 +13,6 @@ actionButtonWithCustomClass <- function (inputId, label, cssClasses = NULL, ...)
 {
     value <- restoreInput(id = inputId, default = NULL)
     tags$button(id = inputId, type = "button",
-    class = paste("btn btn-default action-button ", cssClasses), `data-val` = value,
-    list(label), ...)
+        class = paste("btn btn-default action-button ", cssClasses), `data-val` = value,
+        list(label), ...)
 }

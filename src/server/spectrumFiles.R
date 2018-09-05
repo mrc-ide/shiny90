@@ -22,10 +22,24 @@ spectrumFiles <- function(input, output) {
             state$files <- c(state$files, list(inFile))
         }
     })
+
     output$anySpectrumFiles <- reactive({ state$anyFiles() })
     output$spectrumFileList <- renderUI({
         map(state$files, function(f) {
-            tags$li(f$name)
+            removeEventId <- glue("remove_{f$name}")
+
+            observeEvent(removeEventId, ignoreInit=TRUE, {
+                print(removeEventId)
+                state$files <- state$files[-which(state$files$name == f$name)]
+            })
+
+            tags$li("", class="list-group-item",
+                span(f$name),
+                HTML("&nbsp;&nbsp;"),
+                actionButtonWithCustomClass(removeEventId, "Remove", cssClasses="btn-red",
+                    span("", class="glyphicon glyphicon-remove", `aria-hidden`=TRUE)
+                )
+            )
         })
     })
     output$spectrumFilesCountry <- reactive({ "Malawi" })
