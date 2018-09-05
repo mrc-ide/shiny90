@@ -24,13 +24,34 @@ spectrumFiles <- function(input, output) {
     })
 
     output$anySpectrumFiles <- reactive({ state$anyFiles() })
+    output$spectrumFilesCountry <- reactive({ "Malawi" })
+    output$spectrum_combinedData <- renderDataTable(state$combinedData)
+
+    renderSpectrumFileList(input, output, state)
+    renderSpectrumPlots(output)
+
+    outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
+
+    state
+}
+
+addDynamicObserver <- function(input, observerList, eventId, handler) {
+    if (is.null(observerList[[eventId]])) {
+        observerList[[eventId]] <- observeEvent(input[[eventId]], ignoreInit=TRUE, { handler() })
+    }
+    observerList
+}
+
+renderSpectrumFileList <- function(input, output, state) {
+    state$observerList <- list()
+
     output$spectrumFileList <- renderUI({
         map(state$files, function(f) {
             removeEventId <- glue("remove_{f$name}")
 
-            observeEvent(removeEventId, ignoreInit=TRUE, {
-                print(removeEventId)
-                state$files <- state$files[-which(state$files$name == f$name)]
+            state$observerList <- addDynamicObserver(input, state$observerList, removeEventId, function() {
+                index <- match(f$name, map(state$files, function(x) { x$name }))
+                state$files <- state$files[-index]
             })
 
             tags$li("", class="list-group-item",
@@ -42,14 +63,6 @@ spectrumFiles <- function(input, output) {
             )
         })
     })
-    output$spectrumFilesCountry <- reactive({ "Malawi" })
-    output$spectrum_combinedData <- renderDataTable(state$combinedData)
-
-    renderSpectrumPlots(output)
-
-    outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
-
-    state
 }
 
 renderSpectrumPlots <- function(output) {
