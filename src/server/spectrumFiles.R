@@ -4,30 +4,44 @@ library(glue)
 
 spectrumFiles <- function(input, output) {
     state <- reactiveValues()
-    state$pjnzFilePath <- ""
-    state$spectrumFiles <- character()
-    state$anySpectrumFiles <- reactive({ length(state$spectrumFiles) > 0 })
+    state$files <- list()
+    state$anyFiles <- reactive({ length(state$files) > 0 })
 
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
-            state$pjnzFilePath <- inFile$datapath
-            filename <- inFile$name
-            output[[glue("spectrumReview_{filename}")]] <- renderPlot({
-                plot(faithful$waiting)
-                title(main="Prevalence trend")
-            })
-            state$spectrumFiles <- c(state$spectrumFiles, filename)
+            state$files <- c(state$files, list(inFile))
         }
     })
-    output$anySpectrumFiles <- reactive({state$anySpectrumFiles})
-    output$spectrumFileTabs <- renderUI({
-        tabs = map(state$spectrumFiles, function(filename) {
-            tabPanel(filename, plotOutput(glue("spectrumReview_{filename}")))
+    output$anySpectrumFiles <- reactive({ state$anyFiles() })
+    output$spectrumFileList <- renderUI({
+        map(state$files, function(f) {
+            tags$li(f$name)
         })
-        do.call(tabsetPanel, tabs)
     })
+    output$spectrumFilesCountry <- reactive({ "Malawi" })
+    renderSpectrumPlots(output)
+
     outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
 
     state
+}
+
+renderSpectrumPlots <- function(output) {
+    output$spectrum_hivPrevalance <- renderPlot({
+        plot(faithful$waiting)
+        title(main="HIV prevalence")
+    })
+    output$spectrum_hivIncidence <- renderPlot({
+        plot(faithful$waiting)
+        title(main="HIV incidence")
+    })
+    output$spectrum_populationSize <- renderPlot({
+        plot(faithful$waiting)
+        title(main="Population size")
+    })
+    output$spectrum_numberOfPeopleLivingWithHIV <- renderPlot({
+        plot(faithful$waiting)
+        title(main="Number of people living with HIV")
+    })
 }

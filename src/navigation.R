@@ -21,10 +21,10 @@ panelWithTitle <- function(title, content) {
 
 # Server side
 enableNavLinks <- function(input, output, spectrumFilesState, modelRunState) {
-    enableTabWhen("Review input data", function() { spectrumFilesState$anySpectrumFiles() })
-    enableTabWhen("Run model", function() { spectrumFilesState$anySpectrumFiles() })
+    enableTabWhen("Review input data", function() { spectrumFilesState$anyFiles() })
+    enableTabWhen("Run model", function() { spectrumFilesState$anyFiles() })
     enableTabWhen("View model outputs", function() {
-        spectrumFilesState$anySpectrumFiles() && modelRunState$state == "finished"
+        spectrumFilesState$anyFiles() && modelRunState$state == "finished"
     })
 }
 

@@ -5,8 +5,24 @@ panelSpectrum <- function() {
         fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
         conditionalPanel(
             condition = "output.anySpectrumFiles",
-            h2("Files uploaded so far"),
-            uiOutput('spectrumFileTabs')
+            h3("Uploaded PJNZ files"),
+            tags$ul(
+                uiOutput("spectrumFileList")
+            ),
+
+            h3("",
+                textOutput("spectrumFilesCountry", inline=TRUE),
+                span("PJNZ data (combined)")
+            ),
+
+            fluidRow(
+                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
+                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
+            ),
+            fluidRow(
+                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
+                div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
+            )
         )
 
         # Show country
