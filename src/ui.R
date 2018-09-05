@@ -1,3 +1,5 @@
+library(shinysky)
+
 load_file <- function(fileName) {
     readChar(fileName, file.info(fileName)$size)
 }
@@ -16,5 +18,7 @@ ui <- div(
     conditionalPanel(
         condition="output.workingSet_selected",
         mainView()
-    )
+    ),
+
+    busyIndicator(wait = 1000)
 )
