@@ -11,7 +11,7 @@ Run
 ./bootstrap
 ```
 
-to install R dependencies.
+to install R dependencies. If your system doesn't suppport bash, then instead run `./bootstrap.R`.
 
 ## Run app
 Then run 
