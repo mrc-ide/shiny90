@@ -10,10 +10,10 @@ function showBusyIndicator() {
 
 function updateBusyIndicator() {
     if (shouldShow()) {
-        setTimeout(showBusyIndicator, 500);
+        setTimeout(showBusyIndicator, 250);
     } else {
         $(".busy-indicator").hide();
     }
 }
 
-setInterval(updateBusyIndicator, 100);
+setInterval(updateBusyIndicator, 50);

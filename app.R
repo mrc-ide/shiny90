@@ -3,6 +3,8 @@ library(shiny)
 library(shinyjs)
 library(shinycssloaders)
 
+source("src/helpers.R")
+
 # Server
 source("src/server/model_outputs.R")
 source("src/server/plots.R")

@@ -1,10 +1,6 @@
 library(shiny)
 library(shinyjs)
 
-load_file <- function(fileName) {
-    readChar(fileName, file.info(fileName)$size)
-}
-
 disableUIOnBusy <- function() {
     div("", class="busy-indicator",
         div("",
@@ -22,7 +18,7 @@ ui <- div(id="shiny90",
     includeCSS("css/bootstrap4.css"),
 
     useShinyjs(),
-    extendShinyjs(text=load_file("js/nav.js"), functions=c("enableTab", "disableTab")),
+    extendShinyjs(text=file.readText("js/nav.js"), functions=c("enableTab", "disableTab")),
 
     conditionalPanel(
         condition="!output.workingSet_selected",
