@@ -5,7 +5,7 @@ load_file <- function(fileName) {
     readChar(fileName, file.info(fileName)$size)
 }
 
-disableUIOnBusy <- function(wait=1000) {
+disableUIOnBusy <- function() {
     div("", class="busy-indicator",
         div("",
             div("",
@@ -32,5 +32,5 @@ ui <- div(id="shiny90",
         condition="output.workingSet_selected",
         mainView()
     ),
-    disableUIOnBusy(wait = 1000)
+    disableUIOnBusy()
 )
