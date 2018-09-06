@@ -116,6 +116,10 @@ a, a:focus, a:hover {
     border: 1px solid #e31837;
 }
 
+.modal .modal-header .close {
+    font-size: 24pt;
+}
+
 .modal .modal-header .modal-title {
     color: #e31837;
     font-size: larger;

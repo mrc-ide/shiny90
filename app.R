@@ -17,7 +17,7 @@ source("src/server/save_and_load.R")
 source("src/server.R")
 
 # UI
-source("src/ui/forms.R")
+source("src/ui/helpers.R")
 source("src/ui/shapes.R")
 source("src/ui/main_view.R")
 source("src/ui/digest_buttons.R")
