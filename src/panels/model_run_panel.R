@@ -12,14 +12,11 @@ panelModelRun <- function() {
         ),
         actionButtonWithCustomClass("runModel", "Run model", cssClasses="btn-red btn-lg"),
         div("This make take several minutes. Please do not close your browser.", class="mt-3"),
-        textOutput("modelRunState"),
         conditionalPanel(
             condition = "output.modelRunState == 'finished'",
             div("", class="mt-3",
-                h2("Modelling fitting results"),
-                span("Now that the model has been fitted, you can "),
-                tags$a(href="#", "download a digest file"),
-                span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+                h2("Model run complete"),
+                div("Click 'View model outputs' in the sidebar to see the outputs")
                 # We want the 6 plots currently on the output page, constrained to the age range
                 # present in the input data and with the original data points plotted
             )

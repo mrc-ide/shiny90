@@ -1,5 +1,13 @@
+library(shiny)
+library(shinycssloaders)
+
 panelModelOutputs <- function() {
     div("",
+        div("",
+            span("Now that the model has been run, you can "),
+            tags$a(href="#", "download a digest file"),
+            span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+        ),
         div("", class="row",
             div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_totalNumberOfTests"))),
             div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_numberOfPositiveTests")))
