@@ -1,12 +1,7 @@
 library(shiny)
 
-plotInputs <- function(input, output) {
-    output$inputReview_a <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Figure A")
-    })
-    output$inputReview_b <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Figure B")
+plotInputs <- function(output, programData) {
+    output$inputReview <- renderPlot({
+        plot_inputdata(programData)
     })
 }

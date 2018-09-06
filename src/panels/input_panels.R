@@ -1,3 +1,7 @@
+library(shiny)
+library(rhandsontable)
+library(shinycssloaders)
+
 panelSurvey <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
@@ -33,14 +37,12 @@ panelReviewInput <- function() {
             tags$a(href="#", "download a digest file"),
             span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
-        div("", class="row",
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_a"))),
-            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "inputReview_b")))
-        )
+        withSpinner(plotOutput(outputId = "inputReview", height = "800px"))
     )
 
-    # Number tested (as a proportion of the population? / in 1000s?)
-    # Number of positive tests (in 1000s)
+    # ✓ Number tested (as a proportion of the population? / in 1000s?)
+    # ✓ Number of positive tests (in 1000s)
+    # Still needs:
     # Number tested at ante-natal care (ANC, in 1000s)
     # Number tested positive at ante-natal care (in 1000s)
 }
