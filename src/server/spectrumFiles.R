@@ -1,20 +1,18 @@
 library(shiny)
 library(purrr)
 library(glue)
+library(first90)
 
 spectrumFiles <- function(input, output) {
     state <- reactiveValues()
     state$files <- list()
     state$anyFiles <- reactive({ length(state$files) > 0 })
-    state$combinedData <- {
-        years <- c(2007, 2008)
-        population <- c(1000, 1200)
-        peopleLivingWithHIV <- c(25, 30)
-        prevalence <- c(0.025, 0.026)
-        incidence <- c(4, 5)
-        artCoverage <- c(0.5, 0.55)
-        data.frame(years, population, peopleLivingWithHIV, prevalence, incidence, artCoverage)
-    }
+    state$combinedData <- reactive({
+        if (state$anyFiles()) {
+            # TODO use all files, not just first one
+            prepare_inputs(state$files[[1]]$datapath)
+        }
+    })
 
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
@@ -28,7 +26,7 @@ spectrumFiles <- function(input, output) {
     output$spectrum_combinedData <- renderDataTable(state$combinedData)
 
     renderSpectrumFileList(input, output, state)
-    renderSpectrumPlots(output)
+    renderSpectrumPlots(output, state$combinedData)
 
     outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
 
@@ -65,21 +63,10 @@ renderSpectrumFileList <- function(input, output, state) {
     })
 }
 
-renderSpectrumPlots <- function(output) {
-    output$spectrum_hivPrevalance <- renderPlot({
-        plot(faithful$waiting)
-        title(main="HIV prevalence")
-    })
-    output$spectrum_hivIncidence <- renderPlot({
-        plot(faithful$waiting)
-        title(main="HIV incidence")
-    })
-    output$spectrum_populationSize <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Population size")
-    })
-    output$spectrum_numberOfPeopleLivingWithHIV <- renderPlot({
-        plot(faithful$waiting)
-        title(main="Number of people living with HIV")
+renderSpectrumPlots <- function(output, combinedData) {
+    output$spectrum_plots <- renderPlot({
+        if (!is.null(combinedData())) {
+            plot_pnjz(combinedData())
+        }
     })
 }

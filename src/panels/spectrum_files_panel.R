@@ -1,3 +1,6 @@
+library(shiny)
+library(shinycssloaders)
+
 panelSpectrum <- function() {
     div("",
         div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
@@ -20,19 +23,10 @@ panelSpectrum <- function() {
                 ),
 
                 tabsetPanel(
-                    tabPanel("Figures",
-                        fluidRow(
-                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivPrevalance"))),
-                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_hivIncidence")))
-                        ),
-                        fluidRow(
-                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_populationSize"))),
-                            div("", class="col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "spectrum_numberOfPeopleLivingWithHIV")))
-                        )
-                    ),
+                    tabPanel("Figures", withSpinner(plotOutput(outputId = "spectrum_plots", height = "800px"))),
                     tabPanel("Data",
                         div("", class="mt-3",
-                            dataTableOutput("spectrum_combinedData")
+                            img(src="images/mock-sheet.png")
                         )
                     )
                 )
