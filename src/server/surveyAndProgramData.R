@@ -3,18 +3,16 @@ library(data.table)
 library(rhandsontable)
 library(first90)
 
-surveyAndProgramData <- function(input, output) {
+surveyAndProgramData <- function(input, output, state) {
     data(survey_hts)
     data(prgm_dat)
 
-    tableData = reactiveValues()
-
-    tableData$survey = as.data.frame(survey_hts[country == "Malawi"])
+    state$survey = as.data.frame(survey_hts[country == "Malawi"])
 
     prgm_dat$country = as.character(prgm_dat$country)
     prgm_dat$notes = as.character(prgm_dat$notes)
 
-    tableData$program = prgm_dat[prgm_dat$country == "Malawi", ]
+    state$program = prgm_dat[prgm_dat$country == "Malawi", ]
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -26,7 +24,7 @@ surveyAndProgramData <- function(input, output) {
         }"
 
     output$hot_survey <- renderRHandsontable({
-        rhandsontable(tableData$survey, stretchH = "all") %>%
+        rhandsontable(state$survey, stretchH = "all") %>%
         hot_col("outcome", allowInvalid = TRUE) %>%
         hot_col("agegr", allowInvalid = TRUE)  %>%
         hot_col("est", renderer=number_renderer) %>%
@@ -37,7 +35,7 @@ surveyAndProgramData <- function(input, output) {
     })
 
     output$hot_program <- renderRHandsontable({
-        rhandsontable(tableData$program, stretchH = "all") %>%
+        rhandsontable(state$program, stretchH = "all") %>%
         hot_col("number", renderer=number_renderer) %>%
         hot_col("country", renderer=text_renderer)
     })
@@ -49,7 +47,7 @@ surveyAndProgramData <- function(input, output) {
             return(NULL)
         }
 
-        tableData$survey <<- read.csv(inFile$datapath)
+        state$survey <<- read.csv(inFile$datapath)
     })
 
     observeEvent(input$programData, {
@@ -59,20 +57,20 @@ surveyAndProgramData <- function(input, output) {
         return(NULL)
         }
 
-        tableData$program <<- read.csv(inFile$datapath)
+        state$program <<- read.csv(inFile$datapath)
     })
 
     observe({
         if(!is.null(input$hot_survey)){
-            tableData$survey <<- hot_to_r(input$hot_survey)
+            state$survey <<- hot_to_r(input$hot_survey)
         }
     })
 
     observe({
         if(!is.null(input$hot_program)){
-            tableData$program <<- hot_to_r(input$hot_program)
+            state$program <<- hot_to_r(input$hot_program)
         }
     })
 
-    tableData
+    state
 }

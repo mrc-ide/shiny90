@@ -40,7 +40,7 @@ withDir <- function(dir, expr) {
     evalq(expr)
 }
 
-handleLoad <- function(input, workingSet) {
+handleLoad <- function(input, workingSet, surveyAndProgramData) {
     state <- reactiveValues()
     state$uploadRequested <- FALSE
 
@@ -54,13 +54,22 @@ handleLoad <- function(input, workingSet) {
         inFile <- input$digestUpload
         if (!is.null(inFile)) {
             state$uploadRequested <- FALSE
+            scratch <- tempfile()
+            unzip(inFile$datapath, exdir=scratch)
             workingSet$name <- gsub(".zip.shiny90$", "", inFile$name)
+            withDir(scratch, {
+                workingSet$notes <- file.readText("notes.txt")
+                surveyAndProgramData$survey <- read.csv("survey.csv")
+                surveyAndProgramData$program <- read.csv("program.csv")
+            })
+            print(scratch)
         }
     })
 
     list(
         state = state,
-        workingSet = workingSet
+        workingSet = workingSet,
+        surveyAndProgramData = surveyAndProgramData
     )
 }
 

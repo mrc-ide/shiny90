@@ -6,11 +6,15 @@ server <- function(input, output) {
     workingSet$notes <- NULL
     workingSet$creation_error <- NULL
 
-    loadState <- handleLoad(input, workingSet)
+    surveyAndProgramData <- reactiveValues()
+    surveyAndProgramData$survey <- NULL
+    surveyAndProgramData$program <- NULL
+
+    loadState <- handleLoad(input, workingSet, surveyAndProgramData)
     workingSet <- workingSetLogic(input, output, loadState$workingSet)
 
     spectrumFilesState <- spectrumFiles(input, output)
-    surveyAndProgramData <- surveyAndProgramData(input, output)
+    surveyAndProgramData <- surveyAndProgramData(input, output, loadState$surveyAndProgramData)
     plotInputs(output, surveyAndProgramData$program)
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
 
