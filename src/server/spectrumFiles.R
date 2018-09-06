@@ -3,9 +3,7 @@ library(purrr)
 library(glue)
 library(first90)
 
-spectrumFiles <- function(input, output) {
-    state <- reactiveValues()
-    state$dataSets <- list()
+spectrumFiles <- function(input, output, state) {
     state$anyDataSets <- reactive({ length(state$dataSets) > 0 })
     state$combinedData <- reactive({
         if (state$anyDataSets()) {

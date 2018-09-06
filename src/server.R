@@ -10,10 +10,13 @@ server <- function(input, output) {
     surveyAndProgramData$survey <- NULL
     surveyAndProgramData$program <- NULL
 
-    loadState <- handleLoad(input, workingSet, surveyAndProgramData)
+    spectrumFilesState <- reactiveValues()
+    spectrumFilesState$dataSets <- list()
+
+    loadState <- handleLoad(input, workingSet, surveyAndProgramData, spectrumFilesState)
     workingSet <- workingSetLogic(input, output, loadState$workingSet)
 
-    spectrumFilesState <- spectrumFiles(input, output)
+    spectrumFilesState <- spectrumFiles(input, output, loadState$spectrumFilesState)
     surveyAndProgramData <- surveyAndProgramData(input, output, loadState$surveyAndProgramData)
     plotInputs(output, surveyAndProgramData$program)
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
