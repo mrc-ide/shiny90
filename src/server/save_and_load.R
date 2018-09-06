@@ -70,7 +70,10 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
     state <- reactiveValues()
     state$uploadRequested <- FALSE
 
-    observeEvent(input$requestDigestUpload, {
+    observeEvent({
+        input$requestDigestUpload
+        input$welcomeRequestDigestUpload
+    }, {
         state$uploadRequested <- TRUE
     })
     observeEvent(input$cancelDigestUpload, {
