@@ -8,7 +8,7 @@ panelSpectrum <- function() {
         div("", class="mt-3 mb-5",
             fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
         ),
-        conditionalPanel(condition = "output.anySpectrumFiles",
+        conditionalPanel(condition = "output.anySpectrumDataSets",
             div("", class="mb-5",
                 h3("Uploaded PJNZ files", class="mt-5"),
                 tags$ul("", class="list-group",

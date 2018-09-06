@@ -1,5 +1,6 @@
 library(shiny)
 library(glue)
+library(purrr)
 
 doAndRememberPath <- function(paths, path, func) {
     paths <- c(paths, path)
@@ -18,11 +19,14 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
     paths <- doAndRememberPath(paths, "notes.txt", function(path) {
         file.writeText(path, workingSet$notes)
     })
-    if (!is.null(spectrumFilesState$combinedData())) {
-        paths <- doAndRememberPath(paths, "combined_spectrum_data.rds", function(path) {
-            saveRDS(spectrumFilesState$combinedData(), file=path)
+    dir.create("spectrum_data")
+    paths <- reduce(spectrumFilesState$dataSets, .init=paths, function(paths, dataSet) {
+        path <- file.path("spectrum_data", glue("{dataSet$name}.rds"))
+        doAndRememberPath(paths, path, function(path) {
+            saveRDS(dataSet$data, file=path)
         })
-    }
+    })
+
     paths <- doAndRememberPath(paths, "README.md", function(path) {
         content <- readmeTemplate
         content <- gsub("__TITLE__", workingSet$name, content)

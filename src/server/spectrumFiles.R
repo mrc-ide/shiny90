@@ -5,30 +5,34 @@ library(first90)
 
 spectrumFiles <- function(input, output) {
     state <- reactiveValues()
-    state$files <- list()
-    state$anyFiles <- reactive({ length(state$files) > 0 })
+    state$dataSets <- list()
+    state$anyDataSets <- reactive({ length(state$dataSets) > 0 })
     state$combinedData <- reactive({
-        if (state$anyFiles()) {
+        if (state$anyDataSets()) {
             # TODO use all files, not just first one
-            prepare_inputs(state$files[[1]]$datapath)
+            state$dataSets[[1]]$data
         }
     })
 
     observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
-            state$files <- c(state$files, list(inFile))
+            dataSet = list(
+                name = inFile$name,
+                data = prepare_inputs(inFile$datapath)
+            )
+            state$dataSets <- c(state$dataSets, list(dataSet))
         }
     })
 
-    output$anySpectrumFiles <- reactive({ state$anyFiles() })
+    output$anySpectrumDataSets <- reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- reactive({ "Malawi" })
     output$spectrum_combinedData <- renderDataTable(state$combinedData)
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$combinedData)
 
-    outputOptions(output, "anySpectrumFiles", suspendWhenHidden = FALSE)
+    outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
 
     state
 }
@@ -44,12 +48,12 @@ renderSpectrumFileList <- function(input, output, state) {
     state$observerList <- list()
 
     output$spectrumFileList <- renderUI({
-        map(state$files, function(f) {
+        map(state$dataSets, function(f) {
             removeEventId <- glue("remove_{f$name}")
 
             state$observerList <- addDynamicObserver(input, state$observerList, removeEventId, function() {
-                index <- match(f$name, map(state$files, function(x) { x$name }))
-                state$files <- state$files[-index]
+                index <- match(f$name, map(state$dataSets, function(x) { x$name }))
+                state$dataSets <- state$dataSets[-index]
             })
 
             tags$li("", class="list-group-item",
