@@ -1,12 +1,7 @@
 library(shiny)
 
-workingSetLogic <- function(input, output) {
-    workingSet <- reactiveValues()
-    workingSet$name <- NULL
-    workingSet$notes <- NULL
-    workingSet$creation_error <- NULL
-
-    output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
+workingSetLogic <- function(input, output, workingSet) {
+        output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
     output$workingSet_name <- reactive({ workingSet$name })
     output$workingSet_notes <- reactive({ workingSet$notes })
     output$workingSet_creation_error <- reactive({ workingSet$creation_error })

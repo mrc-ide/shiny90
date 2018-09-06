@@ -2,11 +2,13 @@ library(shiny)
 library(shinyjs)
 
 disableUIOnBusy <- function() {
-    div("", class="busy-indicator",
-        div("",
-            div("",
-                p("Please wait..."),
-                img(src="images/ajax-loader.gif")
+    div("", class="modal busy-indicator",
+        div("", class="modal-dialog",
+            div("", class="modal-content",
+                div("", class="modal-body",
+                    p("Please wait..."),
+                    img(src="images/ajax-loader.gif")
+                )
             )
         ),
         includeScript("js/disableUIOnBusy.js")
@@ -27,6 +29,10 @@ ui <- div(id="shiny90",
     conditionalPanel(
         condition="output.workingSet_selected",
         mainView()
+    ),
+    conditionalPanel(
+        condition="output.modal == 'loadDigest'",
+        loadDigestModal()
     ),
     disableUIOnBusy()
 )

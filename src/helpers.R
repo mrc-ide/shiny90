@@ -4,5 +4,6 @@ file.readText <- function(path) {
 
 file.writeText <- function(path, text) {
     f <- file(path)
+    on.exit(close(f))
     writeLines(text, f)
 }
