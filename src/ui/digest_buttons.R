@@ -47,6 +47,7 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
         content <- readmeTemplate
         content <- gsub("__TITLE__", workingSet$name, content)
         content <- gsub("__NOTES__", workingSet$notes, content)
+        content <- gsub("__TIMESTAMP__", as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), content)
         file.writeText(path, content)
     })
     paths
