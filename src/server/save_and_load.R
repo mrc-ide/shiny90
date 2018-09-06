@@ -97,7 +97,6 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                     )
                 })
             })
-            print(scratch)
         }
     })
 

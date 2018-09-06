@@ -1,6 +1,6 @@
 library(shiny)
 
-inputBox <- function(id, label, explanation, type="number", value=0) {
+inputBox <- function(id, label, explanation="", type="number", value=0) {
     div("", class="form-group",
         tags$label(`for`=id,
             tags$strong(label),

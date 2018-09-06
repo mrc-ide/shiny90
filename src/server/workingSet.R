@@ -1,7 +1,7 @@
 library(shiny)
 
 workingSetLogic <- function(input, output, workingSet) {
-        output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
+    output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
     output$workingSet_name <- reactive({ workingSet$name })
     output$workingSet_notes <- reactive({ workingSet$notes })
     output$workingSet_creation_error <- reactive({ workingSet$creation_error })
@@ -17,6 +17,13 @@ workingSetLogic <- function(input, output, workingSet) {
     })
     outputOptions(output, "workingSet_creation_error", suspendWhenHidden = FALSE)
     outputOptions(output, "workingSet_selected", suspendWhenHidden = FALSE)
+
+    observeEvent(input$editWorkingSet, {
+        workingSet$editing = TRUE
+    })
+    observeEvent(input$cancelEditingWorkingSet, {
+        workingSet$editing = FALSE
+    })
 
     workingSet
 }

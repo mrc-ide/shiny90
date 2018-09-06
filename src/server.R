@@ -6,6 +6,7 @@ server <- function(input, output) {
     workingSet$name <- NULL
     workingSet$notes <- NULL
     workingSet$creation_error <- NULL
+    workingSet$editing <- FALSE
 
     surveyAndProgramData <- reactiveValues()
     surveyAndProgramData$survey <- NULL
@@ -29,6 +30,8 @@ server <- function(input, output) {
     output$modal <- reactive({
         if (loadState$state$uploadRequested) {
             "loadDigest"
+        } else if (workingSet$editing) {
+            "editWorkingSet"
         } else {
             NULL
         }

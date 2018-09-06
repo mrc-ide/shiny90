@@ -34,5 +34,9 @@ ui <- div(id="shiny90",
         condition="output.modal == 'loadDigest'",
         loadDigestModal()
     ),
+    conditionalPanel(
+        condition="output.modal == 'editWorkingSet'",
+        editWorkingSetModal()
+    ),
     disableUIOnBusy()
 )
