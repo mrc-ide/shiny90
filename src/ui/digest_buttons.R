@@ -27,34 +27,40 @@ doAndRememberPath <- function(paths, path, func) {
     paths
 }
 
+writeFilesForDigest <- function(spectrumFilesState, surveyAndProgramData) {
+    paths <- NULL
+    paths <- doAndRememberPath(paths, "survey.csv", function(path) {
+        write.csv(surveyAndProgramData$survey, file=path)
+    })
+    paths <- doAndRememberPath(paths, "program.csv", function(path) {
+        write.csv(surveyAndProgramData$program, file=path)
+    })
+    if (!is.null(spectrumFilesState$combinedData())) {
+        paths <- doAndRememberPath(paths, "combined_spectrum_data.rds", function(path) {
+            saveRDS(spectrumFilesState$combinedData(), file=path)
+        })
+    }
+    paths
+}
+
+withDir <- function(dir, expr) {
+    old_wd <- getwd()
+    on.exit(setwd(old_wd))
+    setwd(dir)
+    evalq(expr)
+}
+
 handleSaveAndLoad <- function(input, output, workingSet, spectrumFilesState, surveyAndProgramData) {
     output$digestDownload <- downloadHandler(
         filename = function() { glue("{workingSet$name}.zip") },
         contentType = "application/zip",
         content = function(file) {
             scratch <- tempfile()
-            paths <- NULL
             dir.create(scratch)
-            setwd(scratch)
-
-            # Write out individual files
-            paths <- doAndRememberPath(paths, "survey.csv", function(path) {
-                write.csv(surveyAndProgramData$survey, file=path)
+            withDir(scratch, {
+                paths <- writeFilesForDigest(spectrumFilesState, surveyAndProgramData)
+                zip(file, paths)
             })
-            paths <- doAndRememberPath(paths, "program.csv", function(path) {
-                write.csv(surveyAndProgramData$program, file=path)
-            })
-            if (!is.null(spectrumFilesState$combinedData())) {
-                paths <- doAndRememberPath(paths, "combined_spectrum_data.rds", function(path) {
-                    saveRDS(spectrumFilesState$combinedData(), file=path)
-                })
-            }
-
-            # Create zip file
-            print(paths)
-            zip(file, paths)
-
-            # Clean up
             unlink(scratch, recursive=TRUE)
         }
     )
