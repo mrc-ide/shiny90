@@ -4,6 +4,7 @@ library(glue)
 library(first90)
 
 spectrumFiles <- function(input, output, state) {
+    state$country <- NULL
     state$anyDataSets <- reactive({ length(state$dataSets) > 0 })
     state$combinedData <- reactive({
         if (state$anyDataSets()) {
@@ -20,11 +21,13 @@ spectrumFiles <- function(input, output, state) {
                 data = prepare_inputs(inFile$datapath)
             )
             state$dataSets <- c(state$dataSets, list(dataSet))
+            # TODO: Throw error if data sets after the first do not match the country of the first data set
+            state$country <- read_country(inFile$datapath)
         }
     })
 
     output$anySpectrumDataSets <- reactive({ state$anyDataSets() })
-    output$spectrumFilesCountry <- reactive({ "Malawi" })
+    output$spectrumFilesCountry <- reactive({ state$country })
     output$spectrum_combinedData <- renderDataTable(state$combinedData)
 
     renderSpectrumFileList(input, output, state)

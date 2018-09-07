@@ -13,12 +13,14 @@ getProgramDataInWideFormat <- function(country) {
     wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
-surveyAndProgramData <- function(input, output, state) {
+surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data(survey_hts)
     data(prgm_dat)
 
-    state$survey <- as.data.frame(survey_hts[country == "Malawi" & outcome == "evertest"])
-    state$program_wide <- getProgramDataInWideFormat("Malawi")
+    observeEvent(spectrumFilesState$country, {
+        state$survey <- as.data.frame(survey_hts[country == spectrumFilesState$country & outcome == "evertest"])
+        state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+    })
     state$program <- reactive({
         gather(state$program_wide,
             key = "type", value = "number",
