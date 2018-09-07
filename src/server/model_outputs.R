@@ -4,7 +4,7 @@ prepareProgramInput <- function(program_data) {
     prgm_tot <- program_data$number[program_data$type == 'NbTested'] + program_data$number[program_data$type == 'NbANCTested']
     prgm_pos <- program_data$number[program_data$type == 'NbTestPos'] + program_data$number[program_data$type == 'NBTestedANCPos']
     year <- unique(prgm_dat$year)
-    prg_dat <- data.frame(year = year, tot = prgm_tot, pos = prgm_pos, agegr='15-99', sex='both', hivstatus='all')
+    prg_dat <- data.frame(year=year, tot=prgm_tot, pos=prgm_pos, agegr='15-99', sex='both', hivstatus='all')
 
     prg_dat
 }
@@ -30,7 +30,6 @@ prepareSurveyInput <- function(survey_dt) {
 }
 
 fitModel <- function(survey_data, program_data, fp){
-
     # Prepare survey data for ever tested for HIV.
     dat <- prepareSurveyInput(survey_data)
 
@@ -54,8 +53,8 @@ fitModel <- function(survey_data, program_data, fp){
 
     ll_hts(theta0, theta_fx, fp, likdat)
 
-    opt <- optim(theta0, ll_hts, theta_fx = theta_fx, fp = fp, likdat = likdat, method = "BFGS",
-    control <- list(fnscale = -1, trace = 4, REPORT = 1, maxit = 150))
+    opt <- optim(theta0, ll_hts, theta_fx = theta_fx, fp = fp, likdat = likdat, method="BFGS",
+    control=list(fnscale = -1, trace=4, REPORT=1, maxit=150))
 
     round(exp(opt$par[1:36]), 3)
     fp <- create_hts_param(opt$par, theta_fx, fp)
@@ -78,10 +77,10 @@ outEverTest <- function(fp, mod) {
 
 numberTested <- function(fp, mod) {
 
-    out_nbtest <- expand.grid(year = 2000:2022,
+    out_nbtest <- expand.grid(year=2000:2022,
                             outcome = "numbertests",
-                            agegrp = "15-99",
-                            sex = "both",
+                            agegrp="15-99",
+                            sex="both",
                             hivstatus='all')
 
     out_nbtest$value <- number_tests(mod, fp, add_ss_indices(out_nbtest, fp$ss))$tests
@@ -91,10 +90,10 @@ numberTested <- function(fp, mod) {
 
 numberTestedPositive <- function(fp, mod) {
 
-    out_nbtest_pos <- expand.grid(year = 2000:2022,
+    out_nbtest_pos <- expand.grid(year=2000:2022,
                                 outcome = "numbertests",
-                                agegrp = "15-99",
-                                sex = "both",
+                                agegrp="15-99",
+                                sex="both",
                                 hivstatus='positive')
 
     out_nbtest_pos$value <- number_tests(mod, fp, add_ss_indices(out_nbtest_pos, fp$ss))$tests
