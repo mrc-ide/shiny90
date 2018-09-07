@@ -5,7 +5,7 @@ library(shinycssloaders)
 
 source("src/helpers.R")
 
-# Server
+# Server (alphabetical)
 source("src/server/model_outputs.R")
 source("src/server/model_run.R")
 source("src/server/plot_inputs.R")
@@ -15,7 +15,7 @@ source("src/server/spectrum_files.R")
 source("src/server/survey_and_program_data.R")
 source("src/server/working_set.R")
 
-# UI
+# UI (alphabetical)
 source("src/ui/digest_buttons.R")
 source("src/ui/input_panels.R")
 source("src/ui/main_view.R")

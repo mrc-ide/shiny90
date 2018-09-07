@@ -29,9 +29,7 @@ prepareSurveyInput <- function(survey_dt) {
     dat
 }
 
-fitModel <- function(survey_data, program_data, pjnz_path){
-
-    fp <- prepare_inputs(pjnz_path)
+fitModel <- function(survey_data, program_data, fp){
 
     # Prepare survey data for ever tested for HIV.
     dat <- prepareSurveyInput(survey_data)

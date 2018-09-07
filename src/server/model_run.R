@@ -12,10 +12,8 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         # it could presumably be re-written to deal with survey data as a data frame but for now we're just
         # converting survey data to the expected format
         surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
-        # TODO: Use all files, not just the first one
-        pjnzFilePaths <- spectrumFilesState$files[[1]]$datapath
 
-        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, pjnzFilePaths)
+        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, spectrumFilesState$combinedData())
 
         # model fit results
         likdat <- out$likdat
