@@ -5,6 +5,7 @@ library(purrr)
 modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     state <- reactiveValues()
     state$state <- "not_run"
+    state$outputs_data <- NULL
 
     observeEvent(input$runModel, {
 
@@ -24,6 +25,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         out_evertest = outEverTest(fp, mod)
 
         plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
+        output$outputs_data <- renderDataTable({ mtcars })
 
         state$state <- "finished"
     })
