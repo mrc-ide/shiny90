@@ -1,10 +1,10 @@
 mainView <- function() {
     div("",
-        div("", class="header",
+        div("", class = "header",
             fluidPage(
-                div("", class="pull-right text-right",
+                div("", class = "pull-right text-right",
                     tags$small("",
-                        a("About this program and the underlying model", href="#")
+                        a("About this program and the underlying model", href = "#")
                     )
                 ),
                 div("",
@@ -13,7 +13,7 @@ mainView <- function() {
                 )
             )
         ),
-        fluidPage(class="main-content",
+        fluidPage(class = "main-content",
             navigationPanel()
         )
     )

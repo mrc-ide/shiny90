@@ -16,19 +16,19 @@ removeExtension <- function(path, extension) {
 writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, readmeTemplate) {
     paths <- NULL
     paths <- doAndRememberPath(paths, "survey.csv", function(path) {
-        write.csv(surveyAndProgramData$survey, file=path)
+        write.csv(surveyAndProgramData$survey, file = path)
     })
     paths <- doAndRememberPath(paths, "program.csv", function(path) {
-        write.csv(surveyAndProgramData$program, file=path)
+        write.csv(surveyAndProgramData$program, file = path)
     })
     paths <- doAndRememberPath(paths, "notes.txt", function(path) {
         file.writeText(path, workingSet$notes)
     })
     dir.create("spectrum_data")
-    paths <- reduce(spectrumFilesState$dataSets, .init=paths, function(paths, dataSet) {
+    paths <- reduce(spectrumFilesState$dataSets, .init = paths, function(paths, dataSet) {
         path <- file.path("spectrum_data", glue("{dataSet$name}.rds"))
         doAndRememberPath(paths, path, function(path) {
-            saveRDS(dataSet$data, file=path)
+            saveRDS(dataSet$data, file = path)
         })
     })
 
@@ -61,7 +61,7 @@ handleSave <- function(input, output, workingSet, spectrumFilesState, surveyAndP
                 paths <- writeFilesForDigest(workingSet, spectrumFilesState, surveyAndProgramData, readmeTemplate)
                 zip(file, paths)
             })
-            unlink(scratch, recursive=TRUE)
+            unlink(scratch, recursive = TRUE)
         }
     )
 }
@@ -84,7 +84,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
         if (!is.null(inFile)) {
             state$uploadRequested <- FALSE
             scratch <- tempfile()
-            unzip(inFile$datapath, exdir=scratch)
+            unzip(inFile$datapath, exdir = scratch)
             workingSet$name <- removeExtension(inFile$name, "zip.shiny90$")
             withDir(scratch, {
                 workingSet$notes <- file.readText("notes.txt")

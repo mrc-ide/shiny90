@@ -2,7 +2,7 @@ library(shiny)
 library(shinyjs)
 
 navigationPanel <- function() {
-    navlistPanel(well=FALSE, widths=c(2, 10),
+    navlistPanel(well = FALSE, widths = c(2, 10),
         panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
         panelWithTitle("Upload survey data", panelSurvey()),
         panelWithTitle("Upload programmatic data", panelProgram()),

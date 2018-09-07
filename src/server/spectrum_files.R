@@ -37,7 +37,7 @@ spectrumFiles <- function(input, output, state) {
 
 addDynamicObserver <- function(input, observerList, eventId, handler) {
     if (is.null(observerList[[eventId]])) {
-        observerList[[eventId]] <- observeEvent(input[[eventId]], ignoreInit=TRUE, { handler() })
+        observerList[[eventId]] <- observeEvent(input[[eventId]], ignoreInit = TRUE, { handler() })
     }
     observerList
 }
@@ -54,11 +54,11 @@ renderSpectrumFileList <- function(input, output, state) {
                 state$dataSets <- state$dataSets[-index]
             })
 
-            tags$li("", class="list-group-item",
+            tags$li("", class = "list-group-item",
                 span(f$name),
                 HTML("&nbsp;&nbsp;"),
-                actionButtonWithCustomClass(removeEventId, "Remove", cssClasses="btn-red",
-                    span("", class="glyphicon glyphicon-remove", `aria-hidden`=TRUE)
+                actionButtonWithCustomClass(removeEventId, "Remove", cssClasses = "btn-red",
+                    span("", class = "glyphicon glyphicon-remove", `aria-hidden`=TRUE)
                 )
             )
         })

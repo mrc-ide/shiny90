@@ -27,17 +27,17 @@ surveyAndProgramData <- function(input, output, state) {
         rhandsontable(state$survey, stretchH = "all") %>%
         hot_col("outcome", allowInvalid = TRUE) %>%
         hot_col("agegr", allowInvalid = TRUE)  %>%
-        hot_col("est", renderer=number_renderer) %>%
-        hot_col("se", renderer=number_renderer) %>%
-        hot_col("ci_l", renderer=number_renderer) %>%
-        hot_col("ci_u", renderer=number_renderer) %>%
-        hot_col("year", format="0")
+        hot_col("est", renderer = number_renderer) %>%
+        hot_col("se", renderer = number_renderer) %>%
+        hot_col("ci_l", renderer = number_renderer) %>%
+        hot_col("ci_u", renderer = number_renderer) %>%
+        hot_col("year", format = "0")
     })
 
     output$hot_program <- renderRHandsontable({
         rhandsontable(state$program, stretchH = "all") %>%
-        hot_col("number", renderer=number_renderer) %>%
-        hot_col("country", renderer=text_renderer)
+        hot_col("number", renderer = number_renderer) %>%
+        hot_col("country", renderer = text_renderer)
     })
 
     observeEvent(input$surveyData, {

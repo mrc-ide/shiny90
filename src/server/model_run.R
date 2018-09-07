@@ -11,7 +11,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         # the model fitting code expects survey data as a data table and program data as a data frame
         # it could presumably be re-written to deal with survey data as a data frame but for now we're just
         # converting survey data to the expected format
-        surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames=TRUE)
+        surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
         out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, spectrumFilesState$combinedData())
 
