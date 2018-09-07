@@ -148,8 +148,8 @@ a, a:focus, a:hover {
     font-weight: bold;
 }
 
-.modal.busy-indicator > div > div {
-    width: 400px;
+.modal.busy-indicator .modal-content {
+    padding-top: 40px;
     height: 180px;
     text-align: center;
 }
