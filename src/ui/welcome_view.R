@@ -6,10 +6,26 @@ welcomeView <- function() {
             fluidRow(class = "row align-items-center",
                 div("", class = "col-md-8 col-sm-12 col-md-offset-2",
                     h1("Shiny 90", class = "title"),
-                    p("Some introductory text about the app Cupcake ipsum dolor sit amet bear claw dessert gummi bears. Donut cake toffee wafer. Caramels chocolate bar apple pie cake toffee."),
-                    p("Danish jelly-o brownie tart ice cream chocolate bar jelly beans cheesecake carrot cake. Tart gingerbread sugar plum wafer halvah cookie candy canes danish. Candy canes bear claw cookie caramels. Tootsie roll biscuit dragée gingerbread gummi bears."),
+                    p("",
+                        HTML('UN Aids have an ambitious treatment target to help end the AIDS epidemic,
+                             <a href="http://www.unaids.org/en/resources/documents/2017/90-90-90">the threes 90s</a>:'),
+                        tags$ul("",
+                            tags$li("By 2020, 90% of all people living with HIV will know their HIV status."),
+                            tags$li("By 2020, 90% of all people with diagnosed HIV infection will receive sustained antiretroviral therapy."),
+                            tags$li("By 2020, 90% of all people receiving antiretroviral therapy will have viral suppression.")
+                        )
+                    ),
+                    p("This tool models the 1st 90: what percentage of the popultation living with HIV (plHIV) have been diagnosed?"),
+                    p("",
+                        span("You will need input data from the UN AIDS"),
+                        HTML('<a href="http://www.unaids.org/en/dataanalysis/datatools/spectrum-epp">Spectrum tool</a>.'),
+                        span(
+                            "This will be combined with survey and programmatic data. You can provide your own
+                            survey and programmatic data, but the app comes with default data."
+                        )
+                    ),
                     fluidRow(class = "row align-items-center mt-3",
-                        div("", class = "col-md-6 welcome-option", style = "border-right: 1px solid black",
+                        div("", class = "col-md-6 welcome-option", style = "border-right: 1px solid rgb(200, 200, 200)",
                             h3("Open an existing Shiny 90 working set"),
                             div("This will be a file you downloaded from this app previously"),
                             div("", class = "text-center pt-4",
