@@ -18,9 +18,9 @@ inputBox <- function(id, label, explanation="", type="number", value=0, multilin
     )
 }
 
-actionButtonWithCustomClass <- function (inputId, label, cssClasses = NULL, ...) {
+actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL, type="button") {
     value <- restoreInput(id = inputId, default = NULL)
-    tags$button(id = inputId, type = "button",
+    tags$button(id = inputId, type = type,
         class = paste("btn btn-default action-button ", cssClasses), `data-val` = value,
         list(label), ...)
 }
