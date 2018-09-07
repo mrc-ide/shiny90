@@ -3,13 +3,8 @@ library(shinycssloaders)
 
 panelSpectrum <- function() {
     div("",
-        div("Please upload either one national PJNZ file or multiple files, one per subnational region.", class = "mb-5",
-            tags$ul(
-                tags$li("??"),
-                tags$li("???"),
-                tags$li("????")
-            )
-        ),
+        div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
+            class = "mb-5"),
         div("", class = "mt-3 mb-5",
             fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
         ),
