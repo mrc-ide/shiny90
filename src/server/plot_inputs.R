@@ -1,7 +1,7 @@
 library(shiny)
 
-plotInputs <- function(output, programData) {
+plotInputs <- function(output, surveyAndProgramData) {
     output$inputReview <- renderPlot({
-        plot_inputdata(programData)
+        plot_inputdata(surveyAndProgramData$program())
     })
 }

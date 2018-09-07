@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+install.packages("tidyr")
 install.packages("shiny")
 install.packages("shinyjs")
 install.packages("glue")
