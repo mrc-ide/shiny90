@@ -22,6 +22,8 @@ ui <- div(id = "shiny90",
     useShinyjs(),
     extendShinyjs(text = file.readText("js/nav.js"), functions = c("enableTab", "disableTab")),
 
+    includeScript("js/enableEnterButton.js"),
+
     conditionalPanel(
         condition = "!output.workingSet_selected",
         welcomeView()
