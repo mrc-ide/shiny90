@@ -3,8 +3,14 @@ library(shinycssloaders)
 
 panelSpectrum <- function() {
     div("",
-        div("Help text for this page: Cupcake ipsum dolor sit amet cotton candy soufflé topping. Icing dessert brownie jujubes lollipop topping. Cotton candy chocolate cake danish apple pie carrot cake wafer chocolate bar oat cake.",
-            class = "mb-3"),
+        div("Please upload one or more PJNZ files exported from Spectrum. All files must be for same country, and
+             between them they must contain:", class = "mb-5",
+            tags$ul(
+                tags$li("??"),
+                tags$li("???"),
+                tags$li("????")
+            )
+        ),
         div("", class = "mt-3 mb-5",
             fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
         ),

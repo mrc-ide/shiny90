@@ -130,6 +130,10 @@ a, a:focus, a:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
+.modal .modal-dialog {
+    margin-top: 30vh;
+}
+
 .modal .modal-dialog .modal-content {
     border: 1px solid #e31837;
 }
