@@ -31,6 +31,9 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             saveRDS(dataSet$data, file = path)
         })
     })
+    paths <- doAndRememberPath(paths, "country.txt", function(path) {
+        file.writeText(path, spectrumFilesState$country)
+    })
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
         content <- readmeTemplate
@@ -92,6 +95,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                         data = readRDS(file.path("spectrum_data", path))
                     )
                 })
+                spectrumFilesState$country <- file.readText("country.txt")
             })
         }
     })
