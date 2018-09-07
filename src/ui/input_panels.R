@@ -4,7 +4,7 @@ library(shinycssloaders)
 
 panelSurvey <- function() {
     div("",
-        div("The following is survey data sourced from ??. You can edit the data below in the browser, or copy and
+        div("The following is survey data sourced from DHS and PHIA. You can edit the data below in the browser, or copy and
              paste to Excel and edit the data there. You can also replace the data entirely be uploading a new CSV file
              below", class = "mb-3"),
         h3("Edit data in place"),
@@ -17,16 +17,18 @@ panelSurvey <- function() {
 
 panelProgram <- function() {
     div("",
-        div("The following is programmatic data sourced from ??. You can edit the data below in the browser, or copy and
-             paste to Excel and edit the data there. You can also replace the data entirely be uploading a new CSV file
-             below",
+        div("The following is programmatic data sourced from national testing programs.
+             You can edit the data below in the browser, or copy and paste to Excel and edit the data there.
+             You can also replace the data entirely be uploading a new CSV file below",
             class = "mb-3"),
-        h3("Edit data in place"),
+        h3("Upload new data"),
+        fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
+        h3("Or edit data in place"),
         div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
-        rHandsontableOutput("hot_program"),
-        h3("Or upload new data"),
-        fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
+        rHandsontableOutput("hot_program")
     )
+    # TODO: Show in wide format
+    # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
 
 panelReviewInput <- function() {
@@ -42,10 +44,5 @@ panelReviewInput <- function() {
         ),
         withSpinner(plotOutput(outputId = "inputReview", height = "800px"))
     )
-
-    # ✓ Number tested (as a proportion of the population? / in 1000s?)
-    # ✓ Number of positive tests (in 1000s)
-    # Still needs:
-    # Number tested at ante-natal care (ANC, in 1000s)
-    # Number tested positive at ante-natal care (in 1000s)
+    # TODO: More plots when Jeff knows what's needed
 }

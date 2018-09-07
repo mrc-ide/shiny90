@@ -3,8 +3,7 @@ library(shinycssloaders)
 
 panelSpectrum <- function() {
     div("",
-        div("Please upload one or more PJNZ files exported from Spectrum. All files must be for same country, and
-             between them they must contain:", class = "mb-5",
+        div("Please upload either one national PJNZ file or multiple files, one per subnational region.", class = "mb-5",
             tags$ul(
                 tags$li("??"),
                 tags$li("???"),

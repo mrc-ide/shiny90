@@ -7,7 +7,7 @@ surveyAndProgramData <- function(input, output, state) {
     data(survey_hts)
     data(prgm_dat)
 
-    state$survey = as.data.frame(survey_hts[country == "Malawi"])
+    state$survey = as.data.frame(survey_hts[country == "Malawi" & outcome == "evertest"])
 
     prgm_dat$country = as.character(prgm_dat$country)
     prgm_dat$notes = as.character(prgm_dat$notes)
