@@ -1,6 +1,6 @@
 library(shiny)
 
-server <- function(input, output) {
+server <- function(input, output, session) {
     # State
     workingSet <- reactiveValues()
     workingSet$name <- NULL
@@ -17,7 +17,7 @@ server <- function(input, output) {
 
     # Logic
     loadState <- handleLoad(input, workingSet, surveyAndProgramData, spectrumFilesState)
-    workingSet <- workingSetLogic(input, output, loadState$workingSet)
+    workingSet <- workingSetLogic(input, output, session, loadState$workingSet)
 
     spectrumFilesState <- spectrumFiles(input, output, loadState$spectrumFilesState)
     surveyAndProgramData <- surveyAndProgramData(input, output, loadState$surveyAndProgramData)

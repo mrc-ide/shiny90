@@ -46,9 +46,27 @@
     margin-bottom: 3px;
 }
 
-.btn-red {
-    color: #e31837 !important;
-    border-color: #e31837 !important;
+.btn-red,
+.btn-red:hover,
+.btn-red:active {
+    color: #e31837;
+    border-color: #e31837;
+}
+
+.btn-red.btn-success,
+.btn-red.btn-success:hover,
+.btn-red.btn-success:active {
+    color: white;
+    border-color: #b9132c;
+}
+
+.btn-red.btn-success {
+    background-color: #e31837;
+}
+
+.btn-red.btn-success:hover ,
+.btn-red.btn-success:active {
+    background-color: #b9132c;
 }
 
 .main-content {

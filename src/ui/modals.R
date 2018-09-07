@@ -11,11 +11,18 @@ loadDigestModal <- function() {
 editWorkingSetModal <- function() {
     modal(
         title="Edit working set",
-        cancelId="cancelEditingWorkingSet",
+        cancelId="editWorkingSet_cancel_cross",
         tags$form("",
-             inputBox("f1", "Name", type="text", value=""),
-             inputBox("f2", "Notes", type="text", value=""),
-             tags$button(class="btn btn-default btn-red", "Update")
+            inputBox("editWorkingSet_name", "Name", type="text", value=""),
+            inputBox("editWorkingSet_notes", "Notes", multiline=TRUE),
+            fluidRow(
+                div("", class="col-md-6",
+                    actionButtonWithCustomClass("editWorkingSet_cancel_button", "Cancel", cssClasses="btn-red")
+                ),
+                div("", class="col-md-6 text-right",
+                    actionButtonWithCustomClass("editWorkingSet_update", "Update", cssClasses="btn-red btn-success")
+                )
+            )
         )
     )
 }
