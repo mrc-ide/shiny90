@@ -6,11 +6,11 @@ library(first90)
 
 getProgramDataInWideFormat <- function(country) {
     data(prgm_dat)
-    program <- prgm_dat[prgm_dat$country == country, ]
-    program$country <- NULL
-    program$notes <- NULL
-    program <- spread(program, key = "type", value = "number")
-    program[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
+    long <- prgm_dat[prgm_dat$country == country, ]
+    long$country <- NULL
+    long$notes <- NULL
+    wide <- spread(long, key = "type", value = "number")
+    wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
 surveyAndProgramData <- function(input, output, state) {
@@ -29,10 +29,6 @@ surveyAndProgramData <- function(input, output, state) {
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             td.style.textAlign = 'right';
-        }"
-
-    text_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
         }"
 
     output$hot_survey <- renderRHandsontable({

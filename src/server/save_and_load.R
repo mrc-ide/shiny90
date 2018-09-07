@@ -19,7 +19,7 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
         write.csv(surveyAndProgramData$survey, file = path)
     })
     paths <- doAndRememberPath(paths, "program.csv", function(path) {
-        write.csv(surveyAndProgramData$program, file = path)
+        write.csv(surveyAndProgramData$program_wide, file = path, row.names = FALSE)
     })
     paths <- doAndRememberPath(paths, "notes.txt", function(path) {
         file.writeText(path, workingSet$notes)
@@ -89,7 +89,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
             withDir(scratch, {
                 workingSet$notes <- file.readText("notes.txt")
                 surveyAndProgramData$survey <- read.csv("survey.csv")
-                surveyAndProgramData$program <- read.csv("program.csv")
+                surveyAndProgramData$program_wide <- read.csv("program.csv")
                 spectrumFilesState$dataSets <- map(list.files("spectrum_data"), function(path) {
                     list(
                         name = removeExtension(path, "rds"),

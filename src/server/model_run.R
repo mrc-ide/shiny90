@@ -13,7 +13,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         # converting survey data to the expected format
         surveyAsDataTable <- as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
-        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program, spectrumFilesState$combinedData())
+        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
 
         # model fit results
         likdat <- out$likdat
