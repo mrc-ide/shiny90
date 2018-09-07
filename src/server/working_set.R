@@ -11,7 +11,7 @@ workingSetLogic <- function(input, output, session, workingSet) {
     observeEvent(input$startNewWorkingSet, {
         if (input$workingSetName != "") {
             workingSet$name <- input$workingSetName
-            workingSet$notes <- "Cupcake ipsum dolor sit amet. Dessert gummies tootsie roll croissant pudding. Marzipan cookie jujubes cotton candy lollipop. Dessert ice cream soufflé.\n\nMarzipan jelly beans candy canes biscuit. Chocolate cake tart jelly beans marzipan cookie toffee gingerbread carrot cake gummi bears. Chocolate pastry dessert apple pie liquorice biscuit ice cream pastry macaroon."
+            workingSet$notes <- ""
             workingSet$creation_error <- NULL
         } else {
             workingSet$creation_error <- "A name is required"
