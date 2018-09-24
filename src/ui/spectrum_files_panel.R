@@ -35,16 +35,6 @@ panelSpectrum <- function() {
     )
 }
 
-# Show country
-# Summary of combined data set (not per spectrum file):
-# Figures:
-# - HIV prevalence
-# - HIV incidence
-# - Population size
-# - Number of people living with HIV
-# Table:
+# TODO table showing summary of combined data set (not per spectrum file):
 # - Show pop, plhiv, prev, incidence, art coverage
 # - Pick year from dropdown, default to most recent
-#
-# Ability to see list of filenames uploaded
-# Remove file uploaded by accident

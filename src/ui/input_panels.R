@@ -27,7 +27,6 @@ panelProgram <- function() {
         div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
         rHandsontableOutput("hot_program")
     )
-    # TODO: Show in wide format
     # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
 
