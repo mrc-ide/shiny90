@@ -36,10 +36,6 @@ fitModel <- function(survey_data, program_data, fp){
     # We prepare the program data
     prg_dat <- prepareProgramInput(program_data)
 
-    # ---- We enter the model parameters here ----
-    # Incidence of opportunistic infection (as Holmes 2006 and Anglaret 2005, cited in Johson et al. 2015)
-    theta_fx <- c(0.05, 0.12, rep(0.27, 2), rep(0.9, 3))
-
     # We create the likelihood data
     likdat <- prepare_hts_likdat(dat, prg_dat, fp)
 
@@ -51,13 +47,13 @@ fitModel <- function(survey_data, program_data, fp){
                 log(0.2),   # Fractor testing among diagnosed, on ART
                 rep(log(0.5), 2)) # Rate ratio for testing in the 25+ age group
 
-    ll_hts(theta0, theta_fx, fp, likdat)
+    ll_hts(theta0, fp, likdat)
 
-    opt <- optim(theta0, ll_hts, theta_fx = theta_fx, fp = fp, likdat = likdat, method="BFGS",
+    opt <- optim(theta0, ll_hts, fp = fp, likdat = likdat, method="BFGS",
     control=list(fnscale = -1, trace=4, REPORT=1, maxit=150))
 
     round(exp(opt$par[1:36]), 3)
-    fp <- create_hts_param(opt$par, theta_fx, fp)
+    fp <- create_hts_param(opt$par, fp)
 
     return(list("fp" = fp, "likdat" = likdat))
 }
