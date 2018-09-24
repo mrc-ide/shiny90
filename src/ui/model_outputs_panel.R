@@ -21,6 +21,7 @@ panelModelOutputs <- function() {
             div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
         ),
         h3("Tabular data"),
+        # TODO
         # By year (2000 to current):
         # - Proportion ever tested by status
         # - Proportion aware
@@ -28,6 +29,7 @@ panelModelOutputs <- function() {
         # Download full long format data set (stratified by age and sex)
         img(src = "images/mock-sheet.png")
 
+        # TODO
         # We want these 6 plots for the full output age range without original data points
         # And we also want these figures:
         # - Cross-sectional estimates
