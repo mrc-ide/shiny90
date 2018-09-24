@@ -21,6 +21,9 @@ panelWithTitle <- function(title, content) {
 
 # Server side
 enableNavLinks <- function(input, output, spectrumFilesState, modelRunState) {
+    enableTabWhen("Upload survey data", function() { spectrumFilesState$anyDataSets() })
+    enableTabWhen("Upload programmatic data", function() { spectrumFilesState$anyDataSets() })
+    enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() })
     enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() })
     enableTabWhen("View model outputs", function() {
         spectrumFilesState$anyDataSets() && modelRunState$state == "finished"

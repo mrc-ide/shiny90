@@ -22,7 +22,7 @@ server <- function(input, output, session) {
 
     spectrumFilesState <- spectrumFiles(input, output, loadState$spectrumFilesState)
     surveyAndProgramData <- surveyAndProgramData(input, output, loadState$surveyAndProgramData, spectrumFilesState)
-    plotInputs(output, surveyAndProgramData)
+    plotInputs(output, surveyAndProgramData, spectrumFilesState)
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
 
     handleSave(input, output, workingSet, spectrumFilesState, surveyAndProgramData)
