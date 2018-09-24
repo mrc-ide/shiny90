@@ -8,7 +8,7 @@ welcomeView <- function() {
                     h1("Shiny 90", class = "title"),
                     p("",
                         HTML('UN Aids have an ambitious treatment target to help end the AIDS epidemic,
-                             <a href="http://www.unaids.org/en/resources/documents/2017/90-90-90">the threes 90s</a>:'),
+                             <a href="http://www.unaids.org/en/resources/documents/2017/90-90-90">the three 90s</a>:'),
                         tags$ul("",
                             tags$li("By 2020, 90% of all people living with HIV will know their HIV status."),
                             tags$li("By 2020, 90% of all people with diagnosed HIV infection will receive sustained antiretroviral therapy."),
