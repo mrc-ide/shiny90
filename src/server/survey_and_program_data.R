@@ -17,7 +17,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data(survey_hts)
     data(prgm_dat)
 
-
     observeEvent(spectrumFilesState$country, {
         state$survey <- as.data.frame(survey_hts[country == spectrumFilesState$country & outcome == "evertest"])
         state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
