@@ -20,11 +20,11 @@ panelWithTitle <- function(title, content) {
 }
 
 # Server side
-enableNavLinks <- function(input, output, spectrumFilesState, modelRunState) {
+enableNavLinks <- function(input, output, spectrumFilesState, modelRunState, surveyAndProgramData) {
     enableTabWhen("Upload survey data", function() { spectrumFilesState$anyDataSets() })
     enableTabWhen("Upload programmatic data", function() { spectrumFilesState$anyDataSets() })
-    enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() })
-    enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() })
+    enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() })
+    enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() })
     enableTabWhen("View model outputs", function() {
         spectrumFilesState$anyDataSets() && modelRunState$state == "finished"
     })

@@ -18,6 +18,14 @@ panelModelRun <- function() {
                 # We want the 6 plots currently on the output page, constrained to the age range
                 # present in the input data and with the original data points plotted
             )
+        ),
+        conditionalPanel(
+            condition = "output.modelRunState == 'error'",
+            div("", class = "mt-3 alert alert-warning",
+            div("Model run failed. Please check your input data.")
+            # We want the 6 plots currently on the output page, constrained to the age range
+            # present in the input data and with the original data points plotted
+            )
         )
     )
 }
