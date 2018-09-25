@@ -20,6 +20,7 @@ spectrumFiles <- function(input, output, state) {
             state$dataSets <- c(state$dataSets, list(dataSet))
             # TODO: Throw error if data sets after the first do not match the country of the first data set
             state$country <- read_country(inFile$datapath)
+            state$newCountry <- TRUE
         }
     })
 

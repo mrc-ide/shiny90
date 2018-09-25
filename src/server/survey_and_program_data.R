@@ -29,11 +29,17 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
 
-    shiny::observeEvent(spectrumFilesState$country, {
-        state$survey <- as.data.frame(survey_hts)
-        state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-        state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+    spectrumFilesState$newCountry <- FALSE
+
+    shiny::observeEvent(spectrumFilesState$newCountry, {
+
+        if (!is.null(spectrumFilesState$country)){
+            state$survey <- as.data.frame(survey_hts)
+            state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+        }
     })
+
     state$program <- shiny::reactive({
         tidyr::gather(state$program_wide,
             key = "type", value = "number",
@@ -41,7 +47,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         )
     })
 
-    state$anyProgramData <- shiny::reactive({ nrow(state$program_wide %>% na.omit()) > 0 })
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_wide) && nrow(state$program_wide %>% na.omit()) > 0 })
 
     output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
 
