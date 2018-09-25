@@ -1,5 +1,3 @@
-library(purrr)
-
 modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     state <- shiny::reactiveValues()
     state$state <- "not_run"

@@ -1,4 +1,4 @@
-library(first90)
+library(eppasm)
 
 spectrumFiles <- function(input, output, state) {
     state$country <- NULL
@@ -68,7 +68,7 @@ addDynamicObserver <- function(input, observerList, eventId, handler) {
 renderSpectrumPlots <- function(output, combinedData) {
     output$spectrum_plots <- shiny::renderPlot({
         if (!is.null(combinedData())) {
-            plot_pnjz(combinedData())
+            first90::plot_pnjz(combinedData())
         }
     })
 }

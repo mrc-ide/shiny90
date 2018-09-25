@@ -1,8 +1,6 @@
-library(first90)
 library(magrittr)
 
 getProgramDataInWideFormat <- function(country) {
-    data(prgm_dat)
     long <- prgm_dat[prgm_dat$country == country, ]
     long$country <- NULL
     long$notes <- NULL
@@ -11,8 +9,8 @@ getProgramDataInWideFormat <- function(country) {
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-    data(survey_hts)
-    data(prgm_dat)
+    data("survey_hts", package="first90")
+    data("prgm_dat", package="first90")
 
     shiny::observeEvent(spectrumFilesState$country, {
         state$survey <- as.data.frame(survey_hts)
