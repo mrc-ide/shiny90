@@ -5,6 +5,8 @@ panelSpectrum <- function() {
         div("", class = "mt-3 mb-5",
             shiny::fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"))
         ),
+        shiny::conditionalPanel(condition = "output.multipleCountryError",
+            div("Spectrum file not valid! You can only use data for one country.", class = "alert alert-warning")),
         shiny::conditionalPanel(condition = "output.anySpectrumDataSets",
             div("", class = "mb-5",
                 shiny::h3("Uploaded PJNZ files", class = "mt-5"),
