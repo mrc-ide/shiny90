@@ -86,6 +86,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
             unzip(inFile$datapath, exdir = scratch)
             workingSet$name <- removeExtension(inFile$name, "zip.shiny90$")
             withDir(scratch, {
+                spectrumFilesState$country <- gsub("[\r\n]", "", file.readText("country.txt"))
                 workingSet$notes <- file.readText("notes.txt")
                 surveyAndProgramData$survey <- read.csv("survey.csv")
                 surveyAndProgramData$program_wide <- read.csv("program.csv")
@@ -95,7 +96,6 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                         data = readRDS(file.path("spectrum_data", path))
                     )
                 })
-                spectrumFilesState$country <- file.readText("country.txt")
             })
         }
     })
