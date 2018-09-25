@@ -1,18 +1,16 @@
-library(shiny)
-
 server <- function(input, output, session) {
     # State
-    workingSet <- reactiveValues()
+    workingSet <- shiny::reactiveValues()
     workingSet$name <- NULL
     workingSet$notes <- NULL
     workingSet$creation_error <- NULL
     workingSet$editing <- FALSE
 
-    surveyAndProgramData <- reactiveValues()
+    surveyAndProgramData <- shiny::reactiveValues()
     surveyAndProgramData$survey <- NULL
     surveyAndProgramData$program_wide <- NULL
 
-    spectrumFilesState <- reactiveValues()
+    spectrumFilesState <- shiny::reactiveValues()
     spectrumFilesState$dataSets <- list()
     spectrumFilesState$country <- NULL
 
@@ -28,7 +26,7 @@ server <- function(input, output, session) {
     handleSave(input, output, workingSet, spectrumFilesState, surveyAndProgramData)
     enableNavLinks(input, output, spectrumFilesState, modelRunState)
 
-    output$modal <- reactive({
+    output$modal <- shiny::reactive({
         if (loadState$state$uploadRequested) {
             "loadDigest"
         } else if (workingSet$editing) {
@@ -37,5 +35,5 @@ server <- function(input, output, session) {
             NULL
         }
     })
-    outputOptions(output, "modal", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "modal", suspendWhenHidden = FALSE)
 }

@@ -1,8 +1,4 @@
 #!/usr/bin/env Rscript
-library(shiny)
-library(shinyjs)
-library(shinycssloaders)
-
 source("src/helpers.R")
 
 # Server (alphabetical)
@@ -32,5 +28,5 @@ source("src/ui/working_set_section.R")
 options(shiny.autoreload = TRUE, shiny.autoreload.pattern = glob2rx("**/*.R"))
 options(shiny.maxRequestSize = 30*1024^2)
 
-addResourcePath('images', file.path('images'))
-runApp("src", port = 8080)
+shiny::addResourcePath('images', file.path('images'))
+shiny::runApp("src", port = 8080)

@@ -1,24 +1,21 @@
-library(shiny)
-library(purrr)
-library(glue)
 library(first90)
 
 spectrumFiles <- function(input, output, state) {
     state$country <- NULL
-    state$anyDataSets <- reactive({ length(state$dataSets) > 0 })
-    state$combinedData <- reactive({
+    state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
+    state$combinedData <-shiny::reactive({
         if (state$anyDataSets()) {
             # TODO use all files, not just first one
             state$dataSets[[1]]$data
         }
     })
 
-    observeEvent(input$spectrumFile, {
+    shiny::observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
             dataSet = list(
                 name = inFile$name,
-                data = prepare_inputs(inFile$datapath)
+                data = first90::prepare_inputs(inFile$datapath)
             )
             state$dataSets <- c(state$dataSets, list(dataSet))
             # TODO: Throw error if data sets after the first do not match the country of the first data set
@@ -26,42 +23,42 @@ spectrumFiles <- function(input, output, state) {
         }
     })
 
-    output$anySpectrumDataSets <- reactive({ state$anyDataSets() })
-    output$spectrumFilesCountry <- reactive({ state$country })
-    output$spectrum_combinedData <- renderDataTable(state$combinedData)
+    output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
+    output$spectrumFilesCountry <- shiny::reactive({ state$country })
+    output$spectrum_combinedData <- shiny::renderDataTable(state$combinedData)
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$combinedData)
 
-    outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
 
     state
 }
 
 addDynamicObserver <- function(input, observerList, eventId, handler) {
     if (is.null(observerList[[eventId]])) {
-        observerList[[eventId]] <- observeEvent(input[[eventId]], ignoreInit = TRUE, { handler() })
+        observerList[[eventId]] <- shiny::observeEvent(input[[eventId]], ignoreInit = TRUE, { handler() })
     }
     observerList
 }
 
-renderSpectrumFileList <- function(input, output, state) {
+    renderSpectrumFileList <- function(input, output, state) {
     state$observerList <- list()
 
-    output$spectrumFileList <- renderUI({
-        map(state$dataSets, function(f) {
-            removeEventId <- glue("remove_{f$name}")
+    output$spectrumFileList <- shiny::renderUI({
+        purrr::map(state$dataSets, function(f) {
+            removeEventId <- glue::glue("remove_{f$name}")
 
             state$observerList <- addDynamicObserver(input, state$observerList, removeEventId, function() {
-                index <- match(f$name, map(state$dataSets, function(x) { x$name }))
+                index <- match(f$name, purrr::map(state$dataSets, function(x) { x$name }))
                 state$dataSets <- state$dataSets[-index]
             })
 
-            tags$li("", class = "list-group-item",
-                span(f$name),
-                HTML("&nbsp;&nbsp;"),
+            shiny::tags$li("", class = "list-group-item",
+                shiny::span(f$name),
+                shiny::HTML("&nbsp;&nbsp;"),
                 actionButtonWithCustomClass(removeEventId, "Remove", cssClasses = "btn-red",
-                    span("", class = "glyphicon glyphicon-remove", `aria-hidden`=TRUE)
+                    shiny::span("", class = "glyphicon glyphicon-remove", `aria-hidden`=TRUE)
                 )
             )
         })
@@ -69,7 +66,7 @@ renderSpectrumFileList <- function(input, output, state) {
 }
 
 renderSpectrumPlots <- function(output, combinedData) {
-    output$spectrum_plots <- renderPlot({
+    output$spectrum_plots <- shiny::renderPlot({
         if (!is.null(combinedData())) {
             plot_pnjz(combinedData())
         }

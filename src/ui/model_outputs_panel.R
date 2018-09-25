@@ -1,5 +1,4 @@
 library(shiny)
-library(shinycssloaders)
 
 panelModelOutputs <- function() {
     div("",
@@ -9,16 +8,16 @@ panelModelOutputs <- function() {
             span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
         div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_totalNumberOfTests"))),
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_numberOfPositiveTests")))
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_totalNumberOfTests"))),
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_numberOfPositiveTests")))
         ),
         div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_percentageNegativeOfTested"))),
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_percentagePLHIVOfTested")))
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageNegativeOfTested"))),
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentagePLHIVOfTested")))
         ),
         div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_percentageTested"))),
-            div("", class = "col-md-6 col-sm-12", withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageTested"))),
+            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
         ),
         h3("Tabular data"),
         # TODO

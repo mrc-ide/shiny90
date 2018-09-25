@@ -1,26 +1,24 @@
-library(shiny)
-
 inputBox <- function(id, label, explanation = "", type = "number", value = 0, multiline = FALSE) {
     classes <- "form-control shiny-bound-input"
     if (multiline) {
-        control <- tags$textarea(id = id, class = classes, rows = 10)
+        control <- shiny::tags$textarea(id = id, class = classes, rows = 10)
     } else {
-        control <- tags$input(id = id, type = type, value = value, class = classes)
+        control <- shiny::tags$input(id = id, type = type, value = value, class = classes)
     }
 
     div("", class = "form-group",
-        tags$label(`for`=id,
-            tags$strong(label),
-            HTML("&nbsp;&nbsp;"),
-            span(explanation, style = "font-weight: normal")
+        shiny::tags$label(`for`=id,
+            shiny::tags$strong(label),
+            shiny::HTML("&nbsp;&nbsp;"),
+            shiny::span(explanation, style = "font-weight: normal")
         ),
         control
     )
 }
 
 actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL, type = "button") {
-    value <- restoreInput(id = inputId, default = NULL)
-    tags$button(id = inputId, type = type,
+    value <- shiny::restoreInput(id = inputId, default = NULL)
+    shiny::tags$button(id = inputId, type = type,
         class = paste("btn btn-default action-button ", cssClasses), `data-val` = value,
         list(label), ...)
 }
