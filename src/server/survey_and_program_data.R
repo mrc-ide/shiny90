@@ -1,5 +1,5 @@
 library(first90)
-library(data.table)
+library(magrittr)
 
 getProgramDataInWideFormat <- function(country) {
     data(prgm_dat)
@@ -15,7 +15,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data(prgm_dat)
 
     shiny::observeEvent(spectrumFilesState$country, {
-        state$survey <- as.data.frame(survey_hts[country == spectrumFilesState$country & outcome == "evertest"])
+        state$survey <- as.data.frame(survey_hts)
+        state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
         state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
     })
     state$program <- shiny::reactive({
