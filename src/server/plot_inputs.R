@@ -1,7 +1,5 @@
-library(shiny)
-
 plotInputs <- function(output, surveyAndProgramData, spectrumFilesState) {
-    output$inputReview <- renderPlot({
-        plot_inputdata(surveyAndProgramData$program(), spectrumFilesState$combinedData())
+    output$inputReview <- shiny::renderPlot({
+        first90::plot_inputdata(surveyAndProgramData$program(), spectrumFilesState$combinedData())
     })
 }

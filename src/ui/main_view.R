@@ -1,9 +1,9 @@
 mainView <- function() {
     div("",
         div("", class = "header",
-            fluidPage(
+            shiny::fluidPage(
                 div("", class = "pull-right text-right",
-                    tags$small("",
+                    shiny::tags$small("",
                         a("About this program and the underlying model", href = "#")
                     )
                 ),
@@ -13,7 +13,7 @@ mainView <- function() {
                 )
             )
         ),
-        fluidPage(class = "main-content",
+        shiny::fluidPage(class = "main-content",
             navigationPanel()
         )
     )
