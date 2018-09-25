@@ -26,7 +26,7 @@ server <- function(input, output, session) {
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
 
     handleSave(input, output, workingSet, spectrumFilesState, surveyAndProgramData)
-    enableNavLinks(input, output, spectrumFilesState, modelRunState)
+    enableNavLinks(input, output, spectrumFilesState, modelRunState, surveyAndProgramData)
 
     output$modal <- reactive({
         if (loadState$state$uploadRequested) {

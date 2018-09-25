@@ -9,13 +9,36 @@ getProgramDataInWideFormat <- function(country) {
     long <- prgm_dat[prgm_dat$country == country, ]
     long$country <- NULL
     long$notes <- NULL
-    wide <- spread(long, key = "type", value = "number")
+
+    if (nrow(long) == 0) {
+
+        # we create an empty data table here, but the plots require values, so we shouldn't let the user proceed
+        # unless they have at least one non-empty row
+        years <- seq(2005, 2017)
+        NbTested <- as.numeric(rep(NA, 2018-2005))
+        NbTestPos <- as.numeric(rep(NA, 2018-2005))
+        NbANCTested <- as.numeric(rep(NA, 2018-2005))
+        NBTestedANCPos <- as.numeric(rep(NA, 2018-2005))
+
+        wide <- data.frame(years, NbTested, NbTestPos, NbANCTested, NBTestedANCPos)
+        colnames(wide) <- c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
+    }
+    else {
+        wide <- spread(long, key = "type", value = "number")
+    }
+
     wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data(survey_hts)
     data(prgm_dat)
+
+    state$program_wide <- data.frame(year=integer(),
+                                        NbTested=numeric(),
+                                        NbTestPos = numeric(),
+                                        NbANCTested=numeric(),
+                                        NBTestedANCPos=numeric())
 
     observeEvent(spectrumFilesState$country, {
         str(spectrumFilesState$country)
@@ -28,6 +51,12 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos"
         )
     })
+
+    state$anyProgramData <- reactive({ nrow(state$program_wide %>% na.omit()) > 0 })
+
+    output$noProgramData <- reactive({ !state$anyProgramData() })
+
+    outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
