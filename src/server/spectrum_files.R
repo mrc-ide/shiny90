@@ -18,9 +18,16 @@ spectrumFiles <- function(input, output, state) {
                 data = first90::prepare_inputs(inFile$datapath)
             )
             state$dataSets <- c(state$dataSets, list(dataSet))
-            # TODO: Throw error if data sets after the first do not match the country of the first data set
-            state$country <- read_country(inFile$datapath)
-            state$newCountry <- TRUE
+
+            newCountry <- read_country(inFile$datapath)
+
+            if (is.null(state$country)){
+                state$newCountry <- TRUE
+                state$country = newCountry
+            }
+            else if (state$country != newCountry){
+                # TODO: Throw error if data sets after the first do not match the country of the first data set
+            }
         }
     })
 
