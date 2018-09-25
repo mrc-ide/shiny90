@@ -11,6 +11,7 @@ spectrumFiles <- function(input, output, state) {
     })
 
     shiny::observeEvent(input$spectrumFile, {
+        state$newCountry <- FALSE
         inFile <- input$spectrumFile
         if (!is.null(inFile)) {
             dataSet = list(

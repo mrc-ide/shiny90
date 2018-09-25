@@ -33,7 +33,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(spectrumFilesState$newCountry, {
 
-        if (!is.null(spectrumFilesState$country)){
+        if (spectrumFilesState$newCountry && !is.null(spectrumFilesState$country)){
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
             state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
