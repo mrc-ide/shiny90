@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: rocker/r-ver:latest
+    steps:
+      - checkout
+      - run: ./bootstrap
+      - run: ./test
