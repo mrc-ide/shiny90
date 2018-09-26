@@ -43,10 +43,10 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         state$state <- ""
     })
 
-    shiny::observeEvent(spectrumFilesState$program, {
+    shiny::observeEvent(spectrumFilesState$combinedData, {
         state$state <- ""
     })
-
+    
     state
 }
 
