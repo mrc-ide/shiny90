@@ -19,7 +19,7 @@ panelProgram <- function() {
             class = "mb-3"),
         conditionalPanel(
             condition = "output.noProgramData",
-            div("Warning: we have no program data for your country!", class = "alert alert-warning")
+            div("Warning: we have no program data for your country! You must add some data to proceed.", class = "alert alert-warning")
             # TODO: link to help email? Include specific instructions about what data are needed?
         ),
         shiny::h3("Upload new data"),

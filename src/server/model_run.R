@@ -12,11 +12,12 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         out <- tryCatch({
                 fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
             },
-            error = function() {
+            error = function(e) {
                 state$state <- "error"
             })
 
-        if (length(out) > 0){
+        if (length(out) > 1){
+
             # model fit results
             likdat <- out$likdat
             fp <- out$fp
