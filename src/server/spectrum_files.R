@@ -16,11 +16,12 @@ spectrumFiles <- function(input, output, state) {
         inFile <- input$spectrumFile
         state$multipleCountryError <- FALSE
         state$newCountry <- FALSE
+
         if (!is.null(inFile)) {
 
             newCountry <- read_country(inFile$datapath)
 
-            if (is.null(state$country) || !state$anyDataSets()){
+            if (!state$anyDataSets() || newCountry == state$country){
                 state$newCountry <- TRUE
                 state$country = newCountry
 
