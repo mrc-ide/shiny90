@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/r-ver:latest
+      - image: rocker/verse:latest
     steps:
       - checkout
       - run: ./bootstrap
