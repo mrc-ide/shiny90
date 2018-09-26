@@ -7,6 +7,7 @@ jobs:
         # Allows us to issue docker commands from within the build container
       - setup_remote_docker:
           docker_layer_caching: true
+      - run: apt-get install wget
       - run:
           name: Install Docker client
           command: |
