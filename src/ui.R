@@ -1,42 +1,39 @@
-library(shiny)
-library(shinyjs)
-
 disableUIOnBusy <- function() {
     div("", class = "modal busy-indicator",
         div("", class = "modal-dialog",
             div("", class = "modal-content",
                 div("", class = "modal-body",
                     p("Please wait..."),
-                    img(src = "images/ajax-loader.gif")
+                    shiny::img(src = "images/ajax-loader.gif")
                 )
             )
         ),
-        includeScript("js/disableUIOnBusy.js")
+        shiny::includeScript("js/disableUIOnBusy.js")
     )
 }
 
 ui <- div(id = "shiny90",
-    includeCSS("css/style.css"),
-    includeCSS("css/bootstrap4.css"),
+    shiny::includeCSS("css/style.css"),
+    shiny::includeCSS("css/bootstrap4.css"),
 
-    useShinyjs(),
-    extendShinyjs(text = file.readText("js/nav.js"), functions = c("enableTab", "disableTab")),
+    shinyjs::useShinyjs(),
+    shinyjs::extendShinyjs(text = file.readText("js/nav.js"), functions = c("enableTab", "disableTab")),
 
-    includeScript("js/enableEnterButton.js"),
+    shiny::includeScript("js/enableEnterButton.js"),
 
-    conditionalPanel(
+    shiny::conditionalPanel(
         condition = "!output.workingSet_selected",
         welcomeView()
     ),
-    conditionalPanel(
+    shiny::conditionalPanel(
         condition = "output.workingSet_selected",
         mainView()
     ),
-    conditionalPanel(
+    shiny::conditionalPanel(
         condition = "output.modal == 'loadDigest'",
         loadDigestModal()
     ),
-    conditionalPanel(
+    shiny::conditionalPanel(
         condition = "output.modal == 'editWorkingSet'",
         editWorkingSetModal()
     ),

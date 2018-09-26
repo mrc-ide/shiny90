@@ -1,17 +1,13 @@
-library(shiny)
-library(rhandsontable)
-library(shinycssloaders)
-
 panelSurvey <- function() {
     div("",
         div("The following is survey data sourced from DHS and PHIA. You can edit the data below in the browser, or copy and
              paste to Excel and edit the data there. You can also replace the data entirely be uploading a new CSV file
              below", class = "mb-3"),
-        h3("Edit data in place"),
+        shiny::h3("Edit data in place"),
         div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
-        rHandsontableOutput("hot_survey"),
-        h3("Or upload new data"),
-        fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
+        rhandsontable::rHandsontableOutput("hot_survey"),
+        shiny::h3("Or upload new data"),
+        shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
     )
 }
 
@@ -21,16 +17,16 @@ panelProgram <- function() {
              You can edit the data below in the browser, or copy and paste to Excel and edit the data there.
              You can also replace the data entirely be uploading a new CSV file below.",
             class = "mb-3"),
-        h3("Upload new data"),
-        fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
-        h3("Or edit data in place"),
         conditionalPanel(
             condition = "output.noProgramData",
             div("Warning: we have no program data for your country!", class = "alert alert-warning")
             # TODO: link to help email? Include specific instructions about what data are needed?
         ),
+        shiny::h3("Upload new data"),
+        shiny::fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
+        shiny::h3("Or edit data in place"),
         div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
-        rHandsontableOutput("hot_program")
+        rhandsontable::rHandsontableOutput("hot_program")
     )
     # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
@@ -43,11 +39,11 @@ panelReviewInput <- function() {
             class = "mb-3"
         ),
         div("",
-            span("Once you have reviewed your input data, you may want to "),
-            tags$a(href = "#", "download a digest file"),
-            span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+            shiny::span("Once you have reviewed your input data, you may want to "),
+            shiny::tags$a(href = "#", "download a digest file"),
+            shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
-        withSpinner(plotOutput(outputId = "inputReview", height = "800px"))
+        shinycssloaders::withSpinner(shiny::plotOutput(outputId = "inputReview", height = "800px"))
     )
     # TODO: More plots when Jeff knows what's needed
 }

@@ -1,11 +1,6 @@
-library(tidyr)
-library(shiny)
-library(data.table)
-library(rhandsontable)
-library(first90)
+library(magrittr)
 
 getProgramDataInWideFormat <- function(country) {
-    data(prgm_dat)
     long <- prgm_dat[prgm_dat$country == country, ]
     long$country <- NULL
     long$notes <- NULL
@@ -24,64 +19,62 @@ getProgramDataInWideFormat <- function(country) {
         colnames(wide) <- c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
     }
     else {
-        wide <- spread(long, key = "type", value = "number")
+        wide <- tidyr::spread(long, key = "type", value = "number")
     }
 
     wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-    data(survey_hts)
-    data(prgm_dat)
+    data("survey_hts", package="first90")
+    data("prgm_dat", package="first90")
 
-    state$program_wide <- data.frame(year=integer(),
-                                        NbTested=numeric(),
-                                        NbTestPos = numeric(),
-                                        NbANCTested=numeric(),
-                                        NBTestedANCPos=numeric())
-
-    observeEvent(spectrumFilesState$country, {
-        state$survey <- as.data.frame(survey_hts[country == spectrumFilesState$country & outcome == "evertest"])
-        state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+    shiny::observeEvent(spectrumFilesState$country, {
+        if (!is.null(spectrumFilesState$country)){
+            state$survey <- as.data.frame(survey_hts)
+            state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+        }
     })
-    state$program <- reactive({
-        gather(state$program_wide,
+
+    state$program <- shiny::reactive({
+        tidyr::gather(state$program_wide,
             key = "type", value = "number",
             "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos"
         )
     })
 
-    state$anyProgramData <- reactive({ nrow(state$program_wide %>% na.omit()) > 0 })
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_wide) && nrow(state$program_wide %>% na.omit()) > 0 })
 
-    output$noProgramData <- reactive({ !state$anyProgramData() })
+    output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
 
-    outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             td.style.textAlign = 'right';
         }"
 
-    output$hot_survey <- renderRHandsontable({
-        rhandsontable(state$survey, stretchH = "all") %>%
-        hot_col("outcome", allowInvalid = TRUE) %>%
-        hot_col("agegr", allowInvalid = TRUE)  %>%
-        hot_col("est", renderer = number_renderer) %>%
-        hot_col("se", renderer = number_renderer) %>%
-        hot_col("ci_l", renderer = number_renderer) %>%
-        hot_col("ci_u", renderer = number_renderer) %>%
-        hot_col("year", format = "0")
+    output$hot_survey <- rhandsontable::renderRHandsontable({
+        rhandsontable::rhandsontable(state$survey, stretchH = "all") %>%
+            rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
+            rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
+            rhandsontable::hot_col("est", renderer = number_renderer) %>%
+            rhandsontable::hot_col("se", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ci_l", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ci_u", renderer = number_renderer) %>%
+            rhandsontable::hot_col("year", format = "0")
     })
 
-    output$hot_program <- renderRHandsontable({
-        rhandsontable(state$program_wide, stretchH = "all") %>%
-            hot_col("NbTested", renderer = number_renderer) %>%
-            hot_col("NbTestPos", renderer = number_renderer) %>%
-            hot_col("NbANCTested", renderer = number_renderer) %>%
-            hot_col("NBTestedANCPos", renderer = number_renderer)
+    output$hot_program <- rhandsontable::renderRHandsontable({
+        rhandsontable::rhandsontable(state$program_wide, stretchH = "all") %>%
+            rhandsontable::hot_col("NbTested", renderer = number_renderer) %>%
+            rhandsontable::hot_col("NbTestPos", renderer = number_renderer) %>%
+            rhandsontable::hot_col("NbANCTested", renderer = number_renderer) %>%
+            rhandsontable::hot_col("NBTestedANCPos", renderer = number_renderer)
     })
 
-    observeEvent(input$surveyData, {
+    shiny::observeEvent(input$surveyData, {
         inFile <- input$surveyData
 
         if (is.null(inFile)){
@@ -91,7 +84,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         state$survey <<- read.csv(inFile$datapath)
     })
 
-    observeEvent(input$programData, {
+    shiny::observeEvent(input$programData, {
         inFile <- input$programData
 
         if (is.null(inFile)){
@@ -101,15 +94,15 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         state$program <<- read.csv(inFile$datapath)
     })
 
-    observe({
+    shiny::observe({
         if(!is.null(input$hot_survey)){
-            state$survey <<- hot_to_r(input$hot_survey)
+            state$survey <<- rhandsontable::hot_to_r(input$hot_survey)
         }
     })
 
-    observe({
+    shiny::observe({
         if(!is.null(input$hot_program)){
-            state$program_wide <- hot_to_r(input$hot_program)
+            state$program_wide <- rhandsontable::hot_to_r(input$hot_program)
         }
     })
 

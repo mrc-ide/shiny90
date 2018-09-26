@@ -1,7 +1,3 @@
-library(shiny)
-library(glue)
-library(purrr)
-
 doAndRememberPath <- function(paths, path, func) {
     paths <- c(paths, path)
     func(path)
@@ -9,7 +5,7 @@ doAndRememberPath <- function(paths, path, func) {
 }
 
 removeExtension <- function(path, extension) {
-    regexp <- glue(".{extension}$")
+    regexp <- glue::glue(".{extension}$")
     gsub(regexp, "", path)
 }
 
@@ -25,8 +21,8 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
         file.writeText(path, workingSet$notes)
     })
     dir.create("spectrum_data")
-    paths <- reduce(spectrumFilesState$dataSets, .init = paths, function(paths, dataSet) {
-        path <- file.path("spectrum_data", glue("{dataSet$name}.rds"))
+    paths <- purrr::reduce(spectrumFilesState$dataSets, .init = paths, function(paths, dataSet) {
+        path <- file.path("spectrum_data", glue::glue("{dataSet$name}.rds"))
         doAndRememberPath(paths, path, function(path) {
             saveRDS(dataSet$data, file = path)
         })
@@ -53,8 +49,8 @@ withDir <- function(dir, expr) {
 }
 
 handleSave <- function(input, output, workingSet, spectrumFilesState, surveyAndProgramData) {
-    output$digestDownload <- downloadHandler(
-        filename = function() { glue("{workingSet$name}.zip.shiny90") },
+    output$digestDownload <- shiny::downloadHandler(
+        filename = function() { glue::glue("{workingSet$name}.zip.shiny90") },
         contentType = "application/zip",
         content = function(file) {
             readmeTemplate <- file.readText("template_for_digest_readme.md")
@@ -70,15 +66,15 @@ handleSave <- function(input, output, workingSet, spectrumFilesState, surveyAndP
 }
 
 handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesState) {
-    state <- reactiveValues()
+    state <- shiny::reactiveValues()
     state$uploadRequested <- FALSE
 
-    observeEvent(input$requestDigestUpload, { state$uploadRequested <- TRUE })
-    observeEvent(input$welcomeRequestDigestUpload, { state$uploadRequested <- TRUE })
-    observeEvent(input$cancelDigestUpload, {
+    shiny::observeEvent(input$requestDigestUpload, { state$uploadRequested <- TRUE })
+    shiny::observeEvent(input$welcomeRequestDigestUpload, { state$uploadRequested <- TRUE })
+    shiny::observeEvent(input$cancelDigestUpload, {
         state$uploadRequested <- FALSE
     })
-    observeEvent(input$digestUpload, {
+    shiny::observeEvent(input$digestUpload, {
         inFile <- input$digestUpload
         if (!is.null(inFile)) {
             state$uploadRequested <- FALSE
@@ -89,7 +85,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 workingSet$notes <- file.readText("notes.txt")
                 surveyAndProgramData$survey <- read.csv("survey.csv")
                 surveyAndProgramData$program_wide <- read.csv("program.csv")
-                spectrumFilesState$dataSets <- map(list.files("spectrum_data"), function(path) {
+                spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
                     list(
                         name = removeExtension(path, "rds"),
                         data = readRDS(file.path("spectrum_data", path))
