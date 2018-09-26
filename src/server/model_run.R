@@ -9,19 +9,27 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         # converting survey data to the expected format
         surveyAsDataTable <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
-        out <- fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
+        out <- tryCatch({
+                fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
+            },
+            error = function(e) {
+                state$state <- "error"
+            })
 
-        # model fit results
-        likdat <- out$likdat
-        fp <- out$fp
-        mod <- eppasm::simmod.specfp(fp)
+        if (length(out) > 1){
 
-        # model output
-        out_evertest = outEverTest(fp, mod)
+            # model fit results
+            likdat <- out$likdat
+            fp <- out$fp
+            mod <- eppasm::simmod.specfp(fp)
 
-        plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
+            # model output
+            out_evertest = outEverTest(fp, mod)
 
-        state$state <- "finished"
+            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
+            state$state <- "finished"
+        }
+
     })
 
     output$modelRunState <- shiny::reactive({ state$state })

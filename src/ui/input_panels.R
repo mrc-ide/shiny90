@@ -15,8 +15,13 @@ panelProgram <- function() {
     shiny::div("",
         shiny::div("The following is programmatic data sourced from national testing programs.
              You can edit the data below in the browser, or copy and paste to Excel and edit the data there.
-             You can also replace the data entirely be uploading a new CSV file below",
+             You can also replace the data entirely be uploading a new CSV file below.",
             class = "mb-3"),
+        conditionalPanel(
+            condition = "output.noProgramData",
+            div("Warning: we have no program data for your country! You must add some data to proceed.", class = "alert alert-warning")
+            # TODO: link to help email? Include specific instructions about what data are needed?
+        ),
         shiny::h3("Upload new data"),
         shiny::fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
         shiny::h3("Or edit data in place"),
@@ -25,6 +30,7 @@ panelProgram <- function() {
     )
     # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
+
 
 panelReviewInput <- function() {
     shiny::div("",

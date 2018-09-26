@@ -4,7 +4,24 @@ getProgramDataInWideFormat <- function(country) {
     long <- prgm_dat[prgm_dat$country == country, ]
     long$country <- NULL
     long$notes <- NULL
-    wide <- tidyr::spread(long, key = "type", value = "number")
+
+    if (nrow(long) == 0) {
+
+        # we create an empty data table here, but the plots require values, so we shouldn't let the user proceed
+        # unless they have at least one non-empty row
+        years <- seq(2005, 2017)
+        NbTested <- as.numeric(rep(NA, 2018-2005))
+        NbTestPos <- as.numeric(rep(NA, 2018-2005))
+        NbANCTested <- as.numeric(rep(NA, 2018-2005))
+        NBTestedANCPos <- as.numeric(rep(NA, 2018-2005))
+
+        wide <- data.frame(years, NbTested, NbTestPos, NbANCTested, NBTestedANCPos)
+        colnames(wide) <- c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
+    }
+    else {
+        wide <- tidyr::spread(long, key = "type", value = "number")
+    }
+
     wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
@@ -13,16 +30,25 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("prgm_dat", package="first90")
 
     shiny::observeEvent(spectrumFilesState$country, {
-        state$survey <- as.data.frame(survey_hts)
-        state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-        state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+        if (!is.null(spectrumFilesState$country)){
+            state$survey <- as.data.frame(survey_hts)
+            state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+        }
     })
+
     state$program <- shiny::reactive({
         tidyr::gather(state$program_wide,
             key = "type", value = "number",
             "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos"
         )
     })
+
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_wide) && nrow(state$program_wide %>% na.omit()) > 0 })
+
+    output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
+
+    shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
