@@ -1,7 +1,7 @@
 library(eppasm)
 
 spectrumFiles <- function(input, output, state) {
-    state$multipleCountryError <- FALSE
+
     state$country <- NULL
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <-shiny::reactive({
