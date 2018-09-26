@@ -27,6 +27,7 @@ panelProgram <- function() {
         conditionalPanel(
             condition = "output.noProgramData",
             div("Warning: we have no program data for your country!", class = "alert alert-warning")
+            # TODO: link to help email? Include specific instructions about what data are needed?
         ),
         div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
         rHandsontableOutput("hot_program")
