@@ -1,6 +1,7 @@
 library(eppasm)
 
 spectrumFiles <- function(input, output, state) {
+    state$multipleCountryError <- FALSE
     state$country <- NULL
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <-shiny::reactive({
@@ -12,25 +13,38 @@ spectrumFiles <- function(input, output, state) {
 
     shiny::observeEvent(input$spectrumFile, {
         inFile <- input$spectrumFile
+        state$multipleCountryError <- FALSE
+        state$newCountry <- FALSE
         if (!is.null(inFile)) {
-            dataSet = list(
-                name = inFile$name,
-                data = first90::prepare_inputs(inFile$datapath)
-            )
-            state$dataSets <- c(state$dataSets, list(dataSet))
-            # TODO: Throw error if data sets after the first do not match the country of the first data set
-            state$country <- read_country(inFile$datapath)
+
+            newCountry <- read_country(inFile$datapath)
+
+            if (is.null(state$country) || !state$anyDataSets()){
+                state$newCountry <- TRUE
+                state$country = newCountry
+
+                dataSet = list(name = inFile$name,
+                                data = first90::prepare_inputs(inFile$datapath))
+
+                state$dataSets <- c(state$dataSets, list(dataSet))
+            }
+            else if (state$country != newCountry){
+                state$multipleCountryError <- TRUE
+                shinyjs::reset("spectrumFile")
+            }
         }
     })
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
     output$spectrum_combinedData <- shiny::renderDataTable(state$combinedData)
+    output$multipleCountryError <- shiny::reactive({ state$multipleCountryError })
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$combinedData)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "multipleCountryError", suspendWhenHidden = FALSE)
 
     state
 }
