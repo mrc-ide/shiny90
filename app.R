@@ -1,4 +1,15 @@
 #!/usr/bin/env Rscript
+if (Sys.getenv("SHINY90_QUIET") == "TRUE") {
+    con <- file(tempfile(), "w")
+    sink(tempfile())
+    sink(con, type = "message")
+    on.exit({
+        sink(NULL)
+        sink(NULL, type = "message")
+        close(con)
+    })
+}
+
 library(shiny)
 library(shinyjs)
 library(shinycssloaders)

@@ -2,7 +2,7 @@
 set -e
 
 # Start shiny APP
-./app.R &
+SHINY90_QUIET=TRUE ./app.R &
 SHINY_PID="$!"
 
 # Start selenium server
@@ -22,5 +22,4 @@ function cleanup {
 }
 trap cleanup exit INT TERM
 
-sleep 5s
 src/tests/test.R
