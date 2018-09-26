@@ -21,6 +21,8 @@ spectrumFiles <- function(input, output, state) {
 
             newCountry <- read_country(inFile$datapath)
 
+            find("read_country")
+
             if (!state$anyDataSets() || newCountry == state$country){
                 state$newCountry <- TRUE
                 state$country = newCountry
@@ -58,7 +60,7 @@ addDynamicObserver <- function(input, observerList, eventId, handler) {
     observerList
 }
 
-    renderSpectrumFileList <- function(input, output, state) {
+renderSpectrumFileList <- function(input, output, state) {
     state$observerList <- list()
 
     output$spectrumFileList <- shiny::renderUI({

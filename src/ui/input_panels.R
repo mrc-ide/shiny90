@@ -19,7 +19,7 @@ panelProgram <- function() {
             class = "mb-3"),
         shiny::conditionalPanel(
             condition = "output.noProgramData",
-            div("Warning: we have no program data for your country! You must add some data to proceed.", class = "alert alert-warning")
+            shiny::div("Warning: we have no program data for your country! You must add some data to proceed.", class = "alert alert-warning")
             # TODO: link to help email? Include specific instructions about what data are needed?
         ),
         shiny::h3("Upload new data"),
@@ -40,7 +40,7 @@ panelReviewInput <- function() {
         ),
         shiny::div("",
             shiny::span("Once you have reviewed your input data, you may want to "),
-            shiny::tags$a(href = "#", "download a digest file"),
+            shiny::tags$a(href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
         shinycssloaders::withSpinner(shiny::plotOutput(outputId = "inputReview", height = "800px"))

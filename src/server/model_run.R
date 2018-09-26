@@ -28,6 +28,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
 
             plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
             state$state <- "finished"
+
         }
 
     })

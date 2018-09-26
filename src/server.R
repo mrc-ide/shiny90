@@ -23,8 +23,20 @@ server <- function(input, output, session) {
     plotInputs(output, surveyAndProgramData, spectrumFilesState)
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
 
-    handleSave(input, output, workingSet, spectrumFilesState, surveyAndProgramData)
+    output$digestDownload1 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
     enableNavLinks(input, output, spectrumFilesState, modelRunState, surveyAndProgramData)
+
+    shiny::observeEvent(modelRunState$state, {
+        if (modelRunState$state == "finished"){
+            output$digestDownload2 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+        }
+    })
+
+    shiny::observeEvent(surveyAndProgramData$anyProgramData, {
+        if (surveyAndProgramData$anyProgramData()){
+            output$digestDownload3 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+        }
+    })
 
     output$modal <- shiny::reactive({
         if (loadState$state$uploadRequested) {

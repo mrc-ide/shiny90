@@ -48,8 +48,9 @@ withDir <- function(dir, expr) {
     evalq(expr)
 }
 
-handleSave <- function(input, output, workingSet, spectrumFilesState, surveyAndProgramData) {
-    output$digestDownload <- shiny::downloadHandler(
+downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData){
+
+    shiny::downloadHandler(
         filename = function() { glue::glue("{workingSet$name}.zip.shiny90") },
         contentType = "application/zip",
         content = function(file) {
@@ -63,6 +64,10 @@ handleSave <- function(input, output, workingSet, spectrumFilesState, surveyAndP
             unlink(scratch, recursive = TRUE)
         }
     )
+}
+
+handleSave <- function(outputItem, workingSet, spectrumFilesState, surveyAndProgramData) {
+    outputItem <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
 }
 
 handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesState) {
