@@ -22,15 +22,18 @@ spectrumFiles <- function(input, output, state) {
             newCountry <- read_country(inFile$datapath)
 
             if (!state$anyDataSets() || newCountry == state$country){
-                state$newCountry <- TRUE
-                state$country = newCountry
+
+                if (!state$anyDataSets()) {
+                    state$newCountry <- TRUE
+                    state$country = newCountry
+                }
 
                 dataSet = list(name = inFile$name,
-                                data = first90::prepare_inputs(inFile$datapath))
+                data = first90::prepare_inputs(inFile$datapath))
 
                 state$dataSets <- c(state$dataSets, list(dataSet))
             }
-            else if (state$country != newCountry){
+            else {
                 state$multipleCountryError <- TRUE
                 shinyjs::reset("spectrumFile")
             }
