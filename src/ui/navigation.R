@@ -1,8 +1,5 @@
-library(shiny)
-library(shinyjs)
-
 navigationPanel <- function() {
-    navlistPanel(well = FALSE, widths = c(2, 10),
+    shiny::navlistPanel(well = FALSE, widths = c(2, 10),
         panelWithTitle("Upload spectrum file(s)", panelSpectrum()),
         panelWithTitle("Upload survey data", panelSurvey()),
         panelWithTitle("Upload programmatic data", panelProgram()),
@@ -13,8 +10,8 @@ navigationPanel <- function() {
 }
 
 panelWithTitle <- function(title, content) {
-    tabPanel(title, div("",
-        h1(title),
+    shiny::tabPanel(title, div("",
+        shiny::h1(title),
         content
     ))
 }
@@ -31,12 +28,12 @@ enableNavLinks <- function(input, output, spectrumFilesState, modelRunState) {
 }
 
 enableTabWhen <- function(tabTitle, condition) {
-    js$disableTab(tabTitle)
-    observe({
+    shinyjs::js$disableTab(tabTitle)
+    shiny::observe({
         if (condition()) {
-            js$enableTab(tabTitle)
+            shinyjs::js$enableTab(tabTitle)
         } else {
-            js$disableTab(tabTitle)
+            shinyjs::js$disableTab(tabTitle)
         }
     })
 }

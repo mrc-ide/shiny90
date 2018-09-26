@@ -1,14 +1,12 @@
-library(shiny)
-
 workingSetLogic <- function(input, output, session, workingSet) {
     # Outputs
-    output$workingSet_selected <- reactive({ !is.null(workingSet$name) })
-    output$workingSet_name <- reactive({ workingSet$name })
-    output$workingSet_notes <- reactive({ workingSet$notes })
-    output$workingSet_creation_error <- reactive({ workingSet$creation_error })
+    output$workingSet_selected <- shiny::reactive({ !is.null(workingSet$name) })
+    output$workingSet_name <- shiny::reactive({ workingSet$name })
+    output$workingSet_notes <- shiny::reactive({ workingSet$notes })
+    output$workingSet_creation_error <- shiny::reactive({ workingSet$creation_error })
 
     # Creating a new one
-    observeEvent(input$startNewWorkingSet, {
+    shiny::observeEvent(input$startNewWorkingSet, {
         if (input$workingSetName != "") {
             workingSet$name <- input$workingSetName
             workingSet$notes <- ""
@@ -17,18 +15,18 @@ workingSetLogic <- function(input, output, session, workingSet) {
             workingSet$creation_error <- "A name is required"
         }
     })
-    outputOptions(output, "workingSet_creation_error", suspendWhenHidden = FALSE)
-    outputOptions(output, "workingSet_selected", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "workingSet_creation_error", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "workingSet_selected", suspendWhenHidden = FALSE)
 
     # Editing
-    observeEvent(input$editWorkingSet, {
+    shiny::observeEvent(input$editWorkingSet, {
         workingSet$editing = TRUE
-        updateTextInput(session, "editWorkingSet_name", value = workingSet$name)
-        updateTextInput(session, "editWorkingSet_notes", value = workingSet$notes)
+        shiny::updateTextInput(session, "editWorkingSet_name", value = workingSet$name)
+        shiny::updateTextInput(session, "editWorkingSet_notes", value = workingSet$notes)
     })
-    observeEvent(input$editWorkingSet_cancel_cross, { workingSet$editing <- FALSE })
-    observeEvent(input$editWorkingSet_cancel_button, { workingSet$editing <- FALSE })
-    observeEvent(input$editWorkingSet_update, {
+    shiny::observeEvent(input$editWorkingSet_cancel_cross, { workingSet$editing <- FALSE })
+    shiny::observeEvent(input$editWorkingSet_cancel_button, { workingSet$editing <- FALSE })
+    shiny::observeEvent(input$editWorkingSet_update, {
         workingSet$editing <- FALSE
         workingSet$name <- input$editWorkingSet_name
         workingSet$notes <- input$editWorkingSet_notes

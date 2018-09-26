@@ -37,7 +37,7 @@ fitModel <- function(survey_data, program_data, fp){
     prg_dat <- prepareProgramInput(program_data)
 
     # We create the likelihood data
-    likdat <- prepare_hts_likdat(dat, prg_dat, fp)
+    likdat <- first90::prepare_hts_likdat(dat, prg_dat, fp)
 
     # Starting parameters
     theta0 <- c(rep(log(0.1), 18), # Males: log of testing rates in 2005, 2010, and 2015
@@ -47,13 +47,13 @@ fitModel <- function(survey_data, program_data, fp){
                 log(0.2),   # Fractor testing among diagnosed, on ART
                 rep(log(0.5), 2)) # Rate ratio for testing in the 25+ age group
 
-    ll_hts(theta0, fp, likdat)
+    first90::ll_hts(theta0, fp, likdat)
 
-    opt <- optim(theta0, ll_hts, fp = fp, likdat = likdat, method="BFGS",
+    opt <- optim(theta0, first90::ll_hts, fp = fp, likdat = likdat, method="BFGS",
     control=list(fnscale = -1, trace=4, REPORT=1, maxit=150))
 
     round(exp(opt$par[1:36]), 3)
-    fp <- create_hts_param(opt$par, fp)
+    fp <- first90::create_hts_param(opt$par, fp)
 
     return(list("fp" = fp, "likdat" = likdat))
 }
@@ -66,7 +66,7 @@ outEverTest <- function(fp, mod) {
                                 sex = c("both", "female", "male"),
                                 hivstatus = c("all", "negative", "positive"))
 
-    out_evertest$value <- evertest(mod, fp, add_ss_indices(out_evertest, fp$ss))
+    out_evertest$value <- first90::evertest(mod, fp, first90::add_ss_indices(out_evertest, fp$ss))
 
     out_evertest
 }
@@ -79,7 +79,7 @@ numberTested <- function(fp, mod) {
                             sex="both",
                             hivstatus='all')
 
-    out_nbtest$value <- number_tests(mod, fp, add_ss_indices(out_nbtest, fp$ss))$tests
+    out_nbtest$value <- first90::number_tests(mod, fp, first90::add_ss_indices(out_nbtest, fp$ss))$tests
 
     out_nbtest
 }
@@ -92,7 +92,7 @@ numberTestedPositive <- function(fp, mod) {
                                 sex="both",
                                 hivstatus='positive')
 
-    out_nbtest_pos$value <- number_tests(mod, fp, add_ss_indices(out_nbtest_pos, fp$ss))$tests
+    out_nbtest_pos$value <- first90::number_tests(mod, fp, first90::add_ss_indices(out_nbtest_pos, fp$ss))$tests
 
     out_nbtest_pos
 }
@@ -144,7 +144,7 @@ first90Data <- function(fp, mod) {
                         sex = c("both", "female", "male"),
                         hivstatus = 'positive')
 
-    out$value <- diagnosed(mod, fp, add_ss_indices(out, fp$ss))
+    out$value <- first90::diagnosed(mod, fp, first90::add_ss_indices(out, fp$ss))
 
     out_art <- data.frame(year = 1970:2022,
                             outcome = "artcov",
