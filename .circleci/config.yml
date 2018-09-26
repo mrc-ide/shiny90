@@ -4,9 +4,6 @@ jobs:
     docker:
       - image: rocker/r-ver:latest
     steps:
-        # Allows us to issue docker commands from within the build container
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: apt-get update && apt-get install wget -y
       - run:
           name: Install Docker client
