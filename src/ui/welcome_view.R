@@ -1,10 +1,10 @@
 welcomeView <- function() {
     shiny::fluidPage(
-        div("", class = "welcome",
+        shiny::div("", class = "welcome",
             shiny::fluidRow(class = "row align-items-center",
-                div("", class = "col-md-8 col-sm-12 col-md-offset-2",
+                shiny::div("", class = "col-md-8 col-sm-12 col-md-offset-2",
                 shiny::h1("Shiny 90", class = "title"),
-                    p("",
+                    shiny::p("",
                         shiny::HTML('UN Aids have an ambitious treatment target to help end the AIDS epidemic,
                              <a href="http://www.unaids.org/en/resources/documents/2017/90-90-90">the three 90s</a>:'),
                         shiny::tags$ul("",
@@ -13,8 +13,8 @@ welcomeView <- function() {
                             shiny::tags$li("By 2020, 90% of all people receiving antiretroviral therapy will have viral suppression.")
                         )
                     ),
-                    p("This tool models the 1st 90: what percentage of the popultation living with HIV (plHIV) have been diagnosed?"),
-                    p("",
+                    shiny::p("This tool models the 1st 90: what percentage of the popultation living with HIV (plHIV) have been diagnosed?"),
+                    shiny::p("",
                         shiny::span("You will need input data from the UN AIDS"),
                         shiny::HTML('<a href="http://www.unaids.org/en/dataanalysis/datatools/spectrum-epp">Spectrum tool</a>.'),
                         shiny::span(
@@ -23,10 +23,10 @@ welcomeView <- function() {
                         )
                     ),
                     shiny::fluidRow(class = "row align-items-center mt-3",
-                        div("", class = "col-md-6 welcome-option", style = "border-right: 1px solid rgb(200, 200, 200)",
+                        shiny::div("", class = "col-md-6 welcome-option", style = "border-right: 1px solid rgb(200, 200, 200)",
                             shiny::h3("Open an existing Shiny 90 working set"),
-                            div("This will be a file you downloaded from this app previously"),
-                            div("", class = "text-center pt-4",
+                            shiny::div("This will be a file you downloaded from this app previously"),
+                            shiny::div("", class = "text-center pt-4",
                                 actionButtonWithCustomClass("welcomeRequestDigestUpload",
                                     label = "", cssClasses = "btn-sq btn-red text-center",
                                     shiny::img(id = "digest-upload-img", src = "images/cloud-upload-red.svg", width = 64, height = 64),
@@ -35,11 +35,11 @@ welcomeView <- function() {
                                 )
                             )
                         ),
-                        div("", class = "col-md-6 welcome-option form-group",
+                        shiny::div("", class = "col-md-6 welcome-option form-group",
                             shiny::h3("Start a new blank working set"),
-                            div("You will have the option to upload data in a moment", class = "mb-3"),
+                            shiny::div("You will have the option to upload data in a moment", class = "mb-3"),
                             shiny::tags$label("Name:"),
-                            div("", class = "input-group",
+                            shiny::div("", class = "input-group",
                                 shiny::tags$input(id = "workingSetName",
                                     type = "text",
                                     name = "workingSetName",
@@ -47,14 +47,14 @@ welcomeView <- function() {
                                     placeholder = "(you can change this later)",
                                     `data-proxy-click` = "startNewWorkingSet"
                                 ),
-                                div("", class = "input-group-btn",
+                                shiny::div("", class = "input-group-btn",
                                     actionButtonWithCustomClass("startNewWorkingSet", "Go", cssClasses = "btn-lg btn btn-red")
                                 )
                             ),
                             shiny::conditionalPanel(
                                 condition = "output.workingSet_creation_error",
-                                div("", class = "has-error",
-                                    div("", class = "help-block error",
+                                shiny::div("", class = "has-error",
+                                    shiny::div("", class = "help-block error",
                                         shiny::textOutput("workingSet_creation_error", inline = TRUE)
                                     )
                                 )

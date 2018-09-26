@@ -1,21 +1,21 @@
 panelModelOutputs <- function() {
-    div("",
-        div("",
+    shiny::div("",
+        shiny::div("",
             shiny::span("Now that the model has been run, you can "),
             shiny::tags$a(href = "#", "download a digest file"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
-        div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_totalNumberOfTests"))),
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_numberOfPositiveTests")))
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_totalNumberOfTests"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_numberOfPositiveTests")))
         ),
-        div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageNegativeOfTested"))),
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentagePLHIVOfTested")))
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageNegativeOfTested"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentagePLHIVOfTested")))
         ),
-        div("", class = "row",
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageTested"))),
-            div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageTested"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
         ),
         shiny::h3("Tabular data"),
         # TODO

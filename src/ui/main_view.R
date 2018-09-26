@@ -1,13 +1,13 @@
 mainView <- function() {
-    div("",
-        div("", class = "header",
+    shiny::div("",
+        shiny::div("", class = "header",
             shiny::fluidPage(
-                div("", class = "pull-right text-right",
+                shiny::div("", class = "pull-right text-right",
                     shiny::tags$small("",
-                        a("About this program and the underlying model", href = "#")
+                        shiny::a("About this program and the underlying model", href = "#")
                     )
                 ),
-                div("",
+                shiny::div("",
                     digestButtons(),
                     workingSetSection()
                 )

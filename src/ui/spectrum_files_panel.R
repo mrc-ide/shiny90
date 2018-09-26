@@ -1,23 +1,23 @@
 panelSpectrum <- function() {
-    div("",
-        div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
+    shiny::div("",
+        shiny::div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
             class = "mb-5"),
-        div("", class = "mt-3 mb-5",
+        shiny::div("", class = "mt-3 mb-5",
             shiny::fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
             shiny::conditionalPanel(condition = "output.multipleCountryError",
-                div("Spectrum file not valid! You can only work with one country at a time.
+                shiny::div("Spectrum file not valid! You can only work with one country at a time.
                     If you want to upload data for a different country you will have to remove the previously loaded file.", class = "alert alert-warning"))
 
         ),
         shiny::conditionalPanel(condition = "output.anySpectrumDataSets",
-            div("", class = "mb-5",
+            shiny::div("", class = "mb-5",
                 shiny::h3("Uploaded PJNZ files", class = "mt-5"),
                 shiny::tags$ul("", class = "list-group",
                     shiny::uiOutput("spectrumFileList")
                 )
             ),
 
-            div("",
+            shiny::div("",
                 shiny::h3("", class = "mt-5",
                     shiny::textOutput("spectrumFilesCountry", inline = TRUE),
                     shiny::span("PJNZ data (combined)")
@@ -26,7 +26,7 @@ panelSpectrum <- function() {
                 shiny::tabsetPanel(
                     shiny::tabPanel("Figures", shinycssloaders::withSpinner(shiny::plotOutput(outputId = "spectrum_plots", height = "800px"))),
                     shiny::tabPanel("Data",
-                        div("", class = "mt-3",
+                        shiny::div("", class = "mt-3",
                             shiny::img(src = "images/mock-sheet.png")
                         )
                     )

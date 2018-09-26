@@ -1,9 +1,9 @@
 disableUIOnBusy <- function() {
-    div("", class = "modal busy-indicator",
-        div("", class = "modal-dialog",
-            div("", class = "modal-content",
-                div("", class = "modal-body",
-                    p("Please wait..."),
+    shiny::div("", class = "modal busy-indicator",
+        shiny::div("", class = "modal-dialog",
+            shiny::div("", class = "modal-content",
+                shiny::div("", class = "modal-body",
+                    shiny::p("Please wait..."),
                     shiny::img(src = "images/ajax-loader.gif")
                 )
             )
@@ -12,7 +12,7 @@ disableUIOnBusy <- function() {
     )
 }
 
-ui <- div(id = "shiny90",
+ui <- shiny::div(id = "shiny90",
     shiny::includeCSS("css/style.css"),
     shiny::includeCSS("css/bootstrap4.css"),
 
