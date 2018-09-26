@@ -8,6 +8,6 @@ if [ -z ${GITHUB_PAT+x} ]; then
         echo "token a file named 'github_token' in the root of this repo."
         exit 1;
     fi
+    export GITHUB_PAT=$(<$here/github_token)
 fi
-export GITHUB_PAT=$(<$here/github_token)
 $here/bootstrap.R
