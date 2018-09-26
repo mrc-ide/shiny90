@@ -50,8 +50,9 @@ fitModel <- function(survey_data, program_data, fp){
     ll_hts(theta0, fp, likdat)
 
     opt <- optim(theta0, ll_hts, fp = fp, likdat = likdat, method="BFGS",
-    control=list(fnscale = -1, trace=4, REPORT=1, maxit=150))
+                    control=list(fnscale = -1, trace=4, REPORT=1, maxit=150))
 
+    str(opt)
     round(exp(opt$par[1:36]), 3)
     fp <- create_hts_param(opt$par, fp)
 
