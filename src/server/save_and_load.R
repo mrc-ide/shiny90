@@ -66,8 +66,10 @@ downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData)
     )
 }
 
-handleSave <- function(outputItem, workingSet, spectrumFilesState, surveyAndProgramData) {
-    outputItem <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+handleSave <- function(output, workingSet, spectrumFilesState, surveyAndProgramData) {
+    output$digestDownload1 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+    output$digestDownload2 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+    output$digestDownload3 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
 }
 
 handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesState) {

@@ -40,7 +40,7 @@ panelReviewInput <- function() {
         ),
         shiny::div("",
             shiny::span("Once you have reviewed your input data, you may want to "),
-            shiny::tags$a(href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
+            shiny::tags$a(class = "shiny-download-link", href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
         shinycssloaders::withSpinner(shiny::plotOutput(outputId = "inputReview", height = "800px"))
