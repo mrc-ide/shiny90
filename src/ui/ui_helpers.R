@@ -6,7 +6,7 @@ inputBox <- function(id, label, explanation = "", type = "number", value = 0, mu
         control <- shiny::tags$input(id = id, type = type, value = value, class = classes)
     }
 
-    div("", class = "form-group",
+    shiny::div("", class = "form-group",
         shiny::tags$label(`for`=id,
             shiny::tags$strong(label),
             shiny::HTML("&nbsp;&nbsp;"),
@@ -24,16 +24,16 @@ actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL,
 }
 
 modal <- function(title, cancelId, ...) {
-    div("", class = "modal",
-        div("", class = "modal-dialog",
-            div("", class = "modal-content",
-                div("", class = "modal-header",
-                    div("", class = "pull-right",
-                        actionButtonWithCustomClass(cancelId, "", cssClasses = "close", HTML("&times"))
+    shiny::div("", class = "modal",
+        shiny::div("", class = "modal-dialog",
+            shiny::div("", class = "modal-content",
+                shiny::div("", class = "modal-header",
+                    shiny::div("", class = "pull-right",
+                        actionButtonWithCustomClass(cancelId, "", cssClasses = "close", shiny::HTML("&times"))
                     ),
-                    div(title, class = "modal-title")
+                    shiny::div(title, class = "modal-title")
                 ),
-                div("", class = "modal-body",
+                shiny::div("", class = "modal-body",
                     ...
                 )
             )
