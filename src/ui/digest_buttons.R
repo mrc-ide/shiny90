@@ -1,6 +1,6 @@
 digestButtons <- function() {
-    div("", style = "width: 64px; display: inline-block",
-        a(id='digestDownload',
+    shiny::div("", style = "width: 64px; display: inline-block",
+        shiny::a(id='digestDownload',
             class = "btn btn-default shiny-download-link digest-button btn-sq btn-sq-sm btn-red text-center",
             href = "",
             target = "_blank",
