@@ -10,7 +10,13 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         surveyAsDataTable <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
         out <- tryCatch({
-            fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
+                fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
+            },
+            error = function(e) {
+                state$state <- "error"
+            })
+
+        if (length(out) > 1){
 
             # model fit results
             likdat <- out$likdat
@@ -22,10 +28,8 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
 
             plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
             state$state <- "finished"
+        }
 
-        }, error = function(e) {
-            state$state <- "error"
-        })
     })
 
     output$modelRunState <- shiny::reactive({ state$state })
