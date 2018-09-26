@@ -2,9 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/r-ver:latest
+      - image: rocker/verse:latest
     steps:
-      - run: apt-get update && apt-get install wget -y
       - run:
           name: Install Docker client
           command: |
