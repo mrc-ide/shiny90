@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/verse:latest
+      - image: rocker/r-ver:latest
     steps:
         # Allows us to issue docker commands from within the build container
       - setup_remote_docker:
