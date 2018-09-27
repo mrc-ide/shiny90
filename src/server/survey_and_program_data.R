@@ -29,8 +29,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
 
-    spectrumFilesState$newCountry <- FALSE
-
     shiny::observeEvent(spectrumFilesState$country, {
 
         if (!is.null(spectrumFilesState$country)){
