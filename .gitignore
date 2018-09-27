@@ -4,5 +4,6 @@ geckodriver*
 ghostdriver.log
 github_token
 node_modules/*
+nohup\.out
 packages/*
 samples_files/
