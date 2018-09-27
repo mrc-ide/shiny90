@@ -32,21 +32,22 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
 
         }
 
+        state$state <- "finished"
     })
 
     output$modelRunState <- shiny::reactive({ state$state })
     shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
 
     shiny::observeEvent(surveyAndProgramData$survey, {
-        state$state <- ""
+        if (surveyAndProgramData$surveyTableChanged > 1){
+            state$state <- ""
+        }
     })
 
     shiny::observeEvent(surveyAndProgramData$program_wide, {
-        state$state <- ""
-    })
-
-    shiny::observeEvent(surveyAndProgramData$program, {
-        state$state <- ""
+        if (surveyAndProgramData$programTableChanged > 1){
+            state$state <- ""
+        }
     })
 
     shiny::observeEvent(spectrumFilesState$combinedData(), {
