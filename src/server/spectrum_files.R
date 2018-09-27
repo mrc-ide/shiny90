@@ -12,19 +12,17 @@ spectrumFiles <- function(input, output, state) {
     })
 
     shiny::observeEvent(input$spectrumFile, {
-        state$newCountry <- FALSE
+
         inFile <- input$spectrumFile
         state$multipleCountryError <- FALSE
-        state$newCountry <- FALSE
 
         if (!is.null(inFile)) {
 
-            newCountry <- read_country(inFile$datapath)
+            newCountry <- eppasm::read_country(inFile$datapath)
 
             if (!state$anyDataSets() || newCountry == state$country){
 
                 if (!state$anyDataSets()) {
-                    state$newCountry <- TRUE
                     state$country = newCountry
                 }
 
