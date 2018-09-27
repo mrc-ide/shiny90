@@ -1,7 +1,7 @@
 library(magrittr)
 
-getProgramDataInWideFormat <- function(country) {
-    long <- prgm_dat[prgm_dat$country == country, ]
+getProgramDataInWideFormat <- function(long) {
+
     long$country <- NULL
     long$notes <- NULL
 
@@ -34,7 +34,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+            long <- prgm_dat[prgm_dat$country == spectrumFilesState$country, ]
+            state$program_wide <- getProgramDataInWideFormat(long)
         }
     })
 
@@ -98,9 +99,9 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     shiny::observe({
         if(!is.null(input$hot_survey)){
             newTable <- rhandsontable::hot_to_r(input$hot_survey)
-            if (!identical(newTable, state$survey)){
+            #if (!identical(newTable, state$survey)){
                 state$survey <<- newTable
-            }
+            #}
         }
     })
 
