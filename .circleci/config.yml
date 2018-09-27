@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/tidyverse:latest
+      - image: rocker/verse:latest
     steps:
       - run: apt-get update && apt-get install iceweasel -y
       - checkout
