@@ -11,18 +11,6 @@ wd$open(silent = TRUE)
 on.exit({ wd$close() })
 appURL <- "http://localhost:8080"
 
-getText <- function(element) {
-    texts <- element$getElementText()
-    if (length(texts) > 1) {
-        testthat::fail(message = "More than one element matched the expression")
-    }
-    texts[[1]]
-}
-
-expectTextEqual <- function(expected, element) {
-    expect_equal(getText(element), expected)
-}
-
 testthat::test_that("title is present", {
     wd$navigate(appURL)
     expectTextEqual("Shiny 90", wd$findElement(using = "css selector", ".title"))
@@ -30,8 +18,16 @@ testthat::test_that("title is present", {
 
 testthat::test_that("can walkthrough app", {
     wd$navigate(appURL)
-    wd$findElement("id", "workingSetName")$sendKeysToElement(list("Selenium working set"))
+
+    # Start new working set
+    enterText(wd$findElement("id", "workingSetName"), "Selenium working set")
     wd$findElement("id", "startNewWorkingSet")$clickElement()
     expectTextEqual("Selenium working set", wd$findElement("id", "workingSet_name"))
+
+    # Upload PJNZ file
     expectTextEqual("Upload spectrum file(s)", wd$findElement("class", "panelTitle"))
+    fileUpload <- wd$findElement("id", "spectrumFile")
+    fileUpload$setElementAttribute("style", "display: inline")
+    enterText(fileUpload, normalizePath("../../../sample_files/Malawi_2018_version_8.PJNZ"))
+    fileUpload$sendKeysToElement(list(key = "enter"))
 })
