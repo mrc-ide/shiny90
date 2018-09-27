@@ -13,7 +13,6 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
                 fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
             },
             error = function(e) {
-                str(e)
                 state$state <- "error"
             })
 
@@ -31,8 +30,6 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
             state$state <- "finished"
 
         }
-
-        state$state <- "finished"
     })
 
     output$modelRunState <- shiny::reactive({ state$state })
