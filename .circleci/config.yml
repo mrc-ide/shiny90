@@ -4,8 +4,7 @@ jobs:
     docker:
       - image: rocker/tidyverse:latest
     steps:
-      - run: which firefox
-      - run: firefox --version
+      - run: apt-get update && apt-get install firefox -y
       - checkout
       - run: ./install_geckodriver.sh
       - restore_cache:
