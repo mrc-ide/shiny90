@@ -2,7 +2,7 @@ library(methods)
 context("basic")
 
 wd <- RSelenium::remoteDriver(
-    browserName = "firefox"
+    browserName = "firefox",
     extraCapabilities = list("moz:firefoxOptions" = list(
         args = list('--headless')
     ))
