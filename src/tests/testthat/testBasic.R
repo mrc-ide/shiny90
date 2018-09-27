@@ -2,9 +2,12 @@ library(methods)
 context("basic")
 
 driver <- RSelenium::remoteDriver(
-    browserName = "phantomjs"
+    browserName = "firefox",
+    extraCapabilities = list("moz:firefoxOptions" = list(
+        args = list('--headless')
+    ))
 )
-driver$open()
+driver$open(silent = TRUE)
 appURL <- "http://localhost:8080"
 
 testthat::test_that("can connect to app", {

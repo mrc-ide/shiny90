@@ -1,8 +1,8 @@
 *.jar
 .idea/*
+geckodriver*
+ghostdriver.log
 github_token
 node_modules/*
 packages/*
 samples_files/
-phantomjs*/
-phantomjs*.tar.bz2

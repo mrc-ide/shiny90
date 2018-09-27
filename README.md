@@ -24,7 +24,7 @@ to run the app.
 
 ## Tests
 ```
-sudo ./install_phantomjs.sh
+sudo ./install_geckodriver.sh
 ./test
 ```
 
