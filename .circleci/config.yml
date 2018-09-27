@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: rocker/verse:latest
     steps:
-      - run: ./install_geckodriver.sh
       - checkout
+      - run: ./install_geckodriver.sh
       - restore_cache:
           keys:
             - R-{{ checksum "bootstrap.R" }}
