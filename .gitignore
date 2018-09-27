@@ -1,4 +1,7 @@
+*.jar
 .idea/*
+geckodriver*
+ghostdriver.log
 github_token
 node_modules/*
 packages/*

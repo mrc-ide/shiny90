@@ -24,8 +24,11 @@ to run the app.
 
 ## Tests
 ```
+sudo ./install_geckodriver.sh
 ./test
 ```
+
+They should also run at https://circleci.com/gh/mrc-ide/workflows/shiny90
 
 # Sample files
 Available on SharePoint [here](https://imperiallondon-my.sharepoint.com/:f:/r/personal/epidem_ic_ac_uk/Documents/UNAIDS%20Ref%20Group%20Shared%20Drive/Ref%20Group%20Meetings/Meetings%202018/first%2090%20workshop%20-%20Wisbech%20August%202018?csf=1&e=MFospr)

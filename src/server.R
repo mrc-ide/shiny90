@@ -23,8 +23,9 @@ server <- function(input, output, session) {
     plotInputs(output, surveyAndProgramData, spectrumFilesState)
     modelRunState <- modelRun(input, output, spectrumFilesState, surveyAndProgramData)
 
-    handleSave(input, output, workingSet, spectrumFilesState, surveyAndProgramData)
+    handleSave(output, workingSet, spectrumFilesState, surveyAndProgramData)
     enableNavLinks(input, output, spectrumFilesState, modelRunState, surveyAndProgramData)
+
 
     output$modal <- shiny::reactive({
         if (loadState$state$uploadRequested) {

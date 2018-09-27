@@ -62,7 +62,7 @@ addDynamicObserver <- function(input, observerList, eventId, handler) {
     observerList
 }
 
-    renderSpectrumFileList <- function(input, output, state) {
+renderSpectrumFileList <- function(input, output, state) {
     state$observerList <- list()
 
     output$spectrumFileList <- shiny::renderUI({
