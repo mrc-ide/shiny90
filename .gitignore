@@ -1,3 +1,4 @@
+*.jar
 .idea/*
 github_token
 node_modules/*

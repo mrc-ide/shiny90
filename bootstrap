@@ -10,4 +10,5 @@ if [ -z ${GITHUB_PAT+x} ]; then
     fi
     export GITHUB_PAT=$(<$here/github_token)
 fi
+export R_LIBS_USER="packages"
 $here/bootstrap.R
