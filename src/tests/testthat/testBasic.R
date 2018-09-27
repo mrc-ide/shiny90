@@ -1,8 +1,10 @@
 library(methods)
 context("basic")
 
-driver <- RSelenium::remoteDriver()
-driver$open(silent = TRUE)
+driver <- RSelenium::remoteDriver(
+    browserName = "phantomjs"
+)
+driver$open()
 appURL <- "http://localhost:8080"
 
 testthat::test_that("can connect to app", {

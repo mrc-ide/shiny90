@@ -24,6 +24,7 @@ to run the app.
 
 ## Tests
 ```
+sudo ./install_phantomjs.sh
 ./test
 ```
 
