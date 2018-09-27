@@ -1,7 +1,12 @@
 library(methods)
 context("basic")
 
-driver <- RSelenium::remoteDriver()
+driver <- RSelenium::remoteDriver(
+    browserName = "firefox",
+    extraCapabilities = list("moz:firefoxOptions" = list(
+        args = list('--headless')
+    ))
+)
 driver$open(silent = TRUE)
 appURL <- "http://localhost:8080"
 

@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: rocker/verse:latest
+    steps:
+      - run: apt-get update && apt-get install iceweasel -y
+      - checkout
+      - run: ./install_geckodriver.sh
+      - restore_cache:
+          keys:
+            - R-{{ checksum "bootstrap.R" }}
+            - R- # used if checksum fails
+      - run: ./bootstrap
+      - save_cache:
+          key: R-{{ checksum "bootstrap.R" }}
+          paths:
+            - packages
+      - run: ./test
