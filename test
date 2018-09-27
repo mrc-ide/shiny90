@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+# Start shiny APP
+SHINY90_QUIET=TRUE ./app.R &
+SHINY_PID="$!"
+
+# Start selenium server
+SELENIUM_ID=$(docker run -d \
+    -p 4444:4444 \
+    --network host \
+    -v /dev/shm:/dev/shm \
+    selenium/standalone-firefox)
+echo "Selenium running as $SELENIUM_ID"
+
+function cleanup {
+    set +e
+    echo "Cleaning up..."
+    kill $SHINY_PID
+    docker kill $SELENIUM_ID > /dev/null
+    echo "Selenium logs are available at: docker logs $SELENIUM_ID"
+}
+trap cleanup exit INT TERM
+
+src/tests/test.R

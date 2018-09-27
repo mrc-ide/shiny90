@@ -18,7 +18,7 @@ spectrumFiles <- function(input, output, state) {
 
         if (!is.null(inFile)) {
 
-            newCountry <- read_country(inFile$datapath)
+            newCountry <- eppasm::read_country(inFile$datapath)
 
             if (!state$anyDataSets() || newCountry == state$country){
 
