@@ -2,8 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/verse:latest
+      - image: rocker/tidyverse:latest
     steps:
+      - run: which firefox
+      - run: firefox --version
       - checkout
       - run: ./install_geckodriver.sh
       - restore_cache:
