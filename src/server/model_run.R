@@ -13,6 +13,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
                 fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
             },
             error = function(e) {
+                str(e)
                 state$state <- "error"
             })
 
@@ -43,7 +44,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         state$state <- ""
     })
 
-    shiny::observeEvent(spectrumFilesState$combinedData, {
+    shiny::observeEvent(spectrumFilesState$combinedData(), {
         state$state <- ""
     })
     

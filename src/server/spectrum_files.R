@@ -6,8 +6,15 @@ spectrumFiles <- function(input, output, state) {
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <-shiny::reactive({
         if (state$anyDataSets()) {
+
+            str("spectrum data changed")
             # TODO use all files, not just first one
             state$dataSets[[1]]$data
+        }
+        else {
+
+            str("spectrum data changed")
+            NULL
         }
     })
 
