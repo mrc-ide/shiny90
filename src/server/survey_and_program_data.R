@@ -1,7 +1,7 @@
 library(magrittr)
 
-getProgramDataInWideFormat <- function(long) {
-
+getProgramDataInWideFormat <- function(country) {
+    long <- prgm_dat[prgm_dat$country == country, ]
     long$country <- NULL
     long$notes <- NULL
 
@@ -34,8 +34,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            long <- prgm_dat[prgm_dat$country == spectrumFilesState$country, ]
-            state$program_wide <- getProgramDataInWideFormat(long)
+            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
         }
     })
 
