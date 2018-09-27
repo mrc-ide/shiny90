@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: rocker/tidyverse:latest
     steps:
-      - run: apt-get update && apt-get install firefox -y
+      - run: apt-get update && apt-get install iceweasel -y
       - checkout
       - run: ./install_geckodriver.sh
       - restore_cache:
