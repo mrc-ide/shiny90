@@ -89,7 +89,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         inFile <- input$programData
 
         if (is.null(inFile)){
-        return(NULL)
+            return(NULL)
         }
 
         state$program <<- read.csv(inFile$datapath)
@@ -97,13 +97,19 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observe({
         if(!is.null(input$hot_survey)){
-            state$survey <<- rhandsontable::hot_to_r(input$hot_survey)
+            newTable <- rhandsontable::hot_to_r(input$hot_survey)
+            if (!identical(newTable, state$survey)){
+                state$survey <<- newTable
+            }
         }
     })
 
     shiny::observe({
         if(!is.null(input$hot_program)){
-            state$program_wide <- rhandsontable::hot_to_r(input$hot_program)
+            newTable <- rhandsontable::hot_to_r(input$hot_program)
+            if (!identical(newTable, state$program_wide)){
+                state$program_wide <<- newTable
+            }
         }
     })
 
