@@ -7,4 +7,4 @@ devnull <- httr::RETRY("GET", url, times = 4, quiet = TRUE)
 print("Shiny is available; running tests...")
 
 source("src/tests/helpers.R")
-testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE)
+testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE, stop_on_warning = TRUE)
