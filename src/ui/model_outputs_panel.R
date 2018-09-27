@@ -2,7 +2,7 @@ panelModelOutputs <- function() {
     shiny::div("",
         shiny::div("",
             shiny::span("Now that the model has been run, you can "),
-            shiny::tags$a(href = "#", "download a digest file"),
+            shiny::tags$a(href = "", class="shiny-download-link", id="digestDownload2", "download a digest file", target = "_blank", download = NA),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
         shiny::div("", class = "row",

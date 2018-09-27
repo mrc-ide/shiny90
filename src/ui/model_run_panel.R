@@ -21,8 +21,8 @@ panelModelRun <- function() {
         ),
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'error'",
-            div("", class = "mt-3 alert alert-warning",
-            div("Model run failed. Please check your input data.")
+            shiny::div("", class = "mt-3 alert alert-warning",
+            shiny::div("Model run failed. Please check your input data.")
             # TODO: link to help email? Explain data needs?
             )
         )
