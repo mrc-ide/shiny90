@@ -2,18 +2,18 @@
 set -e
 
 # Start shiny APP
-SHINY90_QUIET=TRUE ./app.R &
+SHINY90_QUIET=TRUE SHINY90_TEST_MODE=TRUE ./app.R &
 SHINY_PID="$!"
 
 # Start selenium server
+echo "Starting selenium server..."
 SELENIUM_VERSION=3.9.1
 SELENIUM_FILE=selenium-server-standalone-$SELENIUM_VERSION.jar
 if [ ! -f "$SELENIUM_FILE" ]; then
     wget http://selenium-release.storage.googleapis.com/3.9/$SELENIUM_FILE
 fi
-java -jar $SELENIUM_FILE &
+nohup java -jar $SELENIUM_FILE &
 SELENIUM_PID="$!"
-echo "Selenium running"
 
 function cleanup {
     set +e
