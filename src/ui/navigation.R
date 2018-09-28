@@ -11,7 +11,7 @@ navigationPanel <- function() {
 
 panelWithTitle <- function(title, content) {
     shiny::tabPanel(title, div("",
-        shiny::h1(title),
+        shiny::h1(title, class = "panelTitle"),
         content
     ))
 }
