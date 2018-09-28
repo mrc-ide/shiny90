@@ -89,21 +89,28 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         inFile <- input$programData
 
         if (is.null(inFile)){
-        return(NULL)
+            return(NULL)
         }
 
-        state$program <<- read.csv(inFile$datapath)
+        state$program_wide <<- read.csv(inFile$datapath)
     })
 
-    shiny::observe({
+    # We track change events so that we know when to reset the model run state.
+    # See comment in model_run.R
+    state$surveyTableChanged <- 0
+    state$programTableChanged <- 0
+
+    shiny::observeEvent(input$hot_survey, {
         if(!is.null(input$hot_survey)){
             state$survey <<- rhandsontable::hot_to_r(input$hot_survey)
+            state$surveyTableChanged <<- state$surveyTableChanged + 1
         }
     })
 
-    shiny::observe({
+    shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
-            state$program_wide <- rhandsontable::hot_to_r(input$hot_program)
+            state$program_wide <<- rhandsontable::hot_to_r(input$hot_program)
+            state$programTableChanged <<- state$programTableChanged + 1
         }
     })
 

@@ -9,6 +9,9 @@ spectrumFiles <- function(input, output, state) {
             # TODO use all files, not just first one
             state$dataSets[[1]]$data
         }
+        else {
+            NULL
+        }
     })
 
     shiny::observeEvent(input$spectrumFile, {
