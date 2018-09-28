@@ -35,6 +35,9 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     output$modelRunState <- shiny::reactive({ state$state })
     shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
 
+    # A change event will occur the first time the user navigates to the input data page
+    # but this first change event doesn't represent a change to the data.
+    # So we only reset the state on subsequent change events.
     shiny::observeEvent(surveyAndProgramData$survey, {
         if (surveyAndProgramData$surveyTableChanged > 1){
             state$state <- ""

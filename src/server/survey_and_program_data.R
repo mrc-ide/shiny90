@@ -95,6 +95,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         state$program_wide <<- read.csv(inFile$datapath)
     })
 
+    # We track change events so that we know when to reset the model run state.
+    # See comment in model_run.R
     state$surveyTableChanged <- 0
     state$programTableChanged <- 0
 
