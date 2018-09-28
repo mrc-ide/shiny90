@@ -6,4 +6,3 @@ github_token
 node_modules/*
 nohup\.out
 packages/*
-sample_files/
