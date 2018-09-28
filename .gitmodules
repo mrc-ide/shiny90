@@ -1,0 +1,3 @@
+[submodule "sample_files"]
+	path = sample_files
+	url = git@github.com:mrc-ide/shiny90_sample_files.git
