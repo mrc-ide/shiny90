@@ -2,11 +2,10 @@ library(methods)
 context("basic")
 
 wd <- RSelenium::remoteDriver(
-    browserName = "firefox"
-# ,
-#     extraCapabilities = list("moz:firefoxOptions" = list(
-#         args = list('--headless')
-#     ))
+    browserName = "firefox",
+    extraCapabilities = list("moz:firefoxOptions" = list(
+        args = list('--headless')
+    ))
 )
 wd$open(silent = TRUE)
 on.exit({ wd$close() })
