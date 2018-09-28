@@ -86,9 +86,29 @@ renderSpectrumFileList <- function(input, output, state) {
 }
 
 renderSpectrumPlots <- function(output, combinedData) {
-    output$spectrum_plots <- shiny::renderPlot({
+
+    output$spectrumTotalPop <- shiny::renderPlot({
         if (!is.null(combinedData())) {
-            first90::plot_pnjz(combinedData())
+            first90::plot_pnjz_pop(combinedData())
         }
     })
+
+    output$spectrumPLHIV <- shiny::renderPlot({
+        if (!is.null(combinedData())) {
+            first90::plot_pnjz_plhiv(combinedData())
+        }
+    })
+
+    output$spectrumPrevalence <- shiny::renderPlot({
+        if (!is.null(combinedData())) {
+            first90::plot_pnjz_prv(combinedData())
+        }
+    })
+
+    output$spectrumIncidence <- shiny::renderPlot({
+        if (!is.null(combinedData())) {
+            first90::plot_pnjz_inc(combinedData())
+        }
+    })
+
 }

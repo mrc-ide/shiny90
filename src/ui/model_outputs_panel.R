@@ -17,6 +17,10 @@ panelModelOutputs <- function() {
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_percentageTested"))),
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_firstAndSecond90")))
         ),
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_womenEverTested"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "outputs_menEverTested")))
+        ),
         shiny::h3("Tabular data"),
         # TODO
         # By year (2000 to current):
