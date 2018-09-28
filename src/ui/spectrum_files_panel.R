@@ -10,7 +10,7 @@ panelSpectrum <- function() {
 
         ),
         shiny::conditionalPanel(condition = "output.anySpectrumDataSets",
-            shiny::div("", class = "mb-5",
+            shiny::div("", class = "mb-5 uploadedSpectrumFilesSection",
                 shiny::h3("Uploaded PJNZ files", class = "mt-5"),
                 shiny::tags$ul("", class = "list-group",
                     shiny::uiOutput("spectrumFileList")
