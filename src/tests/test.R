@@ -7,6 +7,9 @@ devnull <- httr::RETRY("GET", url, times = 4, quiet = TRUE)
 print("Shiny is available; running tests...")
 
 source("src/tests/helpers.R")
+source("src/tests/logic.R")
 source("src/tests/webDriverNavigation.R")
 
-testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE, stop_on_warning = TRUE)
+tryCatch({
+    testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE, stop_on_warning = TRUE)
+}, finally={wd$close()})

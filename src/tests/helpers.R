@@ -1,3 +1,12 @@
+appURL <- "http://localhost:8080"
+wd <- RSelenium::remoteDriver(
+    browserName = "firefox"#,
+    # extraCapabilities = list("moz:firefoxOptions" = list(
+    #     args = list('--headless')
+    # ))
+    )
+wd$open(silent = TRUE)
+
 getText <- function(element) {
     texts <- element$getElementText()
     if (length(texts) > 1) {
@@ -12,6 +21,14 @@ enterText <- function(element, text) {
 
 expectTextEqual <- function(expected, element) {
     testthat::expect_equal(getText(element), expected)
+}
+
+expectTextToContain <- function(expectedText, element) {
+    actualText <- getText(element)
+    expect(
+        ok = grepl(expectedText, actualText, fixed=TRUE),
+        failure_message = glue::glue("Expected to find string '{expectedText}' in '{actualText}'")
+    )
 }
 
 expectElementPresent <- function(wd, cssSelector) {

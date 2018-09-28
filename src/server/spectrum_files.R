@@ -40,7 +40,7 @@ spectrumFiles <- function(input, output, state) {
                 }
             },
             error=function(condition) {
-                state$spectrumFileError <- glue::glue("Unable to read the contents on this file: {condition}")
+                state$spectrumFileError <- glue::glue("Unable to read the contents of this file: {condition}")
                 NULL
             })
         }
