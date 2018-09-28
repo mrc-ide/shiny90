@@ -6,6 +6,7 @@ jobs:
     steps:
       - run: apt-get update && apt-get install iceweasel -y
       - checkout
+      - run: git submodule init && git submodule update
       - run: ./install_geckodriver.sh
       - restore_cache:
           keys:
