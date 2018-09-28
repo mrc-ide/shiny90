@@ -14,6 +14,14 @@ expectTextEqual <- function(expected, element) {
     testthat::expect_equal(getText(element), expected)
 }
 
+expectElementPresent <- function(wd, cssSelector) {
+    elements <- wd$findElements("css", cssSelector)
+    testthat::expect(
+        ok = length(elements) > 0,
+        failure_message = glue::glue("Expected an element in the page to match {cssSelector}")
+    )
+}
+
 waitForVisible <- function(element) {
     waitFor(function() { element$isElementDisplayed() == "TRUE" })
 }
@@ -36,8 +44,11 @@ waitForChildElement <- function(parent, cssSelector) {
     parent$findChildElement("css", cssSelector)
 }
 
+isBusy <- function(wd) {
+    script <- 'return $("html").hasClass("shiny-busy")'
+    wd$executeScript(script)[[1]]
+}
+
 waitForShinyToNotBeBusy <- function(wd, timeout = 10) {
-    waitFor(function() {
-        wd$executeScript('$("html").hasClass("shiny-busy").length == 0')
-    }, timeout = timeout)
+    waitFor(function() { !isBusy(wd) }, timeout = timeout)
 }

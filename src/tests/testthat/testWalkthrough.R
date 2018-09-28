@@ -13,7 +13,7 @@ on.exit({ wd$close() })
 appURL <- "http://localhost:8080"
 
 uploadSpectrumFile <- function(wd, fileName = "Malawi_2018_version_8.PJNZ") {
-    expectTextEqual("Upload spectrum file(s)", findInActivePane(wd, ".panelTitle"))
+    expectTextEqual("Upload spectrum file(s)", wd$findElement("css", inActivePane(".panelTitle")))
     fileUpload <- wd$findElement("css", "#spectrumFile")
     fileUpload$setElementAttribute("style", "display: inline")
     enterText(fileUpload, normalizePath(glue::glue("../../../sample_files/{fileName}")))
@@ -28,7 +28,7 @@ testthat::test_that("title is present", {
     expectTextEqual("Shiny 90", wd$findElement(using = "css", ".title"))
 })
 
-testthat::test_that("can walkthrough app", {
+testthat::test_that("can walk through app", {
     wd$navigate(appURL)
 
     # Start new working set
@@ -39,7 +39,7 @@ testthat::test_that("can walkthrough app", {
     # Upload spectrum file
     uploadSpectrumFile(wd)
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    expectTextEqual("Uploaded PJNZ files", section$findChildElement("css", "h3"))
+    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
     expectTextEqual("Malawi_2018_version_8.PJNZ", waitForChildElement(section, "li span"))
 
     switchTab(wd, "Upload survey data")
@@ -47,11 +47,17 @@ testthat::test_that("can walkthrough app", {
     switchTab(wd, "Upload programmatic data")
 
     switchTab(wd, "Review input data")
-    # TODO: Find some way of detecting when this page is really ready
-    Sys.sleep(1)
 
     switchTab(wd, "Run model")
-    runModelButton <- findInActivePane(wd, "#runModel")
+    runModelButton <- wd$findElement("css", inActivePane("#runModel"))
     runModelButton$clickElement()
-    waitForShinyToNotBeBusy(wd, timeout = 60)
+    waitForShinyToNotBeBusy(wd)
+
+    switchTab(wd, "View model outputs")
+    expectElementPresent(wd, inActivePane("#outputs_totalNumberOfTests"))
+    expectElementPresent(wd, inActivePane("#outputs_numberOfPositiveTests"))
+    expectElementPresent(wd, inActivePane("#outputs_percentageNegativeOfTested"))
+    expectElementPresent(wd, inActivePane("#outputs_percentagePLHIVOfTested"))
+    expectElementPresent(wd, inActivePane("#outputs_percentageTested"))
+    expectElementPresent(wd, inActivePane("#outputs_firstAndSecond90"))
 })
