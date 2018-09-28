@@ -17,40 +17,45 @@ spectrumFiles <- function(input, output, state) {
     shiny::observeEvent(input$spectrumFile, {
 
         inFile <- input$spectrumFile
-        state$multipleCountryError <- FALSE
+        state$spectrumFileError <- NULL
 
         if (!is.null(inFile)) {
+             tryCatch({
+                newCountry <- eppasm::read_country(inFile$datapath)
 
-            newCountry <- eppasm::read_country(inFile$datapath)
+                if (!state$anyDataSets() || newCountry == state$country){
 
-            if (!state$anyDataSets() || newCountry == state$country){
+                    if (!state$anyDataSets()) {
+                        state$country = newCountry
+                    }
 
-                if (!state$anyDataSets()) {
-                    state$country = newCountry
+                    dataSet = list(name = inFile$name,
+                    data = first90::prepare_inputs(inFile$datapath))
+
+                    state$dataSets <- c(state$dataSets, list(dataSet))
                 }
-
-                dataSet = list(name = inFile$name,
-                data = first90::prepare_inputs(inFile$datapath))
-
-                state$dataSets <- c(state$dataSets, list(dataSet))
-            }
-            else {
-                state$multipleCountryError <- TRUE
-                shinyjs::reset("spectrumFile")
-            }
+                else {
+                    state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
+                    shinyjs::reset("spectrumFile")
+                }
+            },
+            error=function(condition) {
+                state$spectrumFileError <- glue::glue("Unable to read the contents on this file: {condition}")
+                NULL
+            })
         }
     })
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
     output$spectrum_combinedData <- shiny::renderDataTable(state$combinedData)
-    output$multipleCountryError <- shiny::reactive({ state$multipleCountryError })
+    output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$combinedData)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
-    shiny::outputOptions(output, "multipleCountryError", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
 
     state
 }
