@@ -14,6 +14,8 @@ testthat::test_that("can walk through app", {
     uploadSpectrumFile(wd)
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
+
+    waitForVisible(wd$findElement("css", "#spectrumFileList"))
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
     expectTextEqual("Malawi_2018_version_8.PJNZ", section$findChildElement("css", "li span"))
 
@@ -26,7 +28,7 @@ testthat::test_that("can walk through app", {
     switchTab(wd, "Run model")
     runModelButton <- wd$findElement("css", inActivePane("#runModel"))
     runModelButton$clickElement()
-    waitForShinyToNotBeBusy(wd)
+    waitForShinyToNotBeBusy(wd, timeout=50)
 
     switchTab(wd, "View model outputs")
     expectElementPresent(wd, inActivePane("#outputs_totalNumberOfTests"))
