@@ -22,9 +22,8 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
             likdat <- out$likdat
             fp <- out$fp
             mod <- out$mod
-            simul <- out$simul
 
-            plotModelRunResults(output, spectrumFilesState$country, surveyAsDataTable, likdat, fp, mod, simul)
+            plotModelRunResults(output, spectrumFilesState$country, surveyAsDataTable, likdat, fp, mod)
             state$state <- "finished"
 
         }
@@ -55,7 +54,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     state
 }
 
-plotModelRunResults <- function(output, country, surveyAsDataTable, likdat, fp, mod, simul) {
+plotModelRunResults <- function(output, country, surveyAsDataTable, likdat, fp, mod) {
 
     output$outputs_totalNumberOfTests <- shiny::renderPlot({
         first90::plot_out_nbtest(mod, fp, likdat, country)

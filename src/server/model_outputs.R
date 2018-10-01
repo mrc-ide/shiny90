@@ -59,12 +59,12 @@ fitModel <- function(survey_data, program_data, fp){
     opt <- optim(theta0, first90::ll_hts, fp = fp, likdat = likdat, method="BFGS",
                     control=list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations), hessian=TRUE)
 
-    simul <- first90::simul.test(opt,  fp, sim=400)
+    #simul <- first90::simul.test(opt,  fp, sim=400)
 
     fp <- first90::create_hts_param(opt$par, fp)
     mod <- eppasm::simmod.specfp(fp)
 
     #optimized_par(opt)
 
-    return(list("mod" = mod, "fp" = fp, "likdat" = likdat, simul = "simul"))
+    return(list("mod" = mod, "fp" = fp, "likdat" = likdat)
 }
