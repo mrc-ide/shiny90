@@ -55,10 +55,15 @@ waitFor <- function(predicate, timeout = 5) {
 }
 
 waitForChildElement <- function(parent, cssSelector) {
+    children <- waitForThisManyChildren(parent, cssSelector, 1)
+    children[[1]]
+}
+
+waitForThisManyChildren <- function(parent, cssSelector, expectedNumber) {
     waitFor(function() {
-        length(parent$findChildElements("css", cssSelector)) > 0
+        length(parent$findChildElements("css", cssSelector)) == expectedNumber
     })
-    parent$findChildElement("css", cssSelector)
+    parent$findChildElements("css", cssSelector)
 }
 
 isBusy <- function(wd) {
