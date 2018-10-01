@@ -28,7 +28,7 @@ panelSpectrum <- function() {
                     shiny::tabPanel("Figures", shinycssloaders::withSpinner(shiny::plotOutput(outputId = "spectrum_plots", height = "800px"))),
                     shiny::tabPanel("Data",
                         shiny::div("", class = "mt-3",
-                            shiny::img(src = "images/mock-sheet.png")
+                            shiny::dataTableOutput("spectrum_combinedData")
                         )
                     )
                 )
