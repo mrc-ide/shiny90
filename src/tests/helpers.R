@@ -4,7 +4,7 @@ wd <- RSelenium::remoteDriver(
     extraCapabilities = list("moz:firefoxOptions" = list(
         args = list('--headless')
     ))
-    )
+)
 wd$open(silent = TRUE)
 
 getText <- function(element) {
