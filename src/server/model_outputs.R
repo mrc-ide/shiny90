@@ -66,5 +66,5 @@ fitModel <- function(survey_data, program_data, fp){
 
     #optimized_par(opt)
 
-    return(list("mod" = mod, "fp" = fp, "likdat" = likdat)
+    return(list("mod" = mod, "fp" = fp, "likdat" = likdat))
 }
