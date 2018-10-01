@@ -1,6 +1,6 @@
 appURL <- "http://localhost:8080"
 wd <- RSelenium::remoteDriver(
-    browserName = "firefox"#,
+    browserName = "firefox",
     extraCapabilities = list("moz:firefoxOptions" = list(
         args = list('--headless')
     ))
