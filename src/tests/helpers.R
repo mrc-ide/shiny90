@@ -25,7 +25,7 @@ expectTextEqual <- function(expected, element) {
 
 expectTextToContain <- function(expectedText, element) {
     actualText <- getText(element)
-    expect(
+    testthat::expect(
         ok = grepl(expectedText, actualText, fixed=TRUE),
         failure_message = glue::glue("Expected to find string '{expectedText}' in '{actualText}'")
     )
@@ -39,10 +39,6 @@ expectElementPresent <- function(wd, cssSelector) {
     )
 }
 
-waitForVisible <- function(element) {
-    waitFor(function() { element$isElementDisplayed() == "TRUE" })
-}
-
 waitFor <- function(predicate, timeout = 5) {
     waited <- 0
     while (!predicate()) {
@@ -52,6 +48,10 @@ waitFor <- function(predicate, timeout = 5) {
             stop("Timed out waiting for predicate to be true")
         }
     }
+}
+
+waitForVisible <- function(element) {
+    waitFor(function() { element$isElementDisplayed() == "TRUE" })
 }
 
 waitForChildElement <- function(parent, cssSelector) {

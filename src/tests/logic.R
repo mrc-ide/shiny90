@@ -12,3 +12,10 @@ uploadSpectrumFile <- function(wd, path = "../../../sample_files/Malawi_2018_ver
     enterText(fileUpload, normalizePath(path))
     fileUpload$sendKeysToElement(list(key = "enter"))
 }
+
+uploadDigestFile <- function(wd, path = "../../../sample_files/testing1234.zip.shiny90") {
+    fileUpload <- wd$findElement("css", "#digestUpload")
+    fileUpload$setElementAttribute("style", "display: inline")
+    enterText(fileUpload, normalizePath(path))
+    fileUpload$sendKeysToElement(list(key = "enter"))
+}

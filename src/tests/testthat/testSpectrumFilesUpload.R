@@ -1,5 +1,5 @@
 library(methods)
-context("basic")
+testthat::context("basic")
 
 testthat::test_that("uploading bad spectrum file gives error message", {
     wd$navigate(appURL)
