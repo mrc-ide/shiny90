@@ -12,10 +12,8 @@ testthat::test_that("can walk through app", {
     startNewWorkingSet(wd)
 
     uploadSpectrumFile(wd)
-    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
-    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
-    expectTextEqual("Malawi_2018_version_8.PJNZ", section$findChildElement("css", "li span"))
+
+    verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")
 
