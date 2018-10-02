@@ -12,8 +12,9 @@ testthat::test_that("can load digest from welcome page", {
 
     uploadDigestFile(wd)
 
-    panelTitle <- wd$findElement("css", inActivePane(".panelTitle"))
-    waitForVisible(panelTitle)
-    expectTextEqual("Upload spectrum file(s)", panelTitle)
+    waitForShinyToNotBeBusy(wd)
+
+    Sys.sleep(0.5)
+    expectTextEqual("testing1234", wd$findElement("css", "#workingSet_name"))
 
 })
