@@ -17,4 +17,8 @@ testthat::test_that("can load digest from welcome page", {
     Sys.sleep(0.5)
     expectTextEqual("testing1234", wd$findElement("css", "#workingSet_name"))
 
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+
+    expectTextEqual("Malawi_2018_version_8.PJNZ", waitForChildElement(section, "li span"))
+
 })
