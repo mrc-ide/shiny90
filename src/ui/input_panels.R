@@ -7,6 +7,14 @@ panelSurvey <- function() {
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
         rhandsontable::rHandsontableOutput("hot_survey"),
         shiny::h3("Or upload new data"),
+        shiny::conditionalPanel(
+        condition = "output.wrongSurveyHeaders",
+            shiny::div("Invalid headers! Survey data must match the given column headers.", id="wrongSurveyHeadersError", class = "alert alert-warning")
+        ),
+        shiny::conditionalPanel(
+        condition = "output.wrongSurveyCountry",
+            shiny::div("You cannot upload survey data for a different country.", id="wrongSurveyCountryError", class = "alert alert-warning")
+        ),
         shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
     )
 }
