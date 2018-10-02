@@ -1,5 +1,5 @@
 library(methods)
-context("basic")
+testthat::context("basic")
 
 testthat::test_that("title is present", {
     wd$navigate(appURL)

@@ -25,7 +25,7 @@ expectTextEqual <- function(expected, element) {
 
 expectTextToContain <- function(expectedText, element) {
     actualText <- getText(element)
-    expect(
+    testthat::expect(
         ok = grepl(expectedText, actualText, fixed=TRUE),
         failure_message = glue::glue("Expected to find string '{expectedText}' in '{actualText}'")
     )
