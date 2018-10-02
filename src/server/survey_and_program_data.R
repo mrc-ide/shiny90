@@ -89,22 +89,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         newSurvey <- read.csv(inFile$datapath)
 
-        if (identical(sort(names(newSurvey)), sort(names(state$survey)))) {
+        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey)))
 
-            if (nrow(subset(newSurvey, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newSurvey)) {
-                state$wrongSurveyCountry <<- TRUE
-            }
-            else {
-                state$survey <<- newSurvey
-                state$wrongSurveyCountry <<- FALSE
-            }
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newSurvey)
 
-            state$wrongSurveyHeaders <<- FALSE
-
+        if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
+            state$survey <<- newSurvey
         }
-        else {
-            state$wrongSurveyHeaders <<- TRUE
-        }
+
     })
 
     shiny::observeEvent(input$programData, {
