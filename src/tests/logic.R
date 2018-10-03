@@ -2,6 +2,7 @@ startNewWorkingSet <- function(wd) {
     enterText(wd$findElement("css", "#workingSetName"), "Selenium working set")
     Sys.sleep(0.5)
     wd$findElement("css", "#startNewWorkingSet")$clickElement()
+    Sys.sleep(0.5)
     expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
 }
 
