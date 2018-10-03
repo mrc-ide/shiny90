@@ -23,7 +23,8 @@ spectrumFiles <- function(input, output, state) {
                 Population = summary[["pop"]],
                 Prevalence = summary[["prevalence"]],
                 Incidence = summary[["incidence"]],
-                plhiv = summary[["plhiv"]]
+                plhiv = summary[["plhiv"]],
+                art_coverage = summary[["art_coverage"]]
             )
             f <- f[order(-f$Year),]
             f
@@ -69,7 +70,8 @@ spectrumFiles <- function(input, output, state) {
         dom = "lrt",    # https://datatables.net/reference/option/dom
         columns = list(
             NULL, NULL, NULL, NULL,
-            list(title = 'People living with HIV')
+            list(title = 'People living with HIV'),
+            list(title = 'ART coverage')
         )
     ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
