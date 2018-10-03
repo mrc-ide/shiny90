@@ -36,8 +36,8 @@ panelSpectrum <- function() {
                     )
                     ),
                     shiny::tabPanel("Data",
-                        shiny::div("", class = "mt-3",
-                            shiny::img(src = "images/mock-sheet.png")
+                        shiny::div("", class = "mt-3 spectrum-combined-data",
+                            shiny::dataTableOutput("spectrum_combinedData")
                         )
                     )
                 )

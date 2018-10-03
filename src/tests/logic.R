@@ -33,7 +33,10 @@ verifyPJNZFileUpload <- function(filename) {
     waitForVisible(section)
 
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
+    expectTextEqual(filename, section$findChildElement("css", "li span"))
 
-    files <- section$findChildElements("css", "li span")
-    expectTextEqual(filename, files[[1]])
+    # Check data tab
+    wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+    firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+    expectTextEqual("2022", firstYearCell)
 }

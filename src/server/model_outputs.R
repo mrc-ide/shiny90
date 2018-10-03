@@ -37,6 +37,7 @@ fitModel <- function(survey_data, program_data, fp){
     prg_dat <- prepareProgramInput(program_data)
 
     # We create the likelihood data
+    str("running prepare_hts_likdat")
     likdat <- first90::prepare_hts_likdat(dat, prg_dat, fp)
 
     # Starting parameters
@@ -49,6 +50,8 @@ fitModel <- function(survey_data, program_data, fp){
                 rep(log(0.5), 2), # Females: Rate ratio for testing in the 35+ age group
                 boot::logit(0.75)) # Proportion of OI tested for HIV in 2010 (assumed to be 95% in 2015)
 
+
+    str("running ll_hts")
     first90::ll_hts(theta0, fp, likdat)
 
     maxIterations <- 250
