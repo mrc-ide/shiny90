@@ -16,6 +16,7 @@ testthat::test_that("can upload a new set of survey data for the same country", 
     Sys.sleep(1)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
+    # there are 4 rows in the test survey data
     testthat::expect_equal(length(rows), 4)
 })
 
@@ -34,8 +35,8 @@ testthat::test_that("cannot upload a csv with wrong headers", {
     Sys.sleep(1)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
-    # 445 is the number of rows in the built in survey data for Malawi
-    testthat::expect_equal(length(rows), 445)
+    # there are more than 4 rows in the original survey data, 4 in the test data
+    testthat::expect_gt(length(rows), 4)
 
     errorAlert <- wd$findElement("css", "#wrongSurveyHeadersError")
     expectTextEqual("Invalid headers! Survey data must match the given column headers.", errorAlert)
@@ -56,8 +57,8 @@ testthat::test_that("cannot upload a csv for a different country", {
     Sys.sleep(1)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
-    # 445 is the number of rows in the built in survey data for Malawi
-    testthat::expect_equal(length(rows), 445)
+    # there are more than 4 rows in the original survey data, 4 in the test data
+    testthat::expect_gt(length(rows), 4)
 
     errorAlert <- wd$findElement("css", "#wrongSurveyCountryError")
     expectTextEqual("You cannot upload survey data for a different country.", errorAlert)
