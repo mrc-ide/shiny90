@@ -12,7 +12,6 @@ testthat::test_that("can walk through app", {
     startNewWorkingSet(wd)
 
     uploadSpectrumFile(wd)
-
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")

@@ -54,6 +54,18 @@ waitFor <- function(predicate, timeout = 5) {
     }
 }
 
+waitForElement <- function(wd, cssSelector) {
+    elements <- waitForThisManyElements(wd, cssSelector, 1)
+    elements[[1]]
+}
+
+waitForThisManyElements <- function(wd, cssSelector, expectedNumber) {
+    waitFor(function() {
+        length(wd$findElements("css", cssSelector)) == expectedNumber
+    })
+    wd$findElements("css", cssSelector)
+}
+
 waitForChildElement <- function(parent, cssSelector) {
     children <- waitForThisManyChildren(parent, cssSelector, 1)
     children[[1]]
