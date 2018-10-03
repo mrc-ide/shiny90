@@ -49,7 +49,12 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
 
+    output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
+    output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
+
     shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -82,7 +87,16 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        state$survey <<- read.csv(inFile$datapath)
+        newSurvey <- read.csv(inFile$datapath)
+
+        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey)))
+
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newSurvey)
+
+        if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
+            state$survey <<- newSurvey
+        }
+
     })
 
     shiny::observeEvent(input$programData, {
