@@ -6,16 +6,23 @@ testthat::test_that("title is present", {
     expectTextEqual("Shiny 90", wd$findElement(using = "css", ".title"))
 })
 
+checkBasicSpectrumDetails <- function(wd) {
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
+    expectTextEqual("Malawi_2018_version_8.PJNZ", section$findChildElement("css", "li span"))
+    wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+    firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+    expectTextEqual("2022", firstYearCell)
+}
+
 testthat::test_that("can walk through app", {
     wd$navigate(appURL)
 
     startNewWorkingSet(wd)
 
     uploadSpectrumFile(wd)
-    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
-    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
-    expectTextEqual("Malawi_2018_version_8.PJNZ", section$findChildElement("css", "li span"))
+    checkBasicSpectrumDetails(wd)
 
     switchTab(wd, "Upload survey data")
 
