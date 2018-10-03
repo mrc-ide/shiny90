@@ -33,6 +33,7 @@ spectrumFiles <- function(input, output, state) {
                     data = first90::prepare_inputs(inFile$datapath))
 
                     state$dataSets <- c(state$dataSets, list(dataSet))
+
                 }
                 else {
                     state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
@@ -51,8 +52,10 @@ spectrumFiles <- function(input, output, state) {
     output$spectrum_combinedData <- shiny::renderDataTable(state$combinedData)
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
+    state$pjnz_summary <- shiny::reactive({ first90::get_pjnz_summary_data(state$combinedData()) })
+
     renderSpectrumFileList(input, output, state)
-    renderSpectrumPlots(output, state$combinedData)
+    renderSpectrumPlots(output, state$pjnz_summary)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
@@ -90,29 +93,29 @@ renderSpectrumFileList <- function(input, output, state) {
     })
 }
 
-renderSpectrumPlots <- function(output, combinedData) {
+renderSpectrumPlots <- function(output, pjnz_summary) {
 
     output$spectrumTotalPop <- shiny::renderPlot({
-        if (!is.null(combinedData())) {
-            first90::plot_pnjz_pop(combinedData())
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_pop(pjnz_summary())
         }
     })
 
     output$spectrumPLHIV <- shiny::renderPlot({
-        if (!is.null(combinedData())) {
-            first90::plot_pnjz_plhiv(combinedData())
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_plhiv(pjnz_summary())
         }
     })
 
     output$spectrumPrevalence <- shiny::renderPlot({
-        if (!is.null(combinedData())) {
-            first90::plot_pnjz_prv(combinedData())
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_prv(pjnz_summary())
         }
     })
 
     output$spectrumIncidence <- shiny::renderPlot({
-        if (!is.null(combinedData())) {
-            first90::plot_pnjz_inc(combinedData())
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_inc(pjnz_summary())
         }
     })
 
