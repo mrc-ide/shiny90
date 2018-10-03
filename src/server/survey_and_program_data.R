@@ -2,7 +2,7 @@ library(magrittr)
 
 getProgramDataInWideFormat <- function(country) {
     long <- prgm_dat[prgm_dat$country == country, ]
-    long$country <- NULL
+    long$country <- as.character(long$country)
     long$notes <- NULL
 
     if (nrow(long) == 0) {
@@ -10,19 +10,20 @@ getProgramDataInWideFormat <- function(country) {
         # we create an empty data table here, but the plots require values, so we shouldn't let the user proceed
         # unless they have at least one non-empty row
         years <- seq(2005, 2017)
+        country <- rep(country, 2018-2005)
         NbTested <- as.numeric(rep(NA, 2018-2005))
         NbTestPos <- as.numeric(rep(NA, 2018-2005))
         NbANCTested <- as.numeric(rep(NA, 2018-2005))
         NBTestedANCPos <- as.numeric(rep(NA, 2018-2005))
 
         wide <- data.frame(years, NbTested, NbTestPos, NbANCTested, NBTestedANCPos)
-        colnames(wide) <- c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
+        colnames(wide) <- c("year", "country", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
     }
     else {
         wide <- tidyr::spread(long, key = "type", value = "number")
     }
 
-    wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
+    wide[c("year", "country", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -63,6 +64,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey, stretchH = "all") %>%
+            rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("est", renderer = number_renderer) %>%
@@ -74,6 +76,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_wide, stretchH = "all") %>%
+            rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("NbTested", renderer = number_renderer) %>%
             rhandsontable::hot_col("NbTestPos", renderer = number_renderer) %>%
             rhandsontable::hot_col("NbANCTested", renderer = number_renderer) %>%
