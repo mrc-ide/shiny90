@@ -19,13 +19,13 @@ spectrumFiles <- function(input, output, state) {
         } else {
             summary <- first90::get_pjnz_summary_data(state$combinedData())
             f <- data.frame(
-                "Year" = summary[["year"]],
-                "Population" = summary[["pop"]],
-                "Prevalence" = summary[["prevalence"]],
-                "Incidence" = summary[["incidence"]],
-                "People living with HIV" = summary[["plhiv"]]
+                Year = summary[["year"]],
+                Population = summary[["pop"]],
+                Prevalence = summary[["prevalence"]],
+                Incidence = summary[["incidence"]],
+                plhiv = summary[["plhiv"]]
             )
-            f <- f[order(-Year)]
+            f <- f[order(-f$Year),]
             f
         }
     })
@@ -66,7 +66,11 @@ spectrumFiles <- function(input, output, state) {
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
     output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = list (
         paging = FALSE,
-        dom = "lrt"    # https://datatables.net/reference/option/dom
+        dom = "lrt",    # https://datatables.net/reference/option/dom
+        columns = list(
+            NULL, NULL, NULL, NULL,
+            list(title = 'People living with HIV')
+        )
     ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
