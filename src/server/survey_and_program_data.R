@@ -109,6 +109,19 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
+        newProgramData <- read.csv(inFile$datapath)
+
+        state$wrongProgramHeaders <<- !identical(sort(names(newProgramData)), sort(names(state$program_wide)))
+
+        str(subset(newProgramData, gsub("\t", "", country)))
+
+        state$wrongProgamCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgramData,
+                        gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newProgramData)
+
+        if (!state$wrongProgramHeaders && !state$wrongProgamCountry){
+            state$program_wide <<- newProgramData
+        }
+
         state$program_wide <<- read.csv(inFile$datapath)
     })
 
