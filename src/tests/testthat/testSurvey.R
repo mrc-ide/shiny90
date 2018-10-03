@@ -10,7 +10,7 @@ uploadSpectrumFileAndSwitchTab <- function(){
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
 
-    switchTab(wd, "Upload survey data", timeout=10)
+    switchTab(wd, "Upload survey data")
 }
 
 testthat::test_that("can upload a new set of survey data for the same country", {

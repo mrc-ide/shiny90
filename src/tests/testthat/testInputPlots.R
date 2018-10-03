@@ -11,7 +11,7 @@ testthat::test_that("input plots are rendered", {
     waitForVisible(section)
     waitForVisible(wd$findElement("css", "#spectrumFileList"))
 
-    switchTab(wd, "Review input data")
+    switchTab(wd, "Review input data", timeout=10)
 
     waitForShinyToNotBeBusy(wd)
 

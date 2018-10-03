@@ -1,4 +1,4 @@
-switchTab <- function(wd, tabText, timeout=5) {
+switchTab <- function(wd, tabText, timeout=10) {
     selector <- glue::glue("a[data-toggle=tab][data-value='{tabText}']")
 
     link <- wd$findElement("css", selector)
