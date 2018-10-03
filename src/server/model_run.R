@@ -13,6 +13,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
                 fitModel(surveyAsDataTable, surveyAndProgramData$program(), spectrumFilesState$combinedData())
             },
             error = function(e) {
+                str(e)
                 state$state <- "error"
             })
 
@@ -21,15 +22,14 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
             # model fit results
             likdat <- out$likdat
             fp <- out$fp
-            mod <- eppasm::simmod.specfp(fp)
+            mod <- out$mod
 
-            # model output
-            out_evertest = outEverTest(fp, mod)
-
-            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, out_evertest)
+            plotModelRunResults(output, spectrumFilesState$country, surveyAsDataTable, likdat, fp, mod)
             state$state <- "finished"
 
         }
+
+        str(out)
     })
 
     output$modelRunState <- shiny::reactive({ state$state })
@@ -57,28 +57,39 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     state
 }
 
-plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, out_evertest) {
+plotModelRunResults <- function(output, country, surveyAsDataTable, likdat, fp, mod) {
+
+    out_evertest <- first90::get_out_evertest(fp, mod)
+
     output$outputs_totalNumberOfTests <- shiny::renderPlot({
-        plotTotalNumberOfTests(fp, mod, likdat)
+        first90::plot_out_nbtest(mod, fp, likdat, country)
     })
 
     output$outputs_numberOfPositiveTests <- shiny::renderPlot({
-        plotNumberOfPositiveTests(fp, mod, likdat)
+        first90::plot_out_nbpostest(mod, fp, likdat, country)
     })
 
     output$outputs_percentageNegativeOfTested <- shiny::renderPlot({
-        plotPercentageNegativeOfTested(surveyAsDataTable, out_evertest)
+        first90::plot_out_evertestneg(mod, fp, likdat, country, surveyAsDataTable, out_evertest)
     })
 
     output$outputs_percentagePLHIVOfTested <- shiny::renderPlot({
-        plotPercentagePLHIVOfTested(surveyAsDataTable, out_evertest)
+        first90::plot_out_evertestpos(mod, fp, likdat, country, surveyAsDataTable, out_evertest)
     })
 
     output$outputs_percentageTested <- shiny::renderPlot({
-        plotPercentageTested(surveyAsDataTable, out_evertest)
+        first90::plot_out_evertest(mod, fp, likdat, country, surveyAsDataTable, out_evertest)
     })
 
     output$outputs_firstAndSecond90 <- shiny::renderPlot({
-        plotFirstAndSecond90(fp, mod, out_evertest)
+        first90::plot_out_90s(mod, fp, likdat, country)
+    })
+
+    output$outputs_womenEverTested <- shiny::renderPlot({
+        first90::plot_out_evertest_fbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest)
+    })
+
+    output$outputs_menEverTested <- shiny::renderPlot({
+        first90::plot_out_evertest_mbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest)
     })
 }

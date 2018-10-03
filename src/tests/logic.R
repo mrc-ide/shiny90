@@ -2,7 +2,10 @@ startNewWorkingSet <- function(wd) {
     enterText(wd$findElement("css", "#workingSetName"), "Selenium working set")
     Sys.sleep(0.5)
     wd$findElement("css", "#startNewWorkingSet")$clickElement()
-    expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
+    
+    workingSetName <- wd$findElement("css", "#workingSet_name")
+    waitForVisible(workingSetName)
+    expectTextEqual("Selenium working set", workingSetName)
 }
 
 uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
@@ -28,6 +31,7 @@ uploadDigestFile <- function(wd,dir="../../../sample_files/", filename = "testin
 verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
+
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
     expectTextEqual(filename, section$findChildElement("css", "li span"))
 
