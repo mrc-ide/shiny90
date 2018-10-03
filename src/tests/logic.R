@@ -5,7 +5,7 @@ startNewWorkingSet <- function(wd) {
     expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
 }
 
-uploadFile <- function(wd, dir="../../../sample_files/", filename = "Malawi_2018_version_8.PJNZ", inputId) {
+uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 
     path <- paste(dir, filename, sep="")
 
