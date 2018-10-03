@@ -24,9 +24,9 @@ testthat::test_that("can walk through app", {
     switchTab(wd, "Run model")
     runModelButton <- wd$findElement("css", inActivePane("#runModel"))
     runModelButton$clickElement()
-    waitForShinyToNotBeBusy(wd, timeout=200)
+    waitForShinyToNotBeBusy(wd, timeout=60)
 
-    switchTab(wd, "View model outputs")
+    switchTab(wd, "View model outputs", timeout=60)
     expectElementPresent(wd, inActivePane("#outputs_totalNumberOfTests"))
     expectElementPresent(wd, inActivePane("#outputs_numberOfPositiveTests"))
     expectElementPresent(wd, inActivePane("#outputs_percentageNegativeOfTested"))
