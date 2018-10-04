@@ -12,7 +12,6 @@ testthat::test_that("can walk through app", {
     startNewWorkingSet(wd)
 
     uploadSpectrumFile(wd)
-
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")
@@ -33,4 +32,6 @@ testthat::test_that("can walk through app", {
     expectElementPresent(wd, inActivePane("#outputs_percentagePLHIVOfTested"))
     expectElementPresent(wd, inActivePane("#outputs_percentageTested"))
     expectElementPresent(wd, inActivePane("#outputs_firstAndSecond90"))
+    expectElementPresent(wd, inActivePane("#outputs_womenEverTested"))
+    expectElementPresent(wd, inActivePane("#outputs_menEverTested"))
 })

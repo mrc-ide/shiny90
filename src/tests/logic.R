@@ -5,7 +5,7 @@ startNewWorkingSet <- function(wd) {
     expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
 }
 
-uploadFile <- function(wd, dir="../../../sample_files/", filename = "Malawi_2018_version_8.PJNZ", inputId) {
+uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 
     path <- paste(dir, filename, sep="")
 
@@ -33,4 +33,8 @@ verifyPJNZFileUpload <- function(filename) {
     uploadedFile <- section$findChildElement("css", "li span")
     waitForVisible(uploadedFile)
     expectTextEqual(filename, uploadedFile)
+
+    wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+    firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+    expectTextEqual("2022", firstYearCell)
 }

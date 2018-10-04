@@ -13,6 +13,23 @@ spectrumFiles <- function(input, output, state) {
             NULL
         }
     })
+    state$asDataFrame <- shiny::reactive({
+        if (is.null(state$combinedData())) {
+            NULL
+        } else {
+            summary <- first90::get_pjnz_summary_data(state$combinedData())
+            f <- data.frame(
+                Year = summary[["year"]],
+                Population = summary[["pop"]],
+                Prevalence = summary[["prevalence"]],
+                Incidence = summary[["incidence"]],
+                plhiv = summary[["plhiv"]],
+                art_coverage = summary[["art_coverage"]]
+            )
+            f <- f[order(-f$Year),]
+            f
+        }
+    })
 
     shiny::observeEvent(input$spectrumFile, {
 
@@ -48,7 +65,15 @@ spectrumFiles <- function(input, output, state) {
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
-    output$spectrum_combinedData <- shiny::renderDataTable(state$combinedData)
+    output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = list (
+        paging = FALSE,
+        dom = "lrt",    # https://datatables.net/reference/option/dom
+        columns = list(
+            NULL, NULL, NULL, NULL,
+            list(title = 'People living with HIV'),
+            list(title = 'ART coverage')
+        )
+    ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
     renderSpectrumFileList(input, output, state)
@@ -93,7 +118,7 @@ renderSpectrumFileList <- function(input, output, state) {
 renderSpectrumPlots <- function(output, combinedData) {
     output$spectrum_plots <- shiny::renderPlot({
         if (!is.null(combinedData())) {
-            first90::plot_pnjz(combinedData())
+            first90::plot_pjnz(combinedData())
         }
     })
 }
