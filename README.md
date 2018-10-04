@@ -11,16 +11,19 @@ Run
 ./bootstrap
 ```
 
-to install R dependencies. If your system doesn't suppport bash, then instead run `./bootstrap.R`.
+to install R dependencies. If your system doesn't suppport bash, then instead 
+run `./bootstrap.R`.
 
 ## Run app
-Then run 
+To run the app, use `./app.R`
+
+
+To run the app with the model in an inaccurate, but much faster mode for 
+testing, use:
 
 ```
-./app.R
+SHINY90_TEST_MODE=TRUE ./app.R
 ```
-
-to run the app.
 
 ## Tests
 ```
