@@ -153,3 +153,13 @@ a, a:focus, a:hover {
     height: 180px;
     text-align: center;
 }
+
+.working-set-notes pre {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
