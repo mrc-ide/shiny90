@@ -52,10 +52,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
+    output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
+    output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
 
     shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongProgramHeaders", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongProgramCountry", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -108,8 +112,16 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (is.null(inFile)){
             return(NULL)
         }
+        
+        newProgram <- read.csv(inFile$datapath)
 
-        state$program_wide <<- read.csv(inFile$datapath)
+        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_wide)))
+
+        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newProgram)
+
+        if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
+            state$program_wide <<- newProgram
+        }
     })
 
     # We track change events so that we know when to reset the model run state.

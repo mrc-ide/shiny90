@@ -29,5 +29,8 @@ verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
-    expectTextEqual(filename, section$findChildElement("css", "li span"))
+
+    uploadedFile <- section$findChildElement("css", "li span")
+    waitForVisible(uploadedFile)
+    expectTextEqual(filename, uploadedFile)
 }
