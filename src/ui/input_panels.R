@@ -3,10 +3,7 @@ panelSurvey <- function() {
         shiny::div("The following is survey data sourced from DHS and PHIA. You can edit the data below in the browser, or copy and
              paste to Excel and edit the data there. You can also replace the data entirely be uploading a new CSV file
              below", class = "mb-3"),
-        shiny::h3("Edit data in place"),
-        shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
-        rhandsontable::rHandsontableOutput("hot_survey"),
-        shiny::h3("Or upload new data"),
+        shiny::h3("Upload new data"),
         shiny::conditionalPanel(
         condition = "output.wrongSurveyHeaders",
             shiny::div("Invalid headers! Survey data must match the given column headers.", id="wrongSurveyHeadersError", class = "alert alert-warning")
@@ -15,7 +12,10 @@ panelSurvey <- function() {
         condition = "output.wrongSurveyCountry",
             shiny::div("You cannot upload survey data for a different country.", id="wrongSurveyCountryError", class = "alert alert-warning")
         ),
-        shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv"))
+        shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
+        shiny::h3("Or edit data in place"),
+            shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
+        rhandsontable::rHandsontableOutput("hot_survey")
     )
 }
 
@@ -52,20 +52,20 @@ panelReviewInput <- function() {
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
         ),
         shiny::div("", class = "row",
-            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewPrevalence"))),
-            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewIncidence")))
-        ),
-        shiny::div("", class = "row",
-            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalPop"))),
-            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewPLHIV")))
-        ),
-        shiny::div("", class = "row",
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalTests"))),
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalPositive")))
         ),
         shiny::div("", class = "row",
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANC"))),
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANCPositive")))
+        ),
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewPrevalence"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewIncidence")))
+        ),
+        shiny::div("", class = "row",
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalPop"))),
+            shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewPLHIV")))
         )
     )
     # TODO: More plots when Jeff knows what's needed
