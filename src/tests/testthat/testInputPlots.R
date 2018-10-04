@@ -1,6 +1,7 @@
 library(methods)
 context("basic")
 testthat::test_that("input plots are rendered", {
+
     wd$navigate(appURL)
 
     startNewWorkingSet(wd)
@@ -15,12 +16,12 @@ testthat::test_that("input plots are rendered", {
 
     waitForShinyToNotBeBusy(wd)
 
-    expectElementPresent(wd, inActivePane("#reviewPrevalence"))
-    expectElementPresent(wd, inActivePane("#reviewIncidence"))
-    expectElementPresent(wd, inActivePane("#reviewTotalPop"))
-    expectElementPresent(wd, inActivePane("#reviewPLHIV"))
     expectElementPresent(wd, inActivePane("#reviewTotalTests"))
     expectElementPresent(wd, inActivePane("#reviewTotalPositive"))
     expectElementPresent(wd, inActivePane("#reviewTotalANC"))
     expectElementPresent(wd, inActivePane("#reviewTotalANCPositive"))
+    expectElementPresent(wd, inActivePane("#reviewPrevalence"))
+    expectElementPresent(wd, inActivePane("#reviewIncidence"))
+    expectElementPresent(wd, inActivePane("#reviewTotalPop"))
+    expectElementPresent(wd, inActivePane("#reviewPLHIV"))
 })

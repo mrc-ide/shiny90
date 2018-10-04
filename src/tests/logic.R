@@ -1,5 +1,7 @@
 startNewWorkingSet <- function(wd) {
-    enterText(wd$findElement("css", "#workingSetName"), "Selenium working set")
+    workingSetName <- wd$findElement("css", "#workingSetName")
+    waitForVisible(workingSetName)
+    enterText(workingSetName, "Selenium working set")
     Sys.sleep(0.5)
     wd$findElement("css", "#startNewWorkingSet")$clickElement()
     expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
