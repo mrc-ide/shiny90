@@ -14,13 +14,13 @@ Run
 to install R dependencies. If your system doesn't suppport bash, then instead run `./bootstrap.R`.
 
 ## Run app
-Then run 
+To run the app: `./app.R`
+
+To run the app with an inaccurate model for quick testing:
 
 ```
-./app.R
+SHINY90_TEST_MODE=TRUE ./app.R
 ```
-
-to run the app.
 
 ## Tests
 ```

@@ -46,7 +46,7 @@ panelReviewInput <- function() {
             Please review it, and go back and edit your data if anything doesn't look right.",
             class = "mb-3"
         ),
-        shiny::div("",
+        shiny::div("", class="suggest-save",
             shiny::span("Once you have reviewed your input data, you may want to "),
             shiny::tags$a(class = "shiny-download-link", href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
