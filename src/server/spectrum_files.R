@@ -13,19 +13,27 @@ spectrumFiles <- function(input, output, state) {
             NULL
         }
     })
+
+    state$pjnz_summary <- shiny::reactive({
+        if (is.null(state$combinedData())){
+            NULL
+        }
+        else {
+            first90::get_pjnz_summary_data(state$combinedData())
+        }
+    })
+
     state$asDataFrame <- shiny::reactive({
-        if (is.null(state$combinedData())) {
+        if (is.null(state$pjnz_summary())) {
             NULL
         } else {
-            summary <- first90::get_pjnz_summary_data(state$combinedData())
-            f <- data.frame(
-                Year = summary[["year"]],
-                Population = summary[["pop"]],
-                Prevalence = summary[["prevalence"]],
-                Incidence = summary[["incidence"]],
-                plhiv = summary[["plhiv"]],
-                art_coverage = summary[["art_coverage"]]
-            )
+            summary <- state$pjnz_summary()
+            f <- data.frame(Year = summary[["year"]],
+                            Population = summary[["pop"]],
+                            Prevalence = summary[["prevalence"]],
+                            Incidence = summary[["incidence"]],
+                            plhiv = summary[["plhiv"]],
+                            art_coverage = summary[["art_coverage"]])
             f <- f[order(-f$Year),]
             f
         }
@@ -47,7 +55,7 @@ spectrumFiles <- function(input, output, state) {
                     }
 
                     dataSet = list(name = inFile$name,
-                    data = first90::prepare_inputs(inFile$datapath))
+                                    data = first90::prepare_inputs(inFile$datapath))
 
                     state$dataSets <- c(state$dataSets, list(dataSet))
                 }
@@ -77,7 +85,7 @@ spectrumFiles <- function(input, output, state) {
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
     renderSpectrumFileList(input, output, state)
-    renderSpectrumPlots(output, state$combinedData)
+    renderSpectrumPlots(output, state$pjnz_summary)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
@@ -115,10 +123,30 @@ renderSpectrumFileList <- function(input, output, state) {
     })
 }
 
-renderSpectrumPlots <- function(output, combinedData) {
-    output$spectrum_plots <- shiny::renderPlot({
-        if (!is.null(combinedData())) {
-            first90::plot_pjnz(combinedData())
+renderSpectrumPlots <- function(output, pjnz_summary) {
+
+    output$spectrumTotalPop <- shiny::renderPlot({
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_pop(pjnz_summary())
         }
     })
+
+    output$spectrumPLHIV <- shiny::renderPlot({
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_plhiv(pjnz_summary())
+        }
+    })
+
+    output$spectrumPrevalence <- shiny::renderPlot({
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_prv(pjnz_summary())
+        }
+    })
+
+    output$spectrumIncidence <- shiny::renderPlot({
+        if (!is.null(pjnz_summary())) {
+            first90::plot_pjnz_inc(pjnz_summary())
+        }
+    })
+
 }
