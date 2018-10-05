@@ -43,3 +43,16 @@ verifyPJNZFileUpload <- function(filename) {
     firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
     expectTextEqual("2022", firstYearCell)
 }
+
+
+uploadSpectrumFileAndSwitchTab <- function(tabName){
+    wd$navigate(appURL)
+
+    startNewWorkingSet(wd)
+
+    uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+
+    switchTab(wd, tabName)
+}

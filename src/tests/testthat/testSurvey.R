@@ -1,21 +1,9 @@
 library(methods)
 testthat::context("basic")
 
-uploadSpectrumFileAndSwitchTab <- function(){
-    wd$navigate(appURL)
-
-    startNewWorkingSet(wd)
-
-    uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
-    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
-
-    switchTab(wd, "Upload survey data")
-}
-
 testthat::test_that("can upload a new set of survey data for the same country", {
 
-    uploadSpectrumFileAndSwitchTab()
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
     uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
     Sys.sleep(1)
@@ -27,7 +15,7 @@ testthat::test_that("can upload a new set of survey data for the same country", 
 
 testthat::test_that("cannot upload a csv with wrong headers", {
 
-    uploadSpectrumFileAndSwitchTab()
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
 
     uploadFile(wd, filename = "badsurvey_malawi.csv", inputId="#surveyData")
 
@@ -43,7 +31,7 @@ testthat::test_that("cannot upload a csv with wrong headers", {
 
 testthat::test_that("cannot upload a csv for a different country", {
 
-    uploadSpectrumFileAndSwitchTab()
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
 
     uploadFile(wd, filename = "fakesurvey_angola.csv", inputId="#surveyData")
 
