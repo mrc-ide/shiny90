@@ -2,15 +2,20 @@ dir.create("selenium_files", showWarnings = FALSE)
 downloaded_files <- file.path(getwd(), "selenium_files")
 
 appURL <- "http://localhost:8080"
+profile <- RSelenium::makeFirefoxProfile(list(
+    # This is an enum, '2' means use the value in the next parameter
+    "browser.download.dir" = downloaded_files,
+    "browser.download.folderList" = 2L,
+    "browser.helperApps.neverAsk.saveToDisk" = "application/zip"
+))
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",
-    extraCapabilities = RSelenium::makeFirefoxProfile(list(
-        "moz:firefoxOptions" = list(args = list('--headless')),
-        # This is an enum, '2' means use the value in the next parameter
-        "browser.download.dir" = downloaded_files,
-        "browser.download.folderList" = 2L,
-        "browser.helperApps.neverAsk.saveToDisk" = "application/zip"
-    ))
+    extraCapabilities = c(
+        list("moz:firefoxOptions" = list(
+            args = list('--headless')
+        )),
+        profile
+    )
 )
 wd$open(silent = TRUE)
 print(glue::glue("Downloads will be saved to {downloaded_files}"))
@@ -60,7 +65,7 @@ waitFor <- function(predicate, timeout = 5) {
         Sys.sleep(0.25)
         waited <- waited + 0.25
         if (waited >= timeout) {
-            stop("Timed out waiting for predicate to be true")
+            stop(glue::glue("Timed out waiting {timeout}s for predicate to be true"))
         }
     }
 }
