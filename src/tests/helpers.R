@@ -1,11 +1,19 @@
+dir.create("selenium_files", showWarnings = FALSE)
+downloaded_files <- file.path(getwd(), "selenium_files")
+
 appURL <- "http://localhost:8080"
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",
-    extraCapabilities = list("moz:firefoxOptions" = list(
-        args = list('--headless')
+    extraCapabilities = RSelenium::makeFirefoxProfile(list(
+        "moz:firefoxOptions" = list(args = list('--headless')),
+        # This is an enum, '2' means use the value in the next parameter
+        "browser.download.dir" = downloaded_files,
+        "browser.download.folderList" = 2L,
+        "browser.helperApps.neverAsk.saveToDisk" = "application/zip"
     ))
 )
 wd$open(silent = TRUE)
+print(glue::glue("Downloads will be saved to {downloaded_files}"))
 
 getText <- function(element) {
     texts <- element$getElementText()

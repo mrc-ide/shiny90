@@ -6,3 +6,4 @@ github_token
 node_modules/*
 nohup\.out
 packages/*
+selenium_files/*
