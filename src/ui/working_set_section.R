@@ -10,8 +10,10 @@ workingSetSection <- function() {
             )
         ),
         shiny::div("",
-            shiny::tags$strong("Working set notes:"),
-            shiny::textOutput("workingSet_notes", inline = TRUE)
+            shiny::tags$strong("Working set notes:", style="vertical-align: top"),
+            shiny::div("", class="working-set-notes",
+                shiny::verbatimTextOutput("workingSet_notes")
+            )
         ),
         # Fades out notes that are too long to fit in box
         shiny::div("", style = "position: absolute; bottom: 0; left: 0; right: 0; height: 50px;

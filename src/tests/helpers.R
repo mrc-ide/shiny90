@@ -15,7 +15,10 @@ getText <- function(element) {
     texts[[1]]
 }
 
-enterText <- function(element, text) {
+enterText <- function(element, text, clear = FALSE) {
+    if (clear) {
+        element$clearElement()
+    }
     element$sendKeysToElement(list(text))
 }
 
