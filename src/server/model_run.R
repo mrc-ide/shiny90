@@ -15,7 +15,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         out <- tryCatch({
 
                 fitModel(surveyAsDataTable,
-                        surveyAndProgramData$program(),
+                        surveyAndProgramData$program_data,
                         spectrumFilesState$combinedData(),
                         spectrumFilesState$country)
 
@@ -75,7 +75,7 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         }
     })
 
-    shiny::observeEvent(surveyAndProgramData$program_wide, {
+    shiny::observeEvent(surveyAndProgramData$program_data, {
         if (surveyAndProgramData$programTableChanged > 1){
             state$state <- ""
         }

@@ -8,7 +8,7 @@ server <- function(input, output, session) {
 
     surveyAndProgramData <- shiny::reactiveValues()
     surveyAndProgramData$survey <- NULL
-    surveyAndProgramData$program_wide <- NULL
+    surveyAndProgramData$program_data <- NULL
 
     spectrumFilesState <- shiny::reactiveValues()
     spectrumFilesState$dataSets <- list()

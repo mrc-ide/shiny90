@@ -1,30 +1,5 @@
 library(magrittr)
 
-getProgramDataInWideFormat <- function(country) {
-    long <- prgm_dat[prgm_dat$country == country, ]
-    long$country <- NULL
-    long$notes <- NULL
-
-    if (nrow(long) == 0) {
-
-        # we create an empty data table here, but the plots require values, so we shouldn't let the user proceed
-        # unless they have at least one non-empty row
-        years <- seq(2005, 2017)
-        NbTested <- as.numeric(rep(NA, 2018-2005))
-        NbTestPos <- as.numeric(rep(NA, 2018-2005))
-        NbANCTested <- as.numeric(rep(NA, 2018-2005))
-        NBTestedANCPos <- as.numeric(rep(NA, 2018-2005))
-
-        wide <- data.frame(years, NbTested, NbTestPos, NbANCTested, NBTestedANCPos)
-        colnames(wide) <- c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")
-    }
-    else {
-        wide <- tidyr::spread(long, key = "type", value = "number")
-    }
-
-    wide[c("year", "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos")]
-}
-
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
@@ -34,18 +9,11 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            state$program_wide <- getProgramDataInWideFormat(spectrumFilesState$country)
+            state$program_data <- first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL)
         }
     })
 
-    state$program <- shiny::reactive({
-        tidyr::gather(state$program_wide,
-            key = "type", value = "number",
-            "NbTested", "NbTestPos", "NbANCTested", "NBTestedANCPos"
-        )
-    })
-
-    state$anyProgramData <- shiny::reactive({ !is.null(state$program_wide) && nrow(state$program_wide %>% na.omit()) > 0 })
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data %>% na.omit()) > 0 })
 
     output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
 
@@ -73,11 +41,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$program_wide, stretchH = "all") %>%
-            rhandsontable::hot_col("NbTested", renderer = number_renderer) %>%
-            rhandsontable::hot_col("NbTestPos", renderer = number_renderer) %>%
-            rhandsontable::hot_col("NbANCTested", renderer = number_renderer) %>%
-            rhandsontable::hot_col("NBTestedANCPos", renderer = number_renderer)
+        rhandsontable::rhandsontable(state$program_data, stretchH = "all") %>%
+            rhandsontable::hot_col("tot", renderer = number_renderer) %>%
+            rhandsontable::hot_col("totpos", renderer = number_renderer) %>%
+            rhandsontable::hot_col("vct", renderer = number_renderer) %>%
+            rhandsontable::hot_col("vctpos", renderer = number_renderer) %>%
+            rhandsontable::hot_col("anc", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ancpos", renderer = number_renderer)
     })
 
     shiny::observeEvent(input$surveyData, {
@@ -106,7 +76,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        state$program_wide <<- read.csv(inFile$datapath)
+        state$program_data <<- read.csv(inFile$datapath)
     })
 
     # We track change events so that we know when to reset the model run state.
@@ -123,7 +93,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
-            state$program_wide <<- rhandsontable::hot_to_r(input$hot_program)
+            state$program_data <<- rhandsontable::hot_to_r(input$hot_program)
             state$programTableChanged <<- state$programTableChanged + 1
         }
     })
