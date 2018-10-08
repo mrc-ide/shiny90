@@ -1,25 +1,11 @@
-prepareProgramInput <- function(program_data) {
-
-    prgm_dat <- program_data
-    prgm_tot <- program_data$number[program_data$type == 'NbTested'] + program_data$number[program_data$type == 'NbANCTested']
-    prgm_pos <- program_data$number[program_data$type == 'NbTestPos'] + program_data$number[program_data$type == 'NBTestedANCPos']
-    year <- unique(prgm_dat$year)
-    prg_dat <- data.frame(year=year, tot=prgm_tot, pos=prgm_pos, agegr='15-99', sex='both', hivstatus='all')
-
-    prg_dat
-}
-
 fitModel <- function(survey_data, program_data, fp, country){
 
     # Prepare survey data for ever tested for HIV.
     age_group <- c('15-24','25-49')
     dat <- first90::select_hts(survey_data, country, age_group)
 
-    # We prepare the program data
-    prg_dat <- prepareProgramInput(program_data)
-
     # We create the likelihood data
-    likdat <- first90::prepare_hts_likdat(dat, prg_dat, fp)
+    likdat <- first90::prepare_hts_likdat(dat, program_data, fp)
 
     # Starting parameters
     data("theta0", package="first90")
