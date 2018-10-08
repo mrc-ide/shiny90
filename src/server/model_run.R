@@ -34,9 +34,10 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
             state$simul <- out$simul
 
             # model output
-            out_evertest = first90::get_out_evertest(mod, fp)
+            out_evertest = first90::get_out_evertest(state$mod, state$fp)
 
-            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, spectrumFilesState$country, out_evertest)
+            plotModelRunResults(output, surveyAsDataTable, likdat, state$fp,
+                                state$mod, spectrumFilesState$country, out_evertest)
             state$state <- "finished"
         }
     })
@@ -50,21 +51,21 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         } else {
             first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
         }
-    })
+    }, options = defaultDataTableOptions())
     output$outputs_table_aware <- shiny::renderDataTable({
         if (is.null(state$mod) || is.null(state$fp)) {
             NULL
         } else {
             first90::tab_out_aware(state$mod, state$fp, simul = state$simul)
         }
-    })
+    }, options = defaultDataTableOptions())
     output$outputs_table_art_coverage <- shiny::renderDataTable({
         if (is.null(state$mod) || is.null(state$fp)) {
             NULL
         } else {
             first90::tab_out_artcov(state$mod, state$fp)
         }
-    })
+    }, options = defaultDataTableOptions())
 
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.

@@ -73,13 +73,14 @@ spectrumFiles <- function(input, output, state) {
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
-    output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = list (
-        paging = FALSE,
-        dom = "lrt",    # https://datatables.net/reference/option/dom
-        columns = list(
-            NULL, NULL, NULL, NULL,
-            list(title = 'People living with HIV'),
-            list(title = 'ART coverage')
+    output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = c(
+        defaultDataTableOptions,
+        list(
+            columns = list(
+                NULL, NULL, NULL, NULL,
+                list(title = 'People living with HIV'),
+                list(title = 'ART coverage')
+            )
         )
     ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
