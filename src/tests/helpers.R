@@ -11,9 +11,9 @@ profile <- RSelenium::makeFirefoxProfile(list(
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",
     extraCapabilities = c(
-        # list("moz:firefoxOptions" = list(
-        #     args = list('--headless')
-        # )),
+        list("moz:firefoxOptions" = list(
+            args = list('--headless')
+        )),
         profile
     )
 )
