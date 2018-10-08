@@ -2,9 +2,11 @@ startNewWorkingSet <- function(wd) {
     workingSetName <- wd$findElement("css", "#workingSetName")
     waitForVisible(workingSetName)
     enterText(workingSetName, "Selenium working set")
-    Sys.sleep(0.5)
-    wd$findElement("css", "#startNewWorkingSet")$clickElement()
-    expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
+
+    waitFor(function() {
+        wd$findElement("css", "#startNewWorkingSet")$clickElement()
+        getText(wd$findElement("css", "#workingSet_name")) == "Selenium working set"
+    })
 }
 
 uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
