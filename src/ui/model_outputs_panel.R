@@ -26,14 +26,14 @@ panelModelOutputs <- function() {
                     shiny::div("", class = "col-md-6 col-sm-12", withSpinner(shiny::plotOutput(outputId = "outputs_menEverTested")))
                 )
             ),
-            shiny::tabPanel("Data",
-                # TODO
-                # By year (2000 to current):
-                # - Proportion ever tested by status
-                # - Proportion aware
-                # - ART coverage
-                # Download full long format data set (stratified by age and sex)
-                shiny::img(src = "images/mock-sheet.png")
+            shiny::tabPanel("Proportion ever tested",
+                shiny::dataTableOutput("outputs_table_ever_tested")
+            ),
+            shiny::tabPanel("Proportion aware",
+                shiny::dataTableOutput("outputs_table_aware")
+            ),
+            shiny::tabPanel("ART coverage",
+                shiny::dataTableOutput("outputs_table_art_coverage")
             )
         )
     )

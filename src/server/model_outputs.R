@@ -27,16 +27,19 @@ fitModel <- function(survey_data, program_data, fp, country){
     first90::ll_hts(theta0, fp, likdat)
 
     maxIterations <- 250
+    numberOfSimulations <- 400
     if (Sys.getenv("SHINY90_TEST_MODE") == "TRUE") {
         maxIterations <- 2
+        numberOfSimulations <- 2
     }
 
     opt <- optim(theta0, first90::ll_hts, fp = fp, likdat = likdat, method="BFGS",
                     control=list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations))
 
     round(exp(opt$par[1:36]), 3)
+    simul <- simul.test(opt, fp, sim = numberOfSimulations)
     fp <- first90::create_hts_param(opt$par, fp)
     mod <- eppasm::simmod.specfp(fp)
 
-    return(list("fp" = fp, "likdat" = likdat, "mod" = mod))
+    return(list(fp = fp, likdat = likdat, mod = mod, simul = simul))
 }
