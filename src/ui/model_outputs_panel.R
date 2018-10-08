@@ -27,13 +27,19 @@ panelModelOutputs <- function() {
                 )
             ),
             shiny::tabPanel("Proportion ever tested",
-                shiny::dataTableOutput("outputs_table_ever_tested")
+                div("", class="outputs-ever-tested",
+                    shiny::dataTableOutput("outputs_table_ever_tested")
+                )
             ),
             shiny::tabPanel("Proportion aware",
-                shiny::dataTableOutput("outputs_table_aware")
+                div("", class="outputs-aware",
+                    shiny::dataTableOutput("outputs_table_aware")
+                )
             ),
             shiny::tabPanel("ART coverage",
-                shiny::dataTableOutput("outputs_table_art_coverage")
+                div("", class="outputs-art-coverage",
+                    shiny::dataTableOutput("outputs_table_art_coverage")
+                )
             )
         )
     )

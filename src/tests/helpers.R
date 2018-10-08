@@ -11,9 +11,9 @@ profile <- RSelenium::makeFirefoxProfile(list(
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",
     extraCapabilities = c(
-        list("moz:firefoxOptions" = list(
-            args = list('--headless')
-        )),
+        # list("moz:firefoxOptions" = list(
+        #     args = list('--headless')
+        # )),
         profile
     )
 )
@@ -101,4 +101,13 @@ isBusy <- function(wd) {
 
 waitForShinyToNotBeBusy <- function(wd, timeout = 10) {
     waitFor(function() { !isBusy(wd) }, timeout = timeout)
+}
+
+checkTopLeftTableCellHasThisValue <- function(tabName, tableSelector, expectedValue) {
+    waitForVisible(wd$findElement("css", inActivePane(".tabbable")))
+    tabSelector <- glue::glue("li a[data-value='{tabName}']")
+    wd$findElement("css", inActivePane(tabSelector))$clickElement()
+    cellSelector <- glue::glue("{tableSelector} tr:nth-child(1) td:nth-child(1)")
+    firstYearCell <- waitForElement(wd, inActivePane(cellSelector))
+    expectTextEqual(expectedValue, firstYearCell)
 }
