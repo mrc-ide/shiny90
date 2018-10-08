@@ -45,27 +45,15 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     output$modelRunState <- shiny::reactive({ state$state })
     shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
 
-    output$outputs_table_ever_tested <- shiny::renderDataTable({
-        if (is.null(state$mod) || is.null(state$fp)) {
-            NULL
-        } else {
-            first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
-        }
-    }, options = defaultDataTableOptions())
-    output$outputs_table_aware <- shiny::renderDataTable({
-        if (is.null(state$mod) || is.null(state$fp)) {
-            NULL
-        } else {
-            first90::tab_out_aware(state$mod, state$fp, simul = state$simul)
-        }
-    }, options = defaultDataTableOptions())
-    output$outputs_table_art_coverage <- shiny::renderDataTable({
-        if (is.null(state$mod) || is.null(state$fp)) {
-            NULL
-        } else {
-            first90::tab_out_artcov(state$mod, state$fp)
-        }
-    }, options = defaultDataTableOptions())
+    output$outputs_table_ever_tested <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
+    })
+    output$outputs_table_aware <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_aware(state$mod, state$fp, simul = state$simul)
+    })
+    output$outputs_table_art_coverage <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_artcov(state$mod, state$fp)
+    })
 
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.
@@ -87,6 +75,16 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     })
     
     state
+}
+
+renderModelResultsTable <- function(state, func) {
+    shiny::renderDataTable({
+        if (is.null(state$mod) || is.null(state$fp)) {
+            NULL
+        } else {
+            func(state)
+        }
+    }, options = defaultDataTableOptions())
 }
 
 plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, country, out_evertest) {
