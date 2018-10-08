@@ -17,6 +17,20 @@ testthat::test_that("uploading bad spectrum file gives error message", {
     expectTextToContain("Unable to read the contents of this file", errorBox)
 })
 
+testthat::test_that("can plot pjnz", {
+    wd$navigate(appURL)
+    startNewWorkingSet(wd)
+
+    uploadSpectrumFile(wd, filename = "Togo_Centrale_2018.PJNZ")
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+
+    expectElementPresent(wd, inActivePane("#spectrumPrevalence"))
+    expectElementPresent(wd, inActivePane("#spectrumIncidence"))
+    expectElementPresent(wd, inActivePane("#spectrumTotalPop"))
+    expectElementPresent(wd, inActivePane("#spectrumPLHIV"))
+})
+
 testthat::test_that("can upload multiple spectrum files and then remove one", {
     wd$navigate(appURL)
     startNewWorkingSet(wd)

@@ -10,10 +10,12 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         surveyAsDataTable <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
         out <- tryCatch({
+
                 fitModel(surveyAsDataTable,
                         surveyAndProgramData$program(),
                         spectrumFilesState$combinedData(),
                         spectrumFilesState$country)
+
             },
             error = function(e) {
                 str(e)
