@@ -4,7 +4,7 @@ testthat::context("basic")
 testthat::test_that("can upload a new set of program data for the same country", {
 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")
-    uploadFile(wd, filename = "fakeprogramdata_malawi.csv", inputId="#programData")
+    uploadFile(wd, filename = "testprogramdata_malawi.csv", inputId="#programData")
 
     Sys.sleep(1.5)
     rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")
@@ -16,7 +16,7 @@ testthat::test_that("can upload a new set of program data for the same country",
 testthat::test_that("cannot upload progam data with wrong headers", {
 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")
-    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#programData")
+    uploadFile(wd, filename = "badprogramdata_malawi.csv", inputId="#programData")
 
     Sys.sleep(1.5)
     rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")
@@ -33,7 +33,7 @@ testthat::test_that("cannot upload progam data with wrong headers", {
 testthat::test_that("cannot upload program data for a different country", {
 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")
-    uploadFile(wd, filename = "fakeprogramdata_angola.csv", inputId="#programData")
+    uploadFile(wd, filename = "testprogramdata_angola.csv", inputId="#programData")
 
     Sys.sleep(1.5)
     rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")

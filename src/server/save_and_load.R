@@ -29,7 +29,7 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$survey, file = path)
         })
         paths <- doAndRememberPath(paths, "program.csv", function(path) {
-            write.csv(surveyAndProgramData$program_wide, file = path, row.names = FALSE)
+            write.csv(surveyAndProgramData$program_data, file = path, row.names = FALSE)
         })
     }
 
@@ -110,7 +110,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 spectrumFilesState$country <- readCountry()
                 workingSet$notes <- file.readText("notes.txt")
                 surveyAndProgramData$survey <- readCSVIfPresent("survey.csv")
-                surveyAndProgramData$program_wide <- readCSVIfPresent("program.csv")
+                surveyAndProgramData$program_data <- readCSVIfPresent("program.csv")
                 spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
                     list(
                         name = removeExtension(path, "rds"),
