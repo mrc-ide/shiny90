@@ -1,29 +1,5 @@
 library(magrittr)
 
-getProgramDataWithDefault <- function(country) {
-    program_data <- prgm_dat[prgm_dat$country == country, ]
-    if (nrow(program_data) == 0) {
-        # we create an empty data table here, but the plots require values, so we shouldn't let the user proceed
-        # unless they have at least one non-empty row
-        years <- seq(2005, 2017)
-        tot <- as.numeric(rep(NA, 2018-2005))
-        totpos <- as.numeric(rep(NA, 2018-2005))
-        NbANCTested <- as.numeric(rep(NA, 2018-2005))
-        NBTestedANCPos <- as.numeric(rep(NA, 2018-2005))
-
-        program_data <- data.frame(
-            years = seq(2005, 2017),
-            tot    <- as.numeric(rep(NA, 2018-2005)),
-            totpos <- as.numeric(rep(NA, 2018-2005)),
-            vct    <- as.numeric(rep(NA, 2018-2005)),
-            vctpos <- as.numeric(rep(NA, 2018-2005)),
-            anc    <- as.numeric(rep(NA, 2018-2005)),
-            ancpos <- as.numeric(rep(NA, 2018-2005))
-        )
-    }
-    program_data
-}
-
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
@@ -33,7 +9,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            state$program_data <- getProgramDataWithDefault(spectrumFilesState$country)
+            state$program_data <- first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL)
         }
     })
 
