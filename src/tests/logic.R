@@ -4,7 +4,7 @@ startNewWorkingSet <- function(wd) {
     enterText(workingSetName, "Selenium working set")
 
     Sys.sleep(0.5)
-    
+
     waitFor(function() {
         wd$findElement("css", "#startNewWorkingSet")$clickElement()
         getText(wd$findElement("css", "#workingSet_name")) == "Selenium working set"
@@ -41,6 +41,9 @@ verifyPJNZFileUpload <- function(filename) {
 
     # Check data tab
     wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+
+    waitForVisible(wd$findElement("css", "table"), timeout = 10)
+
     firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
     expectTextEqual("2022", firstYearCell)
 }
