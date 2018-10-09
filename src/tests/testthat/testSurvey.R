@@ -6,7 +6,7 @@ testthat::test_that("can upload a new set of survey data for the same country", 
     uploadSpectrumFileAndSwitchTab("Upload survey data")
     uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
-    Sys.sleep(1.5)
+    Sys.sleep(2)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
     # there are 4 rows in the test survey data
@@ -19,7 +19,7 @@ testthat::test_that("cannot upload a csv with wrong headers", {
 
     uploadFile(wd, filename = "badsurvey_malawi.csv", inputId="#surveyData")
 
-    Sys.sleep(1.5)
+    Sys.sleep(2)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
     # there are more than 4 rows in the original survey data, 4 in the test data
@@ -35,7 +35,7 @@ testthat::test_that("cannot upload a csv for a different country", {
 
     uploadFile(wd, filename = "fakesurvey_angola.csv", inputId="#surveyData")
 
-    Sys.sleep(1.5)
+    Sys.sleep(2)
     rows <- wd$findElements("css", "#hot_survey .ht_master tbody .rowHeader")
 
     # there are more than 4 rows in the original survey data, 4 in the test data

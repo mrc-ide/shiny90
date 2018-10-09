@@ -3,7 +3,9 @@ startNewWorkingSet <- function(wd) {
     waitForVisible(workingSetName)
     enterText(workingSetName, "Selenium working set")
     Sys.sleep(0.5)
-    wd$findElement("css", "#startNewWorkingSet")$clickElement()
+    startNewWorkingSet <- wd$findElement("css", "#startNewWorkingSet")
+    waitForVisible(startNewWorkingSet)
+    startNewWorkingSet$clickElement()
     expectTextEqual("Selenium working set", wd$findElement("css", "#workingSet_name"))
 }
 
@@ -29,10 +31,10 @@ verifyPJNZFileUpload <- function(filename) {
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
 
     uploadedFile <- section$findChildElement("css", "li span")
-    waitForVisible(uploadedFile)
+    waitForVisible(uploadedFile, 10)
     expectTextEqual(filename, uploadedFile)
 
-    waitForVisible(wd$findElement("css", ".tabbable"))
+    waitForVisible(wd$findElement("css", ".tabbable"), 10)
 
     # Check data tab
     wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
@@ -59,7 +61,7 @@ runModel <- function() {
 
 waitForDownloadedFile <- function(name) {
     downloadPath <- file.path(downloaded_files, name)
-    waitFor(function() { file.exists(downloadPath) })
+    waitFor(function() { file.exists(downloadPath) }, 10)
 }
 
 
@@ -70,7 +72,7 @@ uploadSpectrumFileAndSwitchTab <- function(tabName){
 
     uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
+    waitForVisible(section, timeout = 10)
 
     switchTab(wd, tabName)
 }

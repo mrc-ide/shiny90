@@ -55,8 +55,8 @@ expectElementPresent <- function(wd, cssSelector) {
     )
 }
 
-waitForVisible <- function(element) {
-    waitFor(function() { element$isElementDisplayed() == "TRUE" })
+waitForVisible <- function(element, timeout = 5) {
+    waitFor(function() { element$isElementDisplayed() == "TRUE" }, timeout)
 }
 
 waitFor <- function(predicate, timeout = 5) {
