@@ -19,7 +19,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
-
     shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)

@@ -18,6 +18,7 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 
     enterText(fileUpload, normalizePath(path))
 
+    Sys.sleep(0.5)
     fileUpload$sendKeysToElement(list(key = "enter"))
 }
 
@@ -38,8 +39,12 @@ verifyPJNZFileUpload <- function(filename) {
     waitForVisible(wd$findElement("css", ".tabbable"))
 
     # Check data tab
-    wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
-    firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+    firstYearCell <- NULL
+    waitFor(function(){
+        wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+        firstYearCell <<- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+        !is.null(firstYearCell)
+    })
     expectTextEqual("2022", firstYearCell)
 }
 

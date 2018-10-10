@@ -38,8 +38,8 @@ enterText <- function(element, text, clear = FALSE) {
     if (clear) {
         element$clearElement()
     }
-    element$sendKeysToElement(list(text))
-    Sys.sleep(0.5)
+
+    element$sendKeysToElement(strsplit(text, "")[[1]])
 }
 
 expectTextEqual <- function(expected, element) {
@@ -62,8 +62,21 @@ expectElementPresent <- function(wd, cssSelector) {
     )
 }
 
+getElementIfPresent <- function(wd, cssSelector) {
+    elements <- wd$findElements("css", cssSelector)
+    if (length(elements) > 0) {
+        elements[[1]]
+    } else {
+        NULL
+    }
+}
+
 waitForVisible <- function(element) {
-    waitFor(function() { element$isElementDisplayed() == "TRUE" })
+    waitFor(function() { isVisible(element) })
+}
+
+isVisible <- function(element) {
+    element$isElementDisplayed() == "TRUE"
 }
 
 numberScreenshot <- local({
