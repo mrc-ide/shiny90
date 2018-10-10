@@ -9,7 +9,7 @@ panelModelRun <- function() {
             )
         ),
         actionButtonWithCustomClass("runModel", "Run model", cssClasses = "btn-red btn-lg btn-success"),
-        shiny::div("This make take several minutes. Please do not close your browser.", class = "mt-3"),
+        shiny::div("This may take several minutes. Please do not close your browser.", class = "mt-3"),
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'finished'",
             shiny::div("", class = "mt-3",
