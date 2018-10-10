@@ -13,7 +13,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
-    state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data %>% na.omit()) > 0 })
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
 
     output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
 
