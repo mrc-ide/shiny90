@@ -31,7 +31,7 @@ verifyPJNZFileUpload <- function(filename) {
     waitForVisible(section)
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
 
-    uploadedFile <- section$findChildElement("css", "li span")
+    uploadedFile <- waitForChildElement(section, "li > span")
     waitForVisible(uploadedFile)
     expectTextEqual(filename, uploadedFile)
 
