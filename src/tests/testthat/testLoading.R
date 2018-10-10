@@ -44,8 +44,8 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     switchTab(wd, "Review input data")
     link = wd$findElement("css", inActivePane(".suggest-save a"))
     expectTextEqual("download a digest file", link)
-    link$clickElement()
-    waitForDownloadedFile("from_review.zip.shiny90")
+
+    downloadFileFromLink(link, "from_review.zip.shiny90")
 
     # Save it from outputs tab
     editWorkingSetMetadata(wd, name = "from_outputs")
@@ -54,8 +54,8 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     switchTab(wd, "View model outputs")
     link = wd$findElement("css", inActivePane(".suggest-save a"))
     expectTextEqual("download a digest file", link)
-    link$clickElement()
-    waitForDownloadedFile("from_outputs.zip.shiny90")
+
+    downloadFileFromLink(link, "from_outputs.zip.shiny90")
 
     # Load each one and check them
     wd$navigate(appURL)

@@ -69,3 +69,13 @@ waitForDownloadedFile <- function(name) {
     downloadPath <- file.path(downloadedFiles, name)
     waitFor(function() { file.exists(downloadPath) })
 }
+
+downloadFileFromLink <- function(link, name) {
+
+    waitFor(function() {
+        link$clickElement()
+        downloadPath <- file.path(downloadedFiles, name)
+        Sys.sleep(0.1)
+        file.exists(downloadPath)
+    })
+}
