@@ -19,7 +19,8 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
     fileUpload <- wd$findElement("css", inputId)
     fileUpload$setElementAttribute("style", "display: inline")
 
-    enterText(fileUpload, normalizePath(path))
+    filePath <- normalizePath(path)
+    enterText(fileUpload, filePath)
 
     Sys.sleep(0.5)
     fileUpload$sendKeysToElement(list(key = "enter"))
@@ -27,12 +28,31 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 
 uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Malawi_2018_version_8.PJNZ") {
     expectTextEqual("Upload spectrum file(s)", wd$findElement("css", inActivePane(".panelTitle")))
-    uploadFile(wd, dir, filename, "#spectrumFile")
+
+    path <- paste(dir, filename, sep="")
+
+    fileUpload <- wd$findElement("css", "#spectrumFile")
+    fileUpload$setElementAttribute("style", "display: inline")
+
+    filePath <- normalizePath(path)
+
+    waitFor(function(){
+        enterText(fileUpload, filePath)
+
+        helperInput = wd$findElement("css", ".shiny-input-container > div > input")
+
+        value <- helperInput$getElementAttribute("value")
+
+        value[[1]] == filename
+    })
+
+    Sys.sleep(0.5)
+    fileUpload$sendKeysToElement(list(key = "enter"))
 }
 
 verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
+
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
 
     uploadedFile <- waitForChildElement(section, "li > span")
