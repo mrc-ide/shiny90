@@ -9,10 +9,12 @@ testthat::test_that("input plots are rendered", {
     uploadSpectrumFile(wd)
 
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section, timeout=15)
+    waitForVisible(section)
     waitForVisible(wd$findElement("css", "#spectrumFileList"))
 
-    switchTab(wd, "Review input data", timeout=15)
+    switchTab(wd, "Upload programmatic data", timeout=10)
+
+    switchTab(wd, "Review input data", timeout=10)
 
     waitForShinyToNotBeBusy(wd)
 

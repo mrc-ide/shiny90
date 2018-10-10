@@ -20,6 +20,8 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
     fileUpload$setElementAttribute("style", "display: inline")
 
     enterText(fileUpload, normalizePath(path))
+
+    Sys.sleep(0.5)
     fileUpload$sendKeysToElement(list(key = "enter"))
 }
 
@@ -33,18 +35,19 @@ verifyPJNZFileUpload <- function(filename) {
     waitForVisible(section)
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
 
-    uploadedFile <- section$findChildElement("css", "li span")
-    waitForVisible(uploadedFile, 10)
+    uploadedFile <- waitForChildElement(section, "li > span")
+    waitForVisible(uploadedFile)
     expectTextEqual(filename, uploadedFile)
 
-    waitForVisible(wd$findElement("css", ".tabbable"), 10)
+    waitForVisible(wd$findElement("css", ".tabbable"))
 
     # Check data tab
-    wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
-
-    waitForVisible(wd$findElement("css", "table"), timeout = 10)
-
-    firstYearCell <- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+    firstYearCell <- NULL
+    waitFor(function(){
+        wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
+        firstYearCell <<- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
+        !is.null(firstYearCell)
+    })
     expectTextEqual("2022", firstYearCell)
 }
 
@@ -66,10 +69,19 @@ runModel <- function() {
 }
 
 waitForDownloadedFile <- function(name) {
-    downloadPath <- file.path(downloaded_files, name)
-    waitFor(function() { file.exists(downloadPath) }, 10)
+    downloadPath <- file.path(downloadedFiles, name)
+    waitFor(function() { file.exists(downloadPath) })
 }
 
+downloadFileFromLink <- function(link, name) {
+
+    waitFor(function() {
+        link$clickElement()
+        downloadPath <- file.path(downloadedFiles, name)
+        Sys.sleep(0.1)
+        file.exists(downloadPath)
+    })
+}
 
 uploadSpectrumFileAndSwitchTab <- function(tabName){
     wd$navigate(appURL)
@@ -78,7 +90,7 @@ uploadSpectrumFileAndSwitchTab <- function(tabName){
 
     uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section, timeout = 10)
+    waitForVisible(section)
 
     switchTab(wd, tabName)
 }

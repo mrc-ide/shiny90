@@ -18,3 +18,5 @@ jobs:
           paths:
             - packages
       - run: ./test
+      - store_artifacts:
+          path: selenium_screenshots

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 rm -r selenium_files
+rm -r selenium_screenshots
 set -e
 
 # Start shiny APP

@@ -37,7 +37,7 @@ testthat::test_that("can upload multiple spectrum files and then remove one", {
 
     uploadSpectrumFile(wd, filename = "Togo_Centrale_2018.PJNZ")
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section, timeout = 10)
+    waitForVisible(section)
 
     uploadSpectrumFile(wd, filename = "Togo_Maritime_2018.PJNZ")
     files <- waitForThisManyChildren(section, "li", 2)

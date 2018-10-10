@@ -1,24 +1,30 @@
 dir.create("selenium_files", showWarnings = FALSE)
-downloaded_files <- file.path(getwd(), "selenium_files")
+downloadedFiles <- normalizePath("selenium_files", mustWork = TRUE)
+
+dir.create("selenium_screenshots", showWarnings = FALSE)
+screenshotsFolder <- normalizePath("selenium_screenshots", mustWork = TRUE)
 
 appURL <- "http://localhost:8080"
 profile <- RSelenium::makeFirefoxProfile(list(
     # This is an enum, '2' means use the value in the next parameter
-    "browser.download.dir" = downloaded_files,
+    "browser.download.dir" = downloadedFiles,
     "browser.download.folderList" = 2L,
     "browser.helperApps.neverAsk.saveToDisk" = "application/zip"
 ))
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",
     extraCapabilities = c(
-        list("moz:firefoxOptions" = list(
-            args = list('--headless')
-        )),
+        list(
+            "moz:firefoxOptions" = list(
+                args = list('--headless')
+            ),
+            "screen-resolution" = "1080x1920"
+        ),
         profile
     )
 )
 wd$open(silent = TRUE)
-print(glue::glue("Downloads will be saved to {downloaded_files}"))
+print(glue::glue("Downloads will be saved to {downloadedFiles}"))
 
 getText <- function(element) {
     texts <- element$getElementText()
@@ -32,7 +38,8 @@ enterText <- function(element, text, clear = FALSE) {
     if (clear) {
         element$clearElement()
     }
-    element$sendKeysToElement(list(text))
+
+    element$sendKeysToElement(strsplit(text, "")[[1]])
 }
 
 expectTextEqual <- function(expected, element) {
@@ -55,9 +62,30 @@ expectElementPresent <- function(wd, cssSelector) {
     )
 }
 
-waitForVisible <- function(element, timeout = 5) {
-    waitFor(function() { element$isElementDisplayed() == "TRUE" }, timeout)
+getElementIfPresent <- function(wd, cssSelector) {
+    elements <- wd$findElements("css", cssSelector)
+    if (length(elements) > 0) {
+        elements[[1]]
+    } else {
+        NULL
+    }
 }
+
+waitForVisible <- function(element) {
+    waitFor(function() { isVisible(element) })
+}
+
+isVisible <- function(element) {
+    element$isElementDisplayed() == "TRUE"
+}
+
+numberScreenshot <- local({
+    counter <- 0
+    function(){
+        counter <<- counter + 1
+        counter
+    }
+})
 
 waitFor <- function(predicate, timeout = 5) {
     waited <- 0
@@ -65,7 +93,10 @@ waitFor <- function(predicate, timeout = 5) {
         Sys.sleep(0.25)
         waited <- waited + 0.25
         if (waited >= timeout) {
-            stop(glue::glue("Timed out waiting {timeout}s for predicate to be true"))
+            num <- numberScreenshot()
+            screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
+            wd$screenshot(file = screenshotPath)
+            stop(glue::glue("Timed out waiting {timeout}s for predicate to be true - screenshot {screenshotPath}"))
         }
     }
 }
