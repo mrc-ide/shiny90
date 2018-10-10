@@ -17,6 +17,7 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
     fileUpload$setElementAttribute("style", "display: inline")
 
     enterText(fileUpload, normalizePath(path))
+
     fileUpload$sendKeysToElement(list(key = "enter"))
 }
 
@@ -60,6 +61,6 @@ runModel <- function() {
 }
 
 waitForDownloadedFile <- function(name) {
-    downloadPath <- file.path(downloaded_files, name)
+    downloadPath <- file.path(downloadedFiles, name)
     waitFor(function() { file.exists(downloadPath) })
 }
