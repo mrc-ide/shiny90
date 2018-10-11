@@ -4,7 +4,7 @@ spectrumFiles <- function(input, output, state) {
 
     state$country <- NULL
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
-    state$combinedData <-shiny::reactive({
+    state$combinedData <- shiny::reactive({
         if (state$anyDataSets()) {
             # TODO use all files, not just first one
             state$dataSets[[1]]$data

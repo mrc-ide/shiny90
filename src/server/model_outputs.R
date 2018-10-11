@@ -23,5 +23,11 @@ fitModel <- function(survey_data, program_data, fp, country){
     fp <- first90::create_hts_param(opt$par, fp)
     mod <- eppasm::simmod.specfp(fp)
 
-    return(list("fp" = fp, "likdat" = likdat, "mod" = mod))
+    list(
+        survey_data = survey_data,
+        opt = opt,
+        fp = fp,
+        likdat = likdat,
+        mod = mod
+    )
 }

@@ -1,7 +1,4 @@
-modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
-    state <- shiny::reactiveValues()
-    state$state <- "not_run"
-
+modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
     shiny::observeEvent(input$runModel, {
 
         # the model fitting code expects survey data as a data table and program data as a data frame
@@ -9,32 +6,28 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
         # converting survey data to the expected format
         surveyAsDataTable <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
 
-        out <- tryCatch({
+        state$outputs <- tryCatch({
+            fitModel(surveyAsDataTable, surveyAndProgramData$program_data,
+                     spectrumFilesState$combinedData(), spectrumFilesState$country)
+        }, error = function(e) {
+            str(e)
+            state$state <- "error"
+        })
+    })
 
-                fitModel(surveyAsDataTable,
-                        surveyAndProgramData$program_data,
-                        spectrumFilesState$combinedData(),
-                        spectrumFilesState$country)
-
-            },
-            error = function(e) {
-                str(e)
-                state$state <- "error"
-            })
-
-        if (length(out) > 1){
-
+    shiny::observeEvent(state$outputs, {
+        if (length(state$outputs) > 1) {
             # model fit results
-            likdat <- out$likdat
-            fp <- out$fp
-            mod <- out$mod
+            likdat <- state$outputs$likdat
+            fp <- state$outputs$fp
+            mod <- state$outputs$mod
 
             # model output
             out_evertest = first90::get_out_evertest(mod, fp)
 
-            plotModelRunResults(output, surveyAsDataTable, likdat, fp, mod, spectrumFilesState$country, out_evertest)
+            plotModelRunResults(output, state$outputs$survey_data, likdat,
+                                fp, mod, spectrumFilesState$country, out_evertest)
             state$state <- "finished"
-
         }
     })
 
@@ -46,18 +39,26 @@ modelRun <- function(input, output, spectrumFilesState, surveyAndProgramData) {
     # So we only reset the state on subsequent change events.
     shiny::observeEvent(surveyAndProgramData$survey, {
         if (surveyAndProgramData$surveyTableChanged > 1){
-            state$state <- ""
+            state$state <- "stale"
         }
     })
 
     shiny::observeEvent(surveyAndProgramData$program_data, {
         if (surveyAndProgramData$programTableChanged > 1){
-            state$state <- ""
+            state$state <- "stale"
         }
     })
 
     shiny::observeEvent(spectrumFilesState$combinedData(), {
-        state$state <- ""
+        state$state <- "stale"
+    })
+
+    shiny::observeEvent(state$outputs_from_digest, {
+        if (!is.null(state$outputs_from_digest)) {
+            state$state <- "finished"
+            state$outputs <- state$outputs_from_digest
+            state$outputs_from_digest <- NULL
+        }
     })
     
     state
