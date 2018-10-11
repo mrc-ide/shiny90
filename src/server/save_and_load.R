@@ -131,7 +131,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 })
                 outputsPath <- "model_outputs/optim.rds"
                 if (file.exists(outputsPath)) {
-                    modelRunState$optim_from_digest <- readRDS(outputsPath)
+                    modelRunState$optim <- readRDS(outputsPath)
                     simulPath <- "model_outputs/simul.rds"
                     if (file.exists(simulPath)) {
                         modelRunState$simul <- readRDS(simulPath)

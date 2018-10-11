@@ -10,19 +10,12 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         }
     })
 
-    state$preparedSurveyData <- shiny::reactive({
-        if (is.null(state$surveyAsDataTable)) {
-            NULL
-        } else {
-            ageGroup <- c('15-24','25-34','35-49')
-            first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$country, ageGroup)
-        }
-    })
-
     state$likelihood <- shiny::reactive({
         tryCatch({
+            ageGroup <- c('15-24','25-34','35-49')
+            preparedSurveyData <- first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$country, ageGroup)
             first90::prepare_hts_likdat(
-                state$preparedSurveyData(),
+                preparedSurveyData,
                 surveyAndProgramData$program_data,
                 spectrumFilesState$combinedData()
             )
@@ -94,13 +87,6 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
 
     shiny::observeEvent(spectrumFilesState$combinedData(), {
         state$state <- "stale"
-    })
-
-    shiny::observeEvent(state$optim_from_digest, {
-        if (!is.null(state$optim_from_digest)) {
-            state$optim <- state$optim_from_digest
-            state$optim_from_digest <- NULL
-        }
     })
     
     state
