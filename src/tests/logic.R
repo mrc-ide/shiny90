@@ -76,7 +76,7 @@ waitForDownloadedFile <- function(name) {
 }
 
 downloadFileFromLink <- function(link, name) {
-
+    waitForShinyToNotBeBusy(wd)
     waitFor(function() {
         link$clickElement()
         downloadPath <- file.path(downloadedFiles, name)

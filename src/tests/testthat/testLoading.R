@@ -1,15 +1,23 @@
 library(methods)
 testthat::context("basic")
 
-loadDigestFromWelcome <- function(wd, dir="../../../sample_files/", filename = "testing1234.zip.shiny90") {
-    loadButton <- wd$findElement("css", "#welcomeRequestDigestUpload")
+loadDigest <- function(wd, dir, filename, selector) {
+    loadButton <- wd$findElement("css", selector)
     loadButton$clickElement()
 
-    modal <- wd$findElement("css", ".modal-dialog")
+    modal <- wd$findElement("css", "#digestModal .modal-dialog")
     waitForVisible(modal)
 
     uploadFile(wd, dir, filename, "#digestUpload")
     waitForVisible(wd$findElement("css", "#workingSet_name"))
+}
+
+loadDigestFromWelcome <- function(wd, dir="../../../sample_files/", filename = "testing1234.zip.shiny90") {
+    loadDigest(wd, dir, filename, "#welcomeRequestDigestUpload")
+}
+
+loadDigestFromMainUI <- function(wd, dir="../../../sample_files/", filename = "testing1234.zip.shiny90") {
+    loadDigest(wd, dir, filename, "#requestDigestUpload")
 }
 
 testthat::test_that("can load digest from welcome page", {
@@ -58,15 +66,20 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     downloadFileFromLink(link, "from_outputs.zip.shiny90")
 
     # Load each one and check them
-    wd$navigate(appURL)
-    loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "from_review.zip.shiny90")
+    loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "from_review.zip.shiny90")
     expectTextEqual("from_review", wd$findElement("css", "#workingSet_name"))
-    verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
     testthat::expect_false(isTabEnabled(wd, "View model outputs"))
+    expectTextToContain(
+        "You need to run the model before you can see any outputs",
+        wd$findElement("css", inActivePane(".alert"))
+    )
+    switchTab(wd, "Upload spectrum file(s)")
+    verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
-    wd$navigate(appURL)
-    loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "from_outputs.zip.shiny90")
+    loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "from_outputs.zip.shiny90")
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_name"))
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
     testthat::expect_true(isTabEnabled(wd, "View model outputs"))
+    switchTab(wd, "View model outputs")
+    expectTextToContain("Now that the model has been run", wd$findElement("css", inActivePane(".suggest-save")))
 })
