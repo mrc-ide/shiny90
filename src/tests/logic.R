@@ -28,26 +28,7 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 
 uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Malawi_2018_version_8.PJNZ") {
     expectTextEqual("Upload spectrum file(s)", wd$findElement("css", inActivePane(".panelTitle")))
-
-    path <- paste(dir, filename, sep="")
-
-    fileUpload <- wd$findElement("css", "#spectrumFile")
-    fileUpload$setElementAttribute("style", "display: inline")
-
-    filePath <- normalizePath(path)
-
-    waitFor(function(){
-        enterText(fileUpload, filePath)
-
-        helperInput = wd$findElement("css", ".shiny-input-container > div > input")
-
-        value <- helperInput$getElementAttribute("value")
-
-        value[[1]] == filename
-    })
-
-    Sys.sleep(0.5)
-    fileUpload$sendKeysToElement(list(key = "enter"))
+    uploadFile(wd, dir, filename, "#spectrumFile")
 }
 
 verifyPJNZFileUpload <- function(filename) {

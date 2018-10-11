@@ -38,8 +38,8 @@ enterText <- function(element, text, clear = FALSE) {
     if (clear) {
         element$clearElement()
     }
-
-    element$sendKeysToElement(strsplit(text, "")[[1]])
+    
+    element$sendKeysToElement(list(text))
 }
 
 expectTextEqual <- function(expected, element) {
