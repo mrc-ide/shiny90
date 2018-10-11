@@ -62,9 +62,11 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "from_review.zip.shiny90")
     expectTextEqual("from_review", wd$findElement("css", "#workingSet_name"))
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
+    testthat::expect_false(isTabEnabled(wd, "View model outputs"))
 
     wd$navigate(appURL)
     loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "from_outputs.zip.shiny90")
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_name"))
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
+    testthat::expect_true(isTabEnabled(wd, "View model outputs"))
 })
