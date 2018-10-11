@@ -1,4 +1,7 @@
 modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
+    output$modelRunState <- shiny::reactive({ state$state })
+    shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
+
     # the model fitting code expects survey data as a data table and program data as a data frame
     # it could presumably be re-written to deal with survey data as a data frame but for now we're just
     # converting survey data to the expected format
@@ -10,6 +13,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         }
     })
 
+    # Likelihood
     state$likelihood <- shiny::reactive({
         tryCatch({
             ageGroup <- c('15-24','25-34','35-49')
@@ -25,6 +29,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         })
     })
 
+    # Run the model and the simulations
     shiny::observeEvent(input$runModel, {
         state$optim <- tryCatch({
             fitModel(state$likelihood(), spectrumFilesState$combinedData())
@@ -42,6 +47,15 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         print("Completed model run")
     })
 
+    renderOutputs(output, state, spectrumFilesState)
+
+    state <- invalidateOutputsWhenInputsChange(state, surveyAndProgramData, spectrumFilesState)
+    
+    state
+}
+
+renderOutputs <- function(output, state, spectrumFilesState) {
+    # Plot the results
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
             # model fit results
@@ -52,14 +66,12 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             out_evertest = first90::get_out_evertest(state$mod, state$fp)
 
             plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
-                                state$fp, state$mod, spectrumFilesState$country, out_evertest)
+            state$fp, state$mod, spectrumFilesState$country, out_evertest)
             state$state <- "finished"
         }
     })
 
-    output$modelRunState <- shiny::reactive({ state$state })
-    shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
-
+    # Render tables of results
     output$outputs_table_ever_tested <- renderModelResultsTable(state, function(state) {
         first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
     })
@@ -69,7 +81,9 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     output$outputs_table_art_coverage <- renderModelResultsTable(state, function(state) {
         first90::tab_out_artcov(state$mod, state$fp)
     })
+}
 
+invalidateOutputsWhenInputsChange <- function(state, surveyAndProgramData, spectrumFilesState) {
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.
     # So we only reset the state on subsequent change events.
@@ -88,7 +102,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     shiny::observeEvent(spectrumFilesState$combinedData(), {
         state$state <- "stale"
     })
-    
+
     state
 }
 
