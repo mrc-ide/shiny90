@@ -154,3 +154,17 @@ isBusy <- function(wd) {
 waitForShinyToNotBeBusy <- function(wd, timeout = 10) {
     waitFor(function() { !isBusy(wd) }, timeout = timeout)
 }
+
+checkTopLeftTableCellHasThisValue <- function(tabName, tableSelector, expectedValue) {
+    waitForVisible(wd$findElement("css", inActivePane(".tabbable")))
+    tabSelector <- glue::glue("li a[data-value='{tabName}']")
+    cellSelector <- glue::glue("{tableSelector} tr:first-child td:first-child")
+
+    firstYearCell <- NULL
+    waitFor(function(){
+        wd$findElement("css", inActivePane(tabSelector))$clickElement()
+        firstYearCell <<- waitForElement(wd, inActivePane(cellSelector))
+        !is.null(firstYearCell)
+    })
+    expectTextEqual(expectedValue, firstYearCell)
+}

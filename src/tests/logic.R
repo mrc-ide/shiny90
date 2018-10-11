@@ -49,16 +49,8 @@ verifyPJNZFileUpload <- function(filename) {
 
     expectTextEqual(filename, uploadedFile)
 
-    waitForVisible(wd$findElement("css", ".tabbable"))
-
     # Check data tab
-    firstYearCell <- NULL
-    waitFor(function(){
-        wd$findElement("css", inActivePane("li a[data-value=Data]"))$clickElement()
-        firstYearCell <<- waitForElement(wd, inActivePane(".spectrum-combined-data tr:nth-child(1) td:nth-child(1)"))
-        !is.null(firstYearCell)
-    })
-    expectTextEqual("2022", firstYearCell)
+    checkTopLeftTableCellHasThisValue("Data", ".spectrum-combined-data", "2022")
 }
 
 editWorkingSetMetadata <- function(wd, name = NULL, notes = NULL) {
