@@ -1,7 +1,4 @@
 modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
-    state$mod <- NULL
-    state$fp <- NULL
-    state$simul <- NULL
     # the model fitting code expects survey data as a data table and program data as a data frame
     # it could presumably be re-written to deal with survey data as a data frame but for now we're just
     # converting survey data to the expected format
@@ -49,6 +46,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             str(e)
             state$state <- "error"
         })
+        print("Completed model run")
     })
 
     shiny::observeEvent(state$optim, {

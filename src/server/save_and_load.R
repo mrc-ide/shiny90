@@ -37,6 +37,11 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
         paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("optim.rds")), function(path) {
             saveRDS(modelRunState$optim, file = path)
         })
+        if (!is.null(modelRunState$simul)) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("simul.rds")), function(path) {
+                saveRDS(modelRunState$simul, file = path)
+            })
+        }
     }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
@@ -127,6 +132,10 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 outputsPath <- "model_outputs/optim.rds"
                 if (file.exists(outputsPath)) {
                     modelRunState$optim_from_digest <- readRDS(outputsPath)
+                    simulPath <- "model_outputs/simul.rds"
+                    if (file.exists(simulPath)) {
+                        modelRunState$simul <- readRDS(simulPath)
+                    }
                 }
             })
         }

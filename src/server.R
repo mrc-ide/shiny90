@@ -16,6 +16,10 @@ server <- function(input, output, session) {
 
     modelRunState <- shiny::reactiveValues()
     modelRunState$state <- "not_run"
+    modelRunState$optim <- NULL
+    modelRunState$simul <- NULL
+    modelRunState$mod <- NULL
+    modelRunState$fp <- NULL
 
     # Logic
     loadState <- handleLoad(input, workingSet, surveyAndProgramData, spectrumFilesState, modelRunState)
