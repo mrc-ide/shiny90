@@ -13,15 +13,19 @@ fitModel <- function(likelihood, spectrumData) {
     optim(
         theta0,
         first90::ll_hts,
-        fp = fp,
-        likdat = likdat,
+        fp = spectrumData,
+        likdat = likelihood,
         method="BFGS",
         control=list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations),
         hessian = !testMode
     )
+}
+
+runSimulations <- function(opt, spectrumData) {
+    testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
     if (testMode) {
-        simul <- NULL
+        NULL
     } else {
-        simul <- simul.test(opt, fp, sim = numberOfSimulations)
+        simul.test(opt, spectrumData)
     }
 }

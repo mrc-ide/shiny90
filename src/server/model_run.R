@@ -42,14 +42,20 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             str(e)
             state$state <- "error"
         })
+
+        state$simul <- tryCatch({
+            runSimulations(state$optim, spectrumFilesState$combinedData())
+        }, error = function(e) {
+            str(e)
+            state$state <- "error"
+        })
     })
 
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
             # model fit results
             state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
-            state$mod <- eppasm::simmod.specfp(fp)
-            state$simul <- out$simul
+            state$mod <- eppasm::simmod.specfp(state$fp)
 
             # model output
             out_evertest = first90::get_out_evertest(state$mod, state$fp)
