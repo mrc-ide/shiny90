@@ -3,10 +3,13 @@ startNewWorkingSet <- function(wd) {
     waitForVisible(workingSetName)
     enterText(workingSetName, "Selenium working set")
 
+    Sys.sleep(0.5)
+
     waitFor(function() {
         wd$findElement("css", "#startNewWorkingSet")$clickElement()
         getText(wd$findElement("css", "#workingSet_name")) == "Selenium working set"
     })
+
 }
 
 uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
@@ -16,7 +19,8 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
     fileUpload <- wd$findElement("css", inputId)
     fileUpload$setElementAttribute("style", "display: inline")
 
-    enterText(fileUpload, normalizePath(path))
+    filePath <- normalizePath(path)
+    enterText(fileUpload, filePath)
 
     Sys.sleep(0.5)
     fileUpload$sendKeysToElement(list(key = "enter"))
@@ -29,11 +33,20 @@ uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Mal
 
 verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
-    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
+
+    waitFor(function(){
+        heading <- waitForChildElement(section, "h3")
+        getText(heading) == "Uploaded PJNZ files"
+    })
 
     uploadedFile <- waitForChildElement(section, "li > span")
-    waitForVisible(uploadedFile)
+
+    waitForAndTryAgain(function(){
+        isVisible(uploadedFile)
+    }, failureCallBack = function(){
+        uploadSpectrumFile(wd, dir="../../../sample_files/", filename)
+    })
+
     expectTextEqual(filename, uploadedFile)
 
     waitForVisible(wd$findElement("css", ".tabbable"))
@@ -78,4 +91,16 @@ downloadFileFromLink <- function(link, name) {
         Sys.sleep(0.1)
         file.exists(downloadPath)
     })
+}
+
+uploadSpectrumFileAndSwitchTab <- function(tabName){
+    wd$navigate(appURL)
+
+    startNewWorkingSet(wd)
+
+    uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+
+    switchTab(wd, tabName)
 }

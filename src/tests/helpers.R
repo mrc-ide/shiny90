@@ -35,11 +35,11 @@ getText <- function(element) {
 }
 
 enterText <- function(element, text, clear = FALSE) {
-    if (clear) {
+ #   if (clear) {
         element$clearElement()
-    }
-
-    element$sendKeysToElement(strsplit(text, "")[[1]])
+ #   }
+    element$click
+    element$sendKeysToElement(list(text))
 }
 
 expectTextEqual <- function(expected, element) {
@@ -97,6 +97,27 @@ waitFor <- function(predicate, timeout = 5) {
             screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
             wd$screenshot(file = screenshotPath)
             stop(glue::glue("Timed out waiting {timeout}s for predicate to be true - screenshot {screenshotPath}"))
+        }
+    }
+}
+
+waitForAndTryAgain <- function(predicate, failureCallBack, maxTries = 2, timeout = 5) {
+    waited <- 0
+    tries <- 0
+    while (!predicate()) {
+        Sys.sleep(0.25)
+        waited <- waited + 0.25
+        if (waited >= timeout) {
+            if (tries >= maxTries){
+                        num <- numberScreenshot()
+                        screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
+                        wd$screenshot(file = screenshotPath)
+                        stop(glue::glue("Timed out waiting {timeout}s for predicate to be true - screenshot {screenshotPath}"))
+            }
+            else {
+                tries <- tries + 1
+                failureCallBack()
+            }
         }
     }
 }
