@@ -35,10 +35,10 @@ getText <- function(element) {
 }
 
 enterText <- function(element, text, clear = FALSE) {
-    if (clear) {
+ #   if (clear) {
         element$clearElement()
-    }
-    
+ #   }
+    element$click
     element$sendKeysToElement(list(text))
 }
 

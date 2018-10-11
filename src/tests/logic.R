@@ -34,7 +34,10 @@ uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Mal
 verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
 
-    expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
+    waitFor(function(){
+        heading <- waitForChildElement(section, "h3")
+        getText(heading) == "Uploaded PJNZ files"
+    })
 
     uploadedFile <- waitForChildElement(section, "li > span")
     waitForVisible(uploadedFile)
