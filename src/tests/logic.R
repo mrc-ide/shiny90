@@ -17,6 +17,8 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
     fileUpload$setElementAttribute("style", "display: inline")
 
     enterText(fileUpload, normalizePath(path))
+
+    Sys.sleep(0.5)
     fileUpload$sendKeysToElement(list(key = "enter"))
 }
 
@@ -30,7 +32,7 @@ verifyPJNZFileUpload <- function(filename) {
     waitForVisible(section)
     expectTextEqual("Uploaded PJNZ files", waitForChildElement(section, "h3"))
 
-    uploadedFile <- section$findChildElement("css", "li span")
+    uploadedFile <- waitForChildElement(section, "li > span")
     waitForVisible(uploadedFile)
     expectTextEqual(filename, uploadedFile)
 
@@ -56,6 +58,16 @@ runModel <- function() {
 }
 
 waitForDownloadedFile <- function(name) {
-    downloadPath <- file.path(downloaded_files, name)
+    downloadPath <- file.path(downloadedFiles, name)
     waitFor(function() { file.exists(downloadPath) })
+}
+
+downloadFileFromLink <- function(link, name) {
+
+    waitFor(function() {
+        link$clickElement()
+        downloadPath <- file.path(downloadedFiles, name)
+        Sys.sleep(0.1)
+        file.exists(downloadPath)
+    })
 }
