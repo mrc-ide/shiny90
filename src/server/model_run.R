@@ -1,31 +1,56 @@
 modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
+    # the model fitting code expects survey data as a data table and program data as a data frame
+    # it could presumably be re-written to deal with survey data as a data frame but for now we're just
+    # converting survey data to the expected format
+    state$surveyAsDataTable <- shiny::reactive({
+        if (is.null(surveyAndProgramData$survey)) {
+            NULL
+        } else {
+            data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
+        }
+    })
+
+    state$preparedSurveyData <- shiny::reactive({
+        if (is.null(state$surveyAsDataTable)) {
+            NULL
+        } else {
+            ageGroup <- c('15-24','25-34','35-49')
+            first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$country, ageGroup)
+        }
+    })
+
+    state$likelihood <- shiny::reactive({
+        tryCatch({
+            first90::prepare_hts_likdat(
+                state$preparedSurveyData(),
+                surveyAndProgramData$program_data,
+                spectrumFilesState$combinedData()
+            )
+        }, error = function(e) {
+            print(glue::glue("An error occured calculating likelihood: {e}"))
+            NULL
+        })
+    })
+
     shiny::observeEvent(input$runModel, {
-
-        # the model fitting code expects survey data as a data table and program data as a data frame
-        # it could presumably be re-written to deal with survey data as a data frame but for now we're just
-        # converting survey data to the expected format
-        surveyAsDataTable <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
-
-        state$outputs <- tryCatch({
-            fitModel(surveyAsDataTable, surveyAndProgramData$program_data,
-                     spectrumFilesState$combinedData(), spectrumFilesState$country)
+        state$optim <- tryCatch({
+            fitModel(state$likelihood(), spectrumFilesState$combinedData())
         }, error = function(e) {
             str(e)
             state$state <- "error"
         })
     })
 
-    shiny::observeEvent(state$outputs, {
-        if (length(state$outputs) > 1) {
+    shiny::observeEvent(state$optim, {
+        if (!is.null(state$optim)) {
             # model fit results
-            likdat <- state$outputs$likdat
-            fp <- state$outputs$fp
-            mod <- state$outputs$mod
+            fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
+            mod <- eppasm::simmod.specfp(fp)
 
             # model output
             out_evertest = first90::get_out_evertest(mod, fp)
 
-            plotModelRunResults(output, state$outputs$survey_data, likdat,
+            plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
                                 fp, mod, spectrumFilesState$country, out_evertest)
             state$state <- "finished"
         }
@@ -53,11 +78,10 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         state$state <- "stale"
     })
 
-    shiny::observeEvent(state$outputs_from_digest, {
-        if (!is.null(state$outputs_from_digest)) {
-            state$state <- "finished"
-            state$outputs <- state$outputs_from_digest
-            state$outputs_from_digest <- NULL
+    shiny::observeEvent(state$optim_from_digest, {
+        if (!is.null(state$optim_from_digest)) {
+            state$optim <- state$optim_from_digest
+            state$optim_from_digest <- NULL
         }
     })
     

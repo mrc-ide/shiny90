@@ -32,10 +32,10 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$program_data, file = path, row.names = FALSE)
         })
     }
-    if (!is.null(modelRunState$outputs)) {
+    if (!is.null(modelRunState$optim)) {
         dir.create("model_outputs")
-        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("outputs.rds")), function(path) {
-            saveRDS(modelRunState$outputs, file = path)
+        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("optim.rds")), function(path) {
+            saveRDS(modelRunState$optim, file = path)
         })
     }
 
@@ -124,9 +124,9 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                         data = readRDS(file.path("spectrum_data", path))
                     )
                 })
-                outputsPath <- "model_outputs/outputs.rds"
+                outputsPath <- "model_outputs/optim.rds"
                 if (file.exists(outputsPath)) {
-                    modelRunState$outputs_from_digest <- readRDS(outputsPath)
+                    modelRunState$optim_from_digest <- readRDS(outputsPath)
                 }
             })
         }
