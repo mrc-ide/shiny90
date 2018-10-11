@@ -40,7 +40,13 @@ verifyPJNZFileUpload <- function(filename) {
     })
 
     uploadedFile <- waitForChildElement(section, "li > span")
-    waitForVisible(uploadedFile)
+
+    waitForAndTryAgain(function(){
+        isVisible(uploadedFile)
+    }, failureCallBack = function(){
+        uploadSpectrumFile(wd, dir="../../../sample_files/", filename)
+    })
+
     expectTextEqual(filename, uploadedFile)
 
     waitForVisible(wd$findElement("css", ".tabbable"))

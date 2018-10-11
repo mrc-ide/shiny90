@@ -101,6 +101,27 @@ waitFor <- function(predicate, timeout = 5) {
     }
 }
 
+waitForAndTryAgain <- function(predicate, failureCallBack, maxTries = 2, timeout = 5) {
+    waited <- 0
+    tries <- 0
+    while (!predicate()) {
+        Sys.sleep(0.25)
+        waited <- waited + 0.25
+        if (waited >= timeout) {
+            if (tries >= maxTries){
+                        num <- numberScreenshot()
+                        screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
+                        wd$screenshot(file = screenshotPath)
+                        stop(glue::glue("Timed out waiting {timeout}s for predicate to be true - screenshot {screenshotPath}"))
+            }
+            else {
+                tries <- tries + 1
+                failureCallBack()
+            }
+        }
+    }
+}
+
 waitForElement <- function(wd, cssSelector) {
     elements <- waitForThisManyElements(wd, cssSelector, 1)
     elements[[1]]
