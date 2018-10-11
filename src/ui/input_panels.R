@@ -14,7 +14,7 @@ panelSurvey <- function() {
         ),
         shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
         shiny::h3("Or edit data in place"),
-            shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
+        shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
         rhandsontable::rHandsontableOutput("hot_survey")
     )
 }
@@ -31,6 +31,14 @@ panelProgram <- function() {
             # TODO: link to help email? Include specific instructions about what data are needed?
         ),
         shiny::h3("Upload new data"),
+        shiny::conditionalPanel(
+            condition = "output.wrongProgramHeaders",
+            shiny::div("Invalid headers! Program data must match the given column headers.", id="wrongProgramHeadersError", class = "alert alert-warning")
+        ),
+        shiny::conditionalPanel(
+            condition = "output.wrongProgramCountry",
+            shiny::div("You cannot upload program data for a different country.", id="wrongProgramCountryError", class = "alert alert-warning")
+        ),
         shiny::fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
         shiny::h3("Or edit data in place"),
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
