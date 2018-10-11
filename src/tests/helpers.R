@@ -35,11 +35,11 @@ getText <- function(element) {
 }
 
 enterText <- function(element, text, clear = FALSE) {
-    if (clear) {
+ #   if (clear) {
         element$clearElement()
-    }
-
-    element$sendKeysToElement(strsplit(text, "")[[1]])
+ #   }
+    element$click
+    element$sendKeysToElement(list(text))
 }
 
 expectTextEqual <- function(expected, element) {
@@ -101,6 +101,27 @@ waitFor <- function(predicate, timeout = 5) {
     }
 }
 
+waitForAndTryAgain <- function(predicate, failureCallBack, maxTries = 2, timeout = 5) {
+    waited <- 0
+    tries <- 0
+    while (!predicate()) {
+        Sys.sleep(0.25)
+        waited <- waited + 0.25
+        if (waited >= timeout) {
+            if (tries >= maxTries){
+                        num <- numberScreenshot()
+                        screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
+                        wd$screenshot(file = screenshotPath)
+                        stop(glue::glue("Timed out waiting {timeout}s for predicate to be true - screenshot {screenshotPath}"))
+            }
+            else {
+                tries <- tries + 1
+                failureCallBack()
+            }
+        }
+    }
+}
+
 waitForElement <- function(wd, cssSelector) {
     elements <- waitForThisManyElements(wd, cssSelector, 1)
     elements[[1]]
@@ -132,4 +153,18 @@ isBusy <- function(wd) {
 
 waitForShinyToNotBeBusy <- function(wd, timeout = 10) {
     waitFor(function() { !isBusy(wd) }, timeout = timeout)
+}
+
+checkTopLeftTableCellHasThisValue <- function(tabName, tableSelector, expectedValue) {
+    waitForVisible(wd$findElement("css", inActivePane(".tabbable")))
+    tabSelector <- glue::glue("li a[data-value='{tabName}']")
+    cellSelector <- glue::glue("{tableSelector} tr:first-child td:first-child")
+
+    firstYearCell <- NULL
+    waitFor(function(){
+        wd$findElement("css", inActivePane(tabSelector))$clickElement()
+        firstYearCell <<- waitForElement(wd, inActivePane(cellSelector))
+        !is.null(firstYearCell)
+    })
+    expectTextEqual(expectedValue, firstYearCell)
 }

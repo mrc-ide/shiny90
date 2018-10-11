@@ -19,9 +19,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
+    output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
+    output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
+
     shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongProgramHeaders", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "wrongProgramCountry", suspendWhenHidden = FALSE)
 
     number_renderer = "function (instance, td, row, col, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -30,6 +35,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey, stretchH = "all") %>%
+            rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("est", renderer = number_renderer) %>%
@@ -41,6 +47,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data, stretchH = "all") %>%
+            rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("tot", renderer = number_renderer) %>%
             rhandsontable::hot_col("totpos", renderer = number_renderer) %>%
             rhandsontable::hot_col("vct", renderer = number_renderer) %>%
@@ -74,8 +81,16 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (is.null(inFile)){
             return(NULL)
         }
+        
+        newProgram <- read.csv(inFile$datapath)
 
-        state$program_data <<- read.csv(inFile$datapath)
+        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data)))
+
+        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newProgram)
+
+        if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
+            state$program_data <<- newProgram
+        }
     })
 
     # We track change events so that we know when to reset the model run state.

@@ -1,4 +1,7 @@
 modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
+    state$mod <- NULL
+    state$fp <- NULL
+    state$simul <- NULL
     # the model fitting code expects survey data as a data table and program data as a data frame
     # it could presumably be re-written to deal with survey data as a data frame but for now we're just
     # converting survey data to the expected format
@@ -44,20 +47,31 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
             # model fit results
-            fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
-            mod <- eppasm::simmod.specfp(fp)
+            state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
+            state$mod <- eppasm::simmod.specfp(fp)
+            state$simul <- out$simul
 
             # model output
-            out_evertest = first90::get_out_evertest(mod, fp)
+            out_evertest = first90::get_out_evertest(state$mod, state$fp)
 
             plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
-                                fp, mod, spectrumFilesState$country, out_evertest)
+                                state$fp, state$mod, spectrumFilesState$country, out_evertest)
             state$state <- "finished"
         }
     })
 
     output$modelRunState <- shiny::reactive({ state$state })
     shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
+
+    output$outputs_table_ever_tested <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
+    })
+    output$outputs_table_aware <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_aware(state$mod, state$fp, simul = state$simul)
+    })
+    output$outputs_table_art_coverage <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_artcov(state$mod, state$fp)
+    })
 
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.
@@ -86,6 +100,16 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     })
     
     state
+}
+
+renderModelResultsTable <- function(state, func) {
+    shiny::renderDataTable({
+        if (is.null(state$mod) || is.null(state$fp)) {
+            NULL
+        } else {
+            func(state)
+        }
+    }, options = defaultDataTableOptions())
 }
 
 plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, country, out_evertest) {

@@ -32,4 +32,15 @@ testthat::test_that("can walk through app", {
     expectElementPresent(wd, inActivePane("#outputs_firstAndSecond90"))
     expectElementPresent(wd, inActivePane("#outputs_womenEverTested"))
     expectElementPresent(wd, inActivePane("#outputs_menEverTested"))
+
+    # Check data tabs
+    checkTopLeftTableCellHasThisValue(tabName = "Proportion ever tested",
+        tableSelector = ".outputs-ever-tested",
+        expectedValue = "2010")
+    checkTopLeftTableCellHasThisValue(tabName = "Proportion aware",
+        tableSelector = ".outputs-aware",
+        expectedValue = "2010")
+    checkTopLeftTableCellHasThisValue(tabName = "ART coverage",
+        tableSelector = ".outputs-art-coverage",
+        expectedValue = "2010")
 })
