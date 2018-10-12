@@ -2,11 +2,13 @@ library(methods)
 testthat::context("basic")
 
 loadDigest <- function(wd, dir, filename, selector) {
-    loadButton <- wd$findElement("css", selector)
-    loadButton$clickElement()
+    waitFor(function() {
+        loadButton <- wd$findElement("css", selector)
+        loadButton$clickElement()
 
-    modal <- wd$findElement("css", "#digestModal .modal-dialog")
-    waitForVisible(modal)
+        modal <- wd$findElement("css", "#digestModal .modal-dialog")
+        isVisible(modal)
+    })
 
     uploadFile(wd, dir, filename, "#digestUpload")
     waitForVisible(wd$findElement("css", "#workingSet_name"))
