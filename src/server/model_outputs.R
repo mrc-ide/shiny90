@@ -15,8 +15,8 @@ fitModel <- function(likelihood, spectrumData) {
         first90::ll_hts,
         fp = spectrumData,
         likdat = likelihood,
-        method="BFGS",
-        control=list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations),
+        method = "BFGS",
+        control = list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations),
         hessian = !testMode
     )
 }

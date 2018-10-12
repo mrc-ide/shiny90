@@ -85,7 +85,7 @@ downloadFileFromLink <- function(link, name) {
     })
 }
 
-uploadSpectrumFileAndSwitchTab <- function(tabName){
+uploadSpectrumFileAndSwitchTab <- function(tabName) {
     wd$navigate(appURL)
 
     startNewWorkingSet(wd)

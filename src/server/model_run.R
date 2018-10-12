@@ -84,23 +84,29 @@ renderOutputs <- function(output, state, spectrumFilesState) {
 }
 
 invalidateOutputsWhenInputsChange <- function(state, surveyAndProgramData, spectrumFilesState) {
+    invalidateOutputs <- function() {
+        state$state <- "stale"
+        state$optim <- NULL
+        state$simul <- NULL
+    }
+
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.
     # So we only reset the state on subsequent change events.
     shiny::observeEvent(surveyAndProgramData$survey, {
         if (surveyAndProgramData$surveyTableChanged > 1){
-            state$state <- "stale"
+            invalidateOutputs()
         }
     })
 
     shiny::observeEvent(surveyAndProgramData$program_data, {
         if (surveyAndProgramData$programTableChanged > 1){
-            state$state <- "stale"
+            invalidateOutputs()
         }
     })
 
     shiny::observeEvent(spectrumFilesState$combinedData(), {
-        state$state <- "stale"
+        invalidateOutputs()
     })
 
     state
