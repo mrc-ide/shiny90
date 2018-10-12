@@ -1,17 +1,23 @@
-switchTab <- function(wd, tabText, timeout=10) {
+getTabLink <- function(wd, tabText) {
     selector <- glue::glue("a[data-toggle=tab][data-value='{tabText}']")
-
     link <- wd$findElement("css", selector)
+}
+
+switchTab <- function(wd, tabText, timeout=10) {
+    link <- getTabLink(wd, tabText)
     waitFor(function(){
         link$getElementAttribute("class") != "disabled"
     }, timeout)
 
     waitFor(function() {
-        link <- wd$findElement("css", selector)
-        link$clickElement()
+        getTabLink(wd, tabText)$clickElement()
         title <- wd$findElement("css", inActivePane(".panelTitle"))
         tabText == getText(title)
     })
+}
+
+isTabEnabled <- function(wd, tabText) {
+    getTabLink(wd, tabText)$getElementAttribute("class") != "disabled"
 }
 
 inActivePane <- function(cssSelector) {

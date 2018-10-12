@@ -76,7 +76,7 @@ waitForDownloadedFile <- function(name) {
 }
 
 downloadFileFromLink <- function(link, name) {
-
+    waitForShinyToNotBeBusy(wd)
     waitFor(function() {
         link$clickElement()
         downloadPath <- file.path(downloadedFiles, name)
@@ -85,7 +85,7 @@ downloadFileFromLink <- function(link, name) {
     })
 }
 
-uploadSpectrumFileAndSwitchTab <- function(tabName){
+uploadSpectrumFileAndSwitchTab <- function(tabName) {
     wd$navigate(appURL)
 
     startNewWorkingSet(wd)

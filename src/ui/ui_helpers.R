@@ -23,8 +23,8 @@ actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL,
         list(label), ...)
 }
 
-modal <- function(title, cancelId, ...) {
-    shiny::div("", class = "modal",
+modal <- function(title, id, cancelId, ...) {
+    shiny::div("", class = "modal", id = id,
         shiny::div("", class = "modal-dialog",
             shiny::div("", class = "modal-content",
                 shiny::div("", class = "modal-header",

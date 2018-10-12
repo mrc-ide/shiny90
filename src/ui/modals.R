@@ -1,6 +1,7 @@
 loadDigestModal <- function() {
     modal(
         title = "Load digest file",
+        id = "digestModal",
         cancelId = "cancelDigestUpload",
         shiny::fileInput("digestUpload", "Choose a Shiny 90 digest file", accept = ".zip.shiny90")
     )
@@ -9,6 +10,7 @@ loadDigestModal <- function() {
 editWorkingSetModal <- function() {
     modal(
         title = "Edit working set",
+        id = "editWorkingSetModal",
         cancelId = "editWorkingSet_cancel_cross",
         shiny::tags$form("",
             inputBox("editWorkingSet_name", "Name", type = "text", value = ""),

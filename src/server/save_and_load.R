@@ -9,7 +9,7 @@ removeExtension <- function(path, extension) {
     gsub(regexp, "", path)
 }
 
-writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, readmeTemplate) {
+writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState, readmeTemplate) {
     paths <- NULL
     paths <- doAndRememberPath(paths, "notes.txt", function(path) {
         file.writeText(path, workingSet$notes)
@@ -32,6 +32,17 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$program_data, file = path, row.names = FALSE)
         })
     }
+    if (!is.null(modelRunState$optim)) {
+        dir.create("model_outputs")
+        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("optim.rds")), function(path) {
+            saveRDS(modelRunState$optim, file = path)
+        })
+        if (!is.null(modelRunState$simul)) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("simul.rds")), function(path) {
+                saveRDS(modelRunState$simul, file = path)
+            })
+        }
+    }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
         content <- readmeTemplate
@@ -50,7 +61,7 @@ withDir <- function(dir, expr) {
     evalq(expr)
 }
 
-downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData){
+downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
 
     shiny::downloadHandler(
         filename = function() { glue::glue("{workingSet$name}.zip.shiny90") },
@@ -60,7 +71,8 @@ downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData)
             scratch <- tempfile()
             dir.create(scratch)
             withDir(scratch, {
-                paths <- writeFilesForDigest(workingSet, spectrumFilesState, surveyAndProgramData, readmeTemplate)
+                paths <- writeFilesForDigest(workingSet, spectrumFilesState,
+                                             surveyAndProgramData, modelRunState, readmeTemplate)
                 zip(file, paths)
             })
             unlink(scratch, recursive = TRUE)
@@ -68,10 +80,10 @@ downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData)
     )
 }
 
-handleSave <- function(output, workingSet, spectrumFilesState, surveyAndProgramData) {
-    output$digestDownload1 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
-    output$digestDownload2 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
-    output$digestDownload3 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData)
+handleSave <- function(output, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
+    output$digestDownload1 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
+    output$digestDownload2 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
+    output$digestDownload3 <- downloadDigest(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
 }
 
 readCountry <- function() {
@@ -90,7 +102,7 @@ readCSVIfPresent <- function(fileName) {
     }
 }
 
-handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesState) {
+handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesState, modelRunState) {
     state <- shiny::reactiveValues()
     state$uploadRequested <- FALSE
 
@@ -117,6 +129,17 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                         data = readRDS(file.path("spectrum_data", path))
                     )
                 })
+                outputsPath <- "model_outputs/optim.rds"
+                if (file.exists(outputsPath)) {
+                    modelRunState$optim <- readRDS(outputsPath)
+                    simulPath <- "model_outputs/simul.rds"
+                    if (file.exists(simulPath)) {
+                        modelRunState$simul <- readRDS(simulPath)
+                    }
+                } else {
+                    modelRunState$optim <- NULL
+                    modelRunState$state <- "not_run"
+                }
             })
         }
     })
@@ -125,6 +148,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
         state = state,
         workingSet = workingSet,
         surveyAndProgramData = surveyAndProgramData,
-        spectrumFilesState = spectrumFilesState
+        spectrumFilesState = spectrumFilesState,
+        modelRunState = modelRunState
     )
 }
