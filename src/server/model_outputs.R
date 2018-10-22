@@ -2,8 +2,6 @@ fitModel <- function(likelihood, spectrumData) {
     # Starting parameters
     data("theta0", package="first90")
 
-    first90::ll_hts(theta0, spectrumData, likelihood)
-
     testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
     maxIterations <- 250
     if (testMode) {
@@ -26,6 +24,6 @@ runSimulations <- function(opt, spectrumData) {
     if (testMode) {
         NULL
     } else {
-        simul.test(opt, spectrumData)
+        first90::simul.test(opt, spectrumData)
     }
 }
