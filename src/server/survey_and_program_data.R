@@ -19,25 +19,31 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
-    # state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
-    # state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
-    # state$anyProgramDataAnc <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$anc)) })
-    # state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
-    # #
-    # output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
-    # output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
-    # output$anyProgramDataAnc <- shiny::reactive({ state$anyProgramDataAnc() })
-    # output$anyProgramDataAncPos <- shiny::reactive({ state$anyProgramDataAncPos() })
+    state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
+
+    state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
+    state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
+    state$anyProgramDataAnc <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$anc)) })
+    state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
+
+    output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() ||
+        !state$anyProgramDataAnc() || !state$anyProgramDataAncPos()})
+
+    output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
+    output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
+    output$anyProgramDataAnc <- shiny::reactive({ state$anyProgramDataAnc() })
+    output$anyProgramDataAncPos <- shiny::reactive({ state$anyProgramDataAncPos() })
 
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
     output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
     output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
-    #
-    # shiny::outputOptions(output, "anyProgramDataTot", suspendWhenHidden = FALSE)
-    # shiny::outputOptions(output, "anyProgramDataTotPos", suspendWhenHidden = FALSE)
-    # shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
-    # shiny::outputOptions(output, "anyProgramDataAncPos", suspendWhenHidden = FALSE)
+
+    shiny::outputOptions(output, "incompleteProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataTot", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataTotPos", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataAncPos", suspendWhenHidden = FALSE)
 
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)

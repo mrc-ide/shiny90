@@ -53,27 +53,31 @@ panelReviewInput <- function() {
             shiny::span("Once you have reviewed your input data, you may want to "),
             shiny::tags$a(class = "shiny-download-link", href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+        ),
+        shiny::conditionalPanel(
+            condition = "output.incompleteProgramData",
+                shiny::div("The programmatic data for your country is incomplete. Please fill in missing values if you have them.", class = "mt-5 alert alert-warning")
+        ),
+        shiny::div("", class = "row",
+            shiny::conditionalPanel(
+                condition = "output.anyProgramDataTot",
+                    shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalTests")))
             ),
-        # shiny::div("", class = "row",
-        #     shiny::conditionalPanel(
-        #         condition = "output.anyProgramDataTot",
-        #             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalTests")))
-        #     ),
-        #     shiny::conditionalPanel(
-        #         condition = "output.anyProgramDataTotPos",
-        #             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalPositive")))
-        #     )
-        # ),
-        # shiny::div("", class = "row",
-        #     shiny::conditionalPanel(
-        #         condition = "output.anyProgramDataAnc",
-        #             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANC")))
-        #     ),
-        #     shiny::conditionalPanel(
-        #         condition = "output.anyProgramDataAncPos",
-        #             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANCPositive")))
-        #     )
-        # ),
+            shiny::conditionalPanel(
+                condition = "output.anyProgramDataTotPos",
+                    shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalPositive")))
+            )
+        ),
+        shiny::div("", class = "row",
+            shiny::conditionalPanel(
+                condition = "output.anyProgramDataAnc",
+                    shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANC")))
+            ),
+            shiny::conditionalPanel(
+                condition = "output.anyProgramDataAncPos",
+                    shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewTotalANCPositive")))
+            )
+        ),
         shiny::div("", class = "row",
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewPrevalence"))),
             shiny::div("", class = "col-md-6 col-sm-12", shinycssloaders::withSpinner(plotOutput(outputId = "reviewIncidence")))

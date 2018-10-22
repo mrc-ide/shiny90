@@ -62,6 +62,11 @@ expectElementPresent <- function(wd, cssSelector) {
     )
 }
 
+expectElementNotVisible <- function(wd, cssSelector){
+    element <- wd$findElement("css", cssSelector)
+    testthat::expect_true(element$isElementDisplayed() == "FALSE")
+}
+
 getElementIfPresent <- function(wd, cssSelector) {
     elements <- wd$findElements("css", cssSelector)
     if (length(elements) > 0) {
