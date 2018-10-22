@@ -1,6 +1,15 @@
 library(methods)
 testthat::context("basic")
 
+testthat::test_that("warning is shown if no program data is present", {
+
+    uploadSpectrumFileAndSwitchTab("Review input data", filename= "Angola_201805v4.PJNZ")
+
+    warning <- waitForElement(wd, ".alert.alert-warning")
+
+   # expectTextEqual("Warning: we have no program data for your country.", warning)
+})
+
 testthat::test_that("can upload a new set of program data for the same country", {
 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")
