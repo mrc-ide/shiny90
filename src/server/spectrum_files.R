@@ -29,11 +29,11 @@ spectrumFiles <- function(input, output, state) {
         } else {
             summary <- state$pjnz_summary()
             f <- data.frame(Year = summary[["year"]],
-                            Population = summary[["pop"]],
-                            Prevalence = summary[["prevalence"]],
-                            Incidence = summary[["incidence"]],
-                            plhiv = summary[["plhiv"]],
-                            art_coverage = summary[["art_coverage"]])
+                            Population = round(summary[["pop"]]/1000)*1000,
+                            Prevalence = round(summary[["prevalence"]], 2),
+                            Incidence = round(summary[["incidence"]]*1000, 2),
+                            plhiv = round(summary[["plhiv"]]/100)*100,
+                            art_coverage = round((summary[["art_coverage"]]/summary[["plhiv"]])*100,1))
             f <- f[order(-f$Year),]
             f
         }
@@ -77,9 +77,9 @@ spectrumFiles <- function(input, output, state) {
         defaultDataTableOptions(),
         list(
             columns = list(
-                NULL, NULL, NULL, NULL,
+                NULL, NULL, list(title="Prevalence (%)"), list(title="Incidence (per thousand)"),
                 list(title = 'People living with HIV'),
-                list(title = 'ART coverage')
+                list(title = 'ART coverage (%)')
             )
         )
     ))
