@@ -1,15 +1,28 @@
 panelModelRun <- function() {
     shiny::div("",
-        shiny::h3("Enter model fitting parameters"),
-        shiny::fluidRow(
-            shiny::div("", class = "col-xs-12 col-sm-6",
-                inputBox("parameter2", "A", "Explantation for parameter A", value = "500"),
-                inputBox("parameter1", "X", "Explantation for parameter B", value = "5")
-                # Weight to programmatic data (dropdown? value?)
+        actionButtonWithCustomClass("runModel", "Run model", cssClasses = "btn-red btn-lg btn-success"),
+        shiny::div("This may take several minutes. Please do not close your browser.", class = "mt-3"
+        ),
+        shiny::div("", class="mt-3",
+            shiny::a("Advanced options", id="showAdvancedOptions", href="#", class="action-button light",
+                shiny::img(src = "images/gear.svg", width = 20, height = 20)),
+            shiny::conditionalPanel(
+                condition = "output.showAdvancedOptions",
+                shiny::fluidRow(
+                    shiny::div("", class = "col-sm-3 col-xs-12",
+                        shiny::div("", class = "mt-3 form-group",
+                            shiny::tags$label(`for`="maxIterations", "Maximum iterations"),
+                                shiny::tags$input(id = "maxIterations", type = "number", value = "250", class = "form-control shiny-bound-input")
+
+                        )
+                        # shiny::div("", class = "mt-3 form-group",
+                        #     shiny::tags$label(`for`="numSimul", "Number of simmulations"),
+                        #         shiny::tags$input(id = "numSimul", type = "number", value = "400", class = "form-control shiny-bound-input")
+                        # )
+                    )
+                )
             )
         ),
-        actionButtonWithCustomClass("runModel", "Run model", cssClasses = "btn-red btn-lg btn-success"),
-        shiny::div("This may take several minutes. Please do not close your browser.", class = "mt-3"),
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'finished'",
             shiny::div("", class = "mt-3",
