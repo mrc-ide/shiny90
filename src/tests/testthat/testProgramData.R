@@ -1,6 +1,24 @@
 library(methods)
 testthat::context("basic")
 
+testthat::test_that("warning is shown if incomplete program data is present", {
+
+    uploadSpectrumFileAndSwitchTab("Review input data", filename= "Angola_201805v4.PJNZ")
+
+    warning <- wd$findElement("css", ".mt-5.alert.alert-warning")
+
+    waitForVisible(warning)
+
+    expectTextEqual("The programmatic data for your country is incomplete. Please fill in missing values if you have them.", warning)
+})
+
+testthat::test_that("warning is not shown if complete program data is present", {
+
+    uploadSpectrumFileAndSwitchTab("Review input data")
+
+    expectElementNotVisible(wd, ".alert-warning")
+})
+
 testthat::test_that("can upload a new set of program data for the same country", {
 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")

@@ -17,22 +17,27 @@ plotInputs <- function(output, surveyAndProgramData, spectrumFilesState) {
     })
 
     output$reviewTotalTests <- shiny::renderPlot({
-        first90::plot_input_tot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        if (surveyAndProgramData$anyProgramDataTot()) {
+            first90::plot_input_tot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        }
     })
 
     output$reviewTotalPositive <- shiny::renderPlot({
-        first90::plot_input_totpos(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        if (surveyAndProgramData$anyProgramDataTotPos()){
+            first90::plot_input_totpos(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        }
     })
 
     output$reviewTotalANC <- shiny::renderPlot({
-        first90::plot_input_anctot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        if (surveyAndProgramData$anyProgramDataAnc()){
+            first90::plot_input_anctot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        }
     })
 
     output$reviewTotalANCPositive <- shiny::renderPlot({
-        first90::plot_input_ancpos(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        if (surveyAndProgramData$anyProgramDataAncPos()) {
+            first90::plot_input_ancpos(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+        }
     })
 
-    output$inputReview <- shiny::renderPlot({
-        first90::plot_inputdata(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
-    })
 }

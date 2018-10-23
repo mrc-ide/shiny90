@@ -85,12 +85,12 @@ downloadFileFromLink <- function(link, name) {
     })
 }
 
-uploadSpectrumFileAndSwitchTab <- function(tabName) {
+uploadSpectrumFileAndSwitchTab <- function(tabName, filename= "Malawi_2018_version_8.PJNZ") {
     wd$navigate(appURL)
 
     startNewWorkingSet(wd)
 
-    uploadSpectrumFile(wd, filename= "Malawi_2018_version_8.PJNZ")
+    uploadSpectrumFile(wd, filename = filename)
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
 
