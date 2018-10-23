@@ -1,5 +1,22 @@
 library(magrittr)
 
+as.num = function(x) {
+    if (is.factor(x)){
+        x = as.character(x)
+    }
+
+    as.numeric(x)
+}
+
+castProgramDataToNumeric <- function(state){
+    state$program_data$tot = as.num(state$program_data$tot)
+    state$program_data$totpos = as.num(state$program_data$totpos)
+    state$program_data$vct = as.num(state$program_data$vct)
+    state$program_data$vctpos = as.num(state$program_data$vctpos)
+    state$program_data$anc = as.num(state$program_data$anc)
+    state$program_data$ancpos = as.num(state$program_data$ancpos)
+}
+
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
@@ -10,12 +27,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
             state$program_data <- first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL)
-            state$program_data$tot = as.numeric(state$program_data$tot)
-            state$program_data$totpos = as.numeric(state$program_data$totpos)
-            state$program_data$vct = as.numeric(state$program_data$vct)
-            state$program_data$vctpos = as.numeric(state$program_data$vctpos)
-            state$program_data$anc = as.numeric(state$program_data$anc)
-            state$program_data$ancpos = as.numeric(state$program_data$ancpos)
+            castProgramDataToNumeric(state)
         }
     })
 
@@ -112,6 +124,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
             state$program_data <<- newProgram
+            castProgramDataToNumeric(state)
         }
     })
 
