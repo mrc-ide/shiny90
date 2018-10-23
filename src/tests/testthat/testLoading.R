@@ -27,6 +27,12 @@ testthat::test_that("can load digest from welcome page", {
     loadDigestFromWelcome(wd)
     expectTextEqual("testing1234", wd$findElement("css", "#workingSet_name"))
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
+
+    switchTab(wd, "Upload survey data")
+    waitForVisible(wd$findElement("css", "#hot_survey"))
+
+    switchTab(wd, "Upload programmatic data")
+    waitForVisible(wd$findElement("css", "#hot_program"))
 })
 
 testthat::test_that("can save digest with top left button", {
