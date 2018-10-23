@@ -1,9 +1,9 @@
-fitModel <- function(likelihood, spectrumData) {
+fitModel <- function(maxIterations, likelihood, spectrumData) {
     # Starting parameters
     data("theta0", package="first90")
 
     testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
-    maxIterations <- 250
+
     if (testMode) {
         maxIterations <- 2
     }

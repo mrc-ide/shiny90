@@ -10,19 +10,41 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             state$survey <- as.data.frame(survey_hts)
             state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
             state$program_data <- first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL)
+            state$program_data$tot = as.numeric(state$program_data$tot)
+            state$program_data$totpos = as.numeric(state$program_data$totpos)
+            state$program_data$vct = as.numeric(state$program_data$vct)
+            state$program_data$vctpos = as.numeric(state$program_data$vctpos)
+            state$program_data$anc = as.numeric(state$program_data$anc)
+            state$program_data$ancpos = as.numeric(state$program_data$ancpos)
         }
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
 
-    output$noProgramData <- shiny::reactive({ !state$anyProgramData() })
+    state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
+    state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
+    state$anyProgramDataAnc <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$anc)) })
+    state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
+
+    output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() ||
+        !state$anyProgramDataAnc() || !state$anyProgramDataAncPos()})
+
+    output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
+    output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
+    output$anyProgramDataAnc <- shiny::reactive({ state$anyProgramDataAnc() })
+    output$anyProgramDataAncPos <- shiny::reactive({ state$anyProgramDataAncPos() })
 
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
     output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
     output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
 
-    shiny::outputOptions(output, "noProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "incompleteProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataTot", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataTotPos", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "anyProgramDataAncPos", suspendWhenHidden = FALSE)
+
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongProgramHeaders", suspendWhenHidden = FALSE)
@@ -38,22 +60,22 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
-            rhandsontable::hot_col("est", renderer = number_renderer) %>%
-            rhandsontable::hot_col("se", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ci_l", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ci_u", renderer = number_renderer) %>%
-            rhandsontable::hot_col("year", format = "0")
+            rhandsontable::hot_col("est", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("se", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ci_l", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ci_u", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("year", type="numeric", format = "0")
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data, rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("tot", renderer = number_renderer) %>%
-            rhandsontable::hot_col("totpos", renderer = number_renderer) %>%
-            rhandsontable::hot_col("vct", renderer = number_renderer) %>%
-            rhandsontable::hot_col("vctpos", renderer = number_renderer) %>%
-            rhandsontable::hot_col("anc", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ancpos", renderer = number_renderer)
+            rhandsontable::hot_col("tot", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("totpos", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("vct", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("vctpos", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("anc", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("ancpos", type="numeric", renderer = number_renderer)
     })
 
     shiny::observeEvent(input$surveyData, {
