@@ -96,7 +96,7 @@ readCountry <- function() {
 
 readCSVIfPresent <- function(fileName) {
     if (file.exists(fileName)) {
-        read.csv("survey.csv")
+        read.csv(fileName)
     } else {
         NULL
     }
