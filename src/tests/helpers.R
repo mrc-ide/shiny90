@@ -168,7 +168,7 @@ checkTopLeftTableCellHasThisValue <- function(tabName, tableSelector, expectedVa
     firstYearCell <- NULL
     waitFor(function(){
         wd$findElement("css", inActivePane(tabSelector))$clickElement()
-        firstYearCell <<- waitForElement(wd, inActivePane(cellSelector))
+        firstYearCell <<- wd$findElement("css", inActivePane(cellSelector))
         !is.null(firstYearCell)
     })
     expectTextEqual(expectedValue, firstYearCell)
