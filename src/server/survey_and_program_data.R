@@ -34,7 +34,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }"
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$survey, stretchH = "all") %>%
+        rhandsontable::rhandsontable(state$survey, rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
@@ -46,7 +46,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$program_data, stretchH = "all") %>%
+        rhandsontable::rhandsontable(state$program_data, rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("country", readOnly = TRUE) %>%
             rhandsontable::hot_col("tot", renderer = number_renderer) %>%
             rhandsontable::hot_col("totpos", renderer = number_renderer) %>%
