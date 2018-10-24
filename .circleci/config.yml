@@ -13,6 +13,7 @@ jobs:
             - R-{{ checksum "bootstrap.R" }}
             - R- # used if checksum fails
       - run: ./bootstrap
+      - run: ./bootstrap-dev.R
       - save_cache:
           key: R-{{ checksum "bootstrap.R" }}
           paths:

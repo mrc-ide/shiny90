@@ -25,4 +25,5 @@ function cleanup {
 }
 trap cleanup exit INT TERM
 
+src/tests/unittest.R
 src/tests/test.R

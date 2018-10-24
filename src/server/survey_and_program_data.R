@@ -1,6 +1,9 @@
 library(magrittr)
 
 as.num = function(x) {
+
+    x[x == "NA"] <- NA
+
     if (is.factor(x)){
         x = as.character(x)
     }
@@ -8,27 +11,93 @@ as.num = function(x) {
     as.numeric(x)
 }
 
-castProgramDataToNumeric <- function(state){
-    state$program_data$tot = as.num(state$program_data$tot)
-    state$program_data$totpos = as.num(state$program_data$totpos)
-    state$program_data$vct = as.num(state$program_data$vct)
-    state$program_data$vctpos = as.num(state$program_data$vctpos)
-    state$program_data$anc = as.num(state$program_data$anc)
-    state$program_data$ancpos = as.num(state$program_data$ancpos)
+mapColumnToNumeric <- function(dataframe, key) {
+    dataframe[[key]] = as.num(dataframe[[key]])
+    dataframe
+}
+
+mapColumnsToNumeric <- function(dataframe, colnames) {
+
+    for (key in colnames){
+        dataframe <- mapColumnToNumeric(dataframe, key)
+    }
+    dataframe
+}
+
+mapHeader <- function(dataframe, key, value) {
+    colnames(dataframe)[names(dataframe) == key] <- value
+    dataframe
+}
+
+mapHeadersToHumanReadable <- function(dataframe, headers) {
+
+    for (key in names(headers)){
+        dataframe <- mapHeader(dataframe, key, headers[[key]])
+    }
+    dataframe
+}
+
+mapHeadersFromHumanReadable <- function(dataframe, headers) {
+
+    for (key in names(headers)){
+        dataframe <- mapHeader(dataframe, headers[[key]], key)
+    }
+    dataframe
+}
+
+sharedHeaders <- list(country= "Country",
+                        year= "Year",
+                        hivstatus= "HIV Status",
+                        sex= "Sex",
+                        agegr= "Age Group")
+
+surveyDataHeaders <- list(surveyid="Survey Id",
+                            outcome = "Outcome",
+                            counts = "Counts",
+                            est= "Estimate",
+                            se= "Standard Error",
+                            ci_l= "Lower Confidence Interval",
+                            ci_u= "Upper Confidence Interval")
+
+programDataHeaders <- list(tot= "Total tests",
+                            totpos= "Total positive tests",
+                            vct= "Total HTS tests",
+                            vctpos= "Total positive HTS tests",
+                            anc= "Total ANC tests",
+                            ancpos= "Total positive ANC tests"
+)
+
+castToNumeric <- function(dataframe, headers){
+    mapColumnsToNumeric(dataframe, names(headers))
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
 
+    state$loadNewData <- TRUE
+
     shiny::observeEvent(spectrumFilesState$country, {
 
         if (!is.null(spectrumFilesState$country)){
-            state$survey <- as.data.frame(survey_hts)
-            state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            state$program_data <- first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL)
-            castProgramDataToNumeric(state)
+            if (state$loadNewData){
+                state$survey <- as.data.frame(survey_hts)
+                state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+                state$survey$counts = as.integer(state$survey$counts)
+                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
+            }
+            else {
+                state$loadNewData <- TRUE
+            }
         }
+    })
+
+    state$program_data_human_readable <- shiny::reactive({
+        mapHeadersToHumanReadable(state$program_data, c(programDataHeaders,sharedHeaders))
+    })
+
+    state$survey_data_human_readable <- shiny::reactive({
+        mapHeadersToHumanReadable(state$survey, c(surveyDataHeaders,sharedHeaders))
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
@@ -68,26 +137,26 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }"
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$survey, rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("outcome", allowInvalid = TRUE) %>%
-            rhandsontable::hot_col("agegr", allowInvalid = TRUE)  %>%
-            rhandsontable::hot_col("est", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("se", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ci_l", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ci_u", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("year", type="numeric", format = "0")
+        rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
+            rhandsontable::hot_col("Country", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Outcome", allowInvalid = TRUE) %>%
+            rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
+            rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Lower Confidence Interval", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Upper Confidence Interval", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Year", type="numeric", format = "0")
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$program_data, rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("tot", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("totpos", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("vct", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("vctpos", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("anc", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("ancpos", type="numeric", renderer = number_renderer)
+        rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
+            rhandsontable::hot_col("Country", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Total tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total positive tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total HTS tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total positive HTS tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total ANC tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total positive ANC tests", type="numeric", renderer = number_renderer)
     })
 
     shiny::observeEvent(input$surveyData, {
@@ -97,14 +166,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        newSurvey <- read.csv(inFile$datapath)
+        newSurvey <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey)))
+        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
-        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newSurvey)
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
-            state$survey <<- newSurvey
+            state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
         }
 
     })
@@ -116,15 +185,17 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
         
-        newProgram <- read.csv(inFile$datapath)
+        newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data)))
+        str(sort(names(newProgram)))
+        str(sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newProgram)
+        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
+
+        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
-            state$program_data <<- newProgram
-            castProgramDataToNumeric(state)
+            state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
         }
     })
 
@@ -135,17 +206,34 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(input$hot_survey, {
         if(!is.null(input$hot_survey)){
-            state$survey <<- rhandsontable::hot_to_r(input$hot_survey)
+            state$survey <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
             state$surveyTableChanged <<- state$surveyTableChanged + 1
         }
     })
 
     shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
-            state$program_data <<- rhandsontable::hot_to_r(input$hot_program)
+            state$program_data <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
             state$programTableChanged <<- state$programTableChanged + 1
         }
     })
 
+    output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable(),
+                                                        glue::glue("survey-data-{spectrumFilesState$country}.csv"))
+    output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable(),
+                                                        glue::glue("program-data-{spectrumFilesState$country}.csv"))
+
     state
+}
+
+
+downloadTemplate <- function(dataframe, filename) {
+
+    shiny::downloadHandler(
+        filename = filename,
+            contentType = "text/csv",
+            content = function(file) {
+                write.csv(dataframe, file, row.names = FALSE)
+            }
+    )
 }

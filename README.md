@@ -24,6 +24,14 @@ SHINY90_TEST_MODE=TRUE ./app.R
 ```
 
 ## Tests
+
+For unit tests:
+```
+./bootstrap-dev.R
+./unittest
+```
+
+For Selenium tests:
 ```
 sudo ./install_geckodriver.sh
 ./test

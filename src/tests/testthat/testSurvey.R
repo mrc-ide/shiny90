@@ -26,7 +26,7 @@ testthat::test_that("cannot upload a csv with wrong headers", {
     testthat::expect_gt(length(rows), 4)
 
     errorAlert <- wd$findElement("css", "#wrongSurveyHeadersError")
-    expectTextEqual("Invalid headers! Survey data must match the given column headers.", errorAlert)
+    expectTextEqual("Invalid headers! Survey data must match the given column headers. If you are missing data points please just input NA.", errorAlert)
 })
 
 testthat::test_that("cannot upload a csv for a different country", {
