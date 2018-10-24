@@ -25,7 +25,7 @@ testthat::test_that("can upload a new set of program data for the same country",
     uploadFile(wd, filename = "testprogramdata_malawi.csv", inputId="#programData")
 
     Sys.sleep(2)
-    rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")
+    rows <- wd$findElements("css", "#hot_program .ht_master tbody tr")
 
     # there are 3 rows in the test program data
     testthat::expect_equal(length(rows), 3)
@@ -37,7 +37,7 @@ testthat::test_that("cannot upload progam data with wrong headers", {
     uploadFile(wd, filename = "badprogramdata_malawi.csv", inputId="#programData")
 
     Sys.sleep(2)
-    rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")
+    rows <- wd$findElements("css", "#hot_program .ht_master tbody tr")
 
     # there are more than 3 rows in the original program data, 3 in the test data
     testthat::expect_gt(length(rows), 3)
@@ -54,7 +54,7 @@ testthat::test_that("cannot upload program data for a different country", {
     uploadFile(wd, filename = "testprogramdata_angola.csv", inputId="#programData")
 
     Sys.sleep(2)
-    rows <- wd$findElements("css", "#hot_program .ht_master tbody .rowHeader")
+    rows <- wd$findElements("css", "#hot_program .ht_master tbody tr")
 
     # there are more than 3 rows in the original program data, 3 in the test data
     testthat::expect_gt(length(rows), 3)

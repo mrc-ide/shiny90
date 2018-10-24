@@ -67,16 +67,23 @@ renderOutputs <- function(output, state, spectrumFilesState) {
     # Plot the results
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
-            # model fit results
-            state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
-            state$mod <- eppasm::simmod.specfp(state$fp)
 
-            # model output
-            out_evertest = first90::get_out_evertest(state$mod, state$fp)
+            tryCatch({
+                # model fit results
+                state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
+                state$mod <- eppasm::simmod.specfp(state$fp)
 
-            plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
-            state$fp, state$mod, spectrumFilesState$country, out_evertest)
-            state$state <- "finished"
+                # model output
+                out_evertest = first90::get_out_evertest(state$mod, state$fp)
+
+                plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
+                state$fp, state$mod, spectrumFilesState$country, out_evertest)
+                state$state <- "finished"
+            }, error = function(e) {
+                str(e)
+                state$state <- "error"
+            })
+
         }
     })
 
