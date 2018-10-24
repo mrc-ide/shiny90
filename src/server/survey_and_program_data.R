@@ -2,6 +2,8 @@ library(magrittr)
 
 as.num = function(x) {
 
+    x[x == "NA"] <- NA
+
     if (is.factor(x)){
         x = as.character(x)
     }
