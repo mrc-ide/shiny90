@@ -26,7 +26,7 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             file.writeText(path, spectrumFilesState$country)
         })
         paths <- doAndRememberPath(paths, "survey.csv", function(path) {
-            write.csv(surveyAndProgramData$survey, file = path)
+            write.csv(surveyAndProgramData$survey, file = path, row.names = FALSE)
         })
         paths <- doAndRememberPath(paths, "program.csv", function(path) {
             write.csv(surveyAndProgramData$program_data, file = path, row.names = FALSE)
@@ -96,7 +96,7 @@ readCountry <- function() {
 
 readCSVIfPresent <- function(fileName) {
     if (file.exists(fileName)) {
-        read.csv("survey.csv")
+        read.csv(fileName)
     } else {
         NULL
     }
