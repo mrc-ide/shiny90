@@ -44,7 +44,7 @@ testthat::test_that("cannot upload progam data with wrong headers", {
 
     errorAlert <- wd$findElement("css", "#wrongProgramHeadersError")
     waitForVisible(errorAlert)
-    expectTextEqual("Invalid headers! Program data must match the given column headers.", errorAlert)
+    expectTextEqual("Invalid headers! Program data must match the given column headers. If you are missing data points please just input NA.", errorAlert)
 
 })
 

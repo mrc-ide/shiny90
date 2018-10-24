@@ -1,14 +1,17 @@
 panelSurvey <- function() {
     shiny::div("",
         shiny::div("The following is survey data sourced from DHS and PHIA. You can edit the data below in the browser, or copy and
-             paste to Excel and edit the data there. You can also replace the data entirely by uploading a new CSV file
-             below.", class = "mb-3"),
+             paste to Excel and edit the data there, then copy and paste back into the table below. You can also replace the data entirely
+             by uploading a new CSV file.", class = "mb-3"),
+        downloadButton("downloadSurveyTemplate", "Download survey data"),
         shiny::h3("Upload new data"),
         shiny::conditionalPanel(
         condition = "output.wrongSurveyHeaders",
-            shiny::div("Invalid headers! Survey data must match the given column headers.", id="wrongSurveyHeadersError", class = "alert alert-warning")
+            shiny::div("Invalid headers! Survey data must match the given column headers. If you are missing data points please just input NA.",
+                        id="wrongSurveyHeadersError", class = "alert alert-warning")
         ),
         shiny::conditionalPanel(
+
         condition = "output.wrongSurveyCountry",
             shiny::div("You cannot upload survey data for a different country.", id="wrongSurveyCountryError", class = "alert alert-warning")
         ),
@@ -32,7 +35,7 @@ panelProgram <- function() {
                 This number should be equal to the number of positive tests found during HTC (in non-pregnant population) and during ANC among
                 pregnant women.</li>"),
             shiny::HTML("<li><strong>Total HTS tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of ANC services,
-                 and for which clients received the results. If only the overall total is available, please leave blank.</li>"),
+                 and for which clients received the results. If only the overall total is available, please input NA.</li>"),
             shiny::HTML("<li><strong>Total HTS positive tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
             shiny::HTML("<li><strong>Total ANC tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
             shiny::HTML("<li><strong>Total ANC positive tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>")
@@ -41,10 +44,11 @@ panelProgram <- function() {
                         and paste back into the table below. You can also replace the data entirely by uploading a new CSV file.",
             class = "mb-3"),
         shiny::div("", class="mb-3 text-muted"),
+        downloadButton("downloadProgramTemplate", "Download programmatic data"),
         shiny::h3("Upload new data"),
         shiny::conditionalPanel(
             condition = "output.wrongProgramHeaders",
-            shiny::div("Invalid headers! Program data must match the given column headers.",
+            shiny::div("Invalid headers! Program data must match the given column headers. If you are missing data points please just input NA.",
             id="wrongProgramHeadersError", class = "alert alert-warning")
         ),
         shiny::conditionalPanel(

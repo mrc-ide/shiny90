@@ -166,14 +166,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        newSurvey <- read.csv(inFile$datapath)
+        newSurvey <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey)))
+        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
-        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newSurvey)
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
-            state$survey <<- newSurvey
+            state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
         }
 
     })
@@ -185,14 +185,17 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
         
-        newProgram <- read.csv(inFile$datapath)
+        newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data)))
+        str(sort(names(newProgram)))
+        str(sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", country) == spectrumFilesState$country)) < nrow(newProgram)
+        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
+
+        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
-            state$program_data <<- castToNumeric(newProgram, programDataHeaders)
+            state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
         }
     })
 
@@ -215,5 +218,22 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
+    output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable(),
+                                                        glue::glue("survey-data-{spectrumFilesState$country}.csv"))
+    output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable(),
+                                                        glue::glue("program-data-{spectrumFilesState$country}.csv"))
+
     state
+}
+
+
+downloadTemplate <- function(dataframe, filename) {
+
+    shiny::downloadHandler(
+        filename = filename,
+            contentType = "text/csv",
+            content = function(file) {
+                write.csv(dataframe, file, row.names = FALSE)
+            }
+    )
 }
