@@ -75,12 +75,20 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
 
+    state$loadNewData <- TRUE
+
     shiny::observeEvent(spectrumFilesState$country, {
 
         if (!is.null(spectrumFilesState$country)){
-            state$survey <- as.data.frame(survey_hts)
-            state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-            state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
+            if (state$loadNewData){
+                state$survey <- as.data.frame(survey_hts)
+                state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+                state$survey$counts = as.integer(state$survey$counts)
+                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
+            }
+            else {
+                state$loadNewData <- TRUE
+            }
         }
     })
 

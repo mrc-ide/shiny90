@@ -141,6 +141,8 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                     modelRunState$state <- "not_run"
                 }
             })
+
+            surveyAndProgramData$loadNewData <- FALSE
         }
     })
 
