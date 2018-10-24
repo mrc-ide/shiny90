@@ -42,13 +42,13 @@ testthat::test_that("cast to numeric casts given headers", {
     s = c("NA", "NA", "6.3216")
 
     df = data.frame(b, n, s)
-    colnames(df) <- c("B", "N", "S")
+    colnames(df) <- c("b", "n", "s")
 
     result <- castToNumeric(df, headers)
 
-    testthat::expect_false(is.numeric(result$B))
-    testthat::expect_true(is.numeric(result$N))
-    testthat::expect_true(is.numeric(result$S))
-    testthat::expect_equal(result$S[1], as.numeric(NA))
-    testthat::expect_equal(result$S[3], 6.3216)
+    testthat::expect_false(is.numeric(result$b))
+    testthat::expect_true(is.numeric(result$n))
+    testthat::expect_true(is.numeric(result$s))
+    testthat::expect_equal(result$s[1], as.numeric(NA))
+    testthat::expect_equal(result$s[3], 6.3216)
 })
