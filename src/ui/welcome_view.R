@@ -29,7 +29,7 @@ welcomeView <- function() {
                             shiny::div("", class = "text-center pt-4",
                                 actionButtonWithCustomClass("welcomeRequestDigestUpload",
                                     label = "", cssClasses = "btn-sq btn-red text-center",
-                                    shiny::img(id = "digest-upload-img", src = "images/cloud-upload-red.svg", width = 64, height = 64),
+                                    shiny::icon("upload", "fa-3x", lib = "font-awesome"),
                                     shiny::tags$br(),
                                     shiny::tags$label(`for`="digest-upload-img", "Load")
                                 )

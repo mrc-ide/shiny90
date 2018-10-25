@@ -5,7 +5,7 @@ panelModelRun <- function() {
         ),
         shiny::div("", class="mt-3",
             shiny::a("Advanced options", id="showAdvancedOptions", href="#", class="action-button light",
-                shiny::img(src = "images/gear.svg", width = 20, height = 20)),
+                    shiny::icon("cog", lib = "glyphicon")),
             shiny::conditionalPanel(
                 condition = "output.showAdvancedOptions",
                 shiny::fluidRow(
