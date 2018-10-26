@@ -14,22 +14,19 @@ panelModelRun <- function() {
                             shiny::tags$label(`for`="maxIterations", "Maximum iterations"),
                                 shiny::tags$input(id = "maxIterations", type = "number", value = "250", class = "form-control shiny-bound-input")
 
+                        ),
+                        shiny::div("", class = "mt-3 form-group",
+                             shiny::tags$label(`for`="numSimul", "Number of simulations"),
+                                 shiny::tags$input(id = "numSimul", type = "number", value = "20000", class = "form-control shiny-bound-input")
                         )
-                        # shiny::div("", class = "mt-3 form-group",
-                        #     shiny::tags$label(`for`="numSimul", "Number of simmulations"),
-                        #         shiny::tags$input(id = "numSimul", type = "number", value = "400", class = "form-control shiny-bound-input")
-                        # )
                     )
                 )
             )
         ),
         shiny::conditionalPanel(
-            condition = "output.modelRunState == 'finished'",
+            condition = "output.modelRunState == 'converged'",
             shiny::div("", class = "mt-3",
-                shiny::h2("Model run complete"),
-                shiny::div("Click 'View model outputs' in the sidebar to see the outputs")
-                # We want the 6 plots currently on the output page, constrained to the age range
-                # present in the input data and with the original data points plotted
+                shiny::h3("Model fitting complete")
             )
         ),
         shiny::conditionalPanel(
@@ -38,6 +35,7 @@ panelModelRun <- function() {
             shiny::div("Model run failed. Please check your input data.")
             # TODO: link to help email? Explain data needs?
             )
-        )
+        ),
+        panelModelOutputs()
     )
 }

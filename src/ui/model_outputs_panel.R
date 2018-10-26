@@ -3,14 +3,7 @@ panelModelOutputs <- function() {
 
     shiny::div("",
         shiny::conditionalPanel(
-            condition = "output.modelRunState != 'finished'",
-            shiny::div("", class = "mt-3 alert alert-warning",
-                shiny::div("You need to run the model before you can see any outputs.")
-            )
-        ),
-
-        shiny::conditionalPanel(
-            condition = "output.modelRunState == 'finished'",
+            condition = "output.modelRunState == 'converged'",
             shiny::div("",
                 shiny::div("", class="mb-5 suggest-save",
                     shiny::span("Now that the model has been run, you can "),

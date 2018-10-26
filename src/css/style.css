@@ -159,6 +159,42 @@ a.light, a.light:hover, a.light:focus {
     text-align: center;
 }
 
+#shiny-notification-panel {
+    position: absolute;
+    width: 100%;
+    top: 30vh;
+}
+
+.shiny-notification {
+    width: 600px;
+    margin: 30px auto;
+    padding-top: 40px;
+    height: 180px;
+    text-align: center;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #e31837;
+    border-radius: 6px;
+    outline: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    opacity: 1;
+}
+
+.shiny-notification-close {
+    display: none !important;
+}
+
+.progress-message, .progress-detail {
+    font-size: 100% !important;
+    display: block;
+}
+
+.progress-bar {
+   background-color: #e31837!important;
+}
+
 .working-set-notes pre {
     background: none;
     border: none;

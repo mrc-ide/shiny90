@@ -12,14 +12,14 @@ fitModel <- function(maxIterations, likelihood, spectrumData) {
 
     shiny::withProgress(message = 'Fitting model', value = 0, {
 
-        i <- Counter$new(value = 0)
+        i <- OptimisationCounter$new(par = 0, iteration = 0)
 
         opt <- optim(
             theta0,
             iterate,
             fp = spectrumData,
             likdat = likelihood,
-            maxIt = maxIterations*90,
+            maxRuns = maxIterations*2*length(theta0), # this is a heuristic for how many times the model is run by optim
             i = i,
             method = "BFGS",
             control = list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations)
@@ -27,65 +27,48 @@ fitModel <- function(maxIterations, likelihood, spectrumData) {
 
     })
 
-    shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!', value = 0, {
-
-        j <- Counter$new(value = 0)
-
-        opt$hessian <- numDeriv::hessian(x=opt$par,
-                                        func=iterateHessian,
-                                        fp = spectrumData,
-                                        likdat = likelihood,
-                                        i = j)
-    })
-
     opt
 }
 
-invert <- function(f) function(...) -f(...)
+iterate <- function(theta, fp, likdat, maxRuns, i){
 
-Counter <- methods::setRefClass("Counter",
-                fields=list(
-                    value="numeric"
-                ))
+    val <- first90::ll_hts(theta, fp, likdat)
 
-makeCounter <- function() {
-    value <- 0
-    function() {
-        value <<- value + 1
-        value
-    }
-}
-
-iterate <- function(theta, fp, likdat, maxIt, i){
-    if (i$value %% 90 == 0){
-        shiny::incProgress((1/(maxIt)), detail= paste("Iteration ", i$value/90))
+    if (isGradientStep(theta, i$par) || is.nan(val)){
+        shiny::incProgress((1/(maxRuns)))
     }
     else {
-        shiny::incProgress((1/(maxIt)))
+        shiny::incProgress((1/(maxRuns)), detail= paste("Converging: ", round(val, 2)))
     }
 
-    i$value <- i$value + 1
-    first90::ll_hts(theta, fp, likdat)
+    i$par <- theta
+    i$iteration <- i$iteration + 1
+    val
 }
 
+isGradientStep <- function(theta1, theta2){
+    length(which(theta1 != theta2)) < 2
+}
 
 iterateHessian <- function(theta, fp, likdat, i){
 
-    shiny::incProgress(1/7300)
-    i$value <- i$value + 1
+    shiny::incProgress(1/7300) # 7300 is an approximation of how many times the model will be run to calculate the hessian
+    i$iteration <- i$iteration + 1
 
     first90::ll_hts(theta, fp, likdat)
 }
 
-runSimulations <- function(opt, spectrumData) {
+simCallback <- function(maxRuns, iteration){
+    shiny::incProgress(1/maxRuns, detail=glue::glue("Running simulation {iteration} of {maxRuns}"))
+}
+
+runSimulations <- function(opt, likdat, spectrumData, numSimul) {
     testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
     simul <- NULL
     if (!testMode) {
 
         shiny::withProgress(message = 'Running simulations', value = 0, {
-
-            i <- Counter$new(value = 0)
-            simul <- first90::simul.test(opt, spectrumData)
+            simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, sim_callback = simCallback, likdat = likdat)
         })
     }
 

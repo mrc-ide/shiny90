@@ -48,13 +48,37 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             state$state <- "error"
         })
 
-        state$simul <- tryCatch({
-            runSimulations(state$optim, spectrumFilesState$combinedData())
-        }, error = function(e) {
-            str(e)
-            state$state <- "error"
-        })
+        state$state <- "converged"
         print("Completed model run")
+
+
+    })
+
+    shiny::observeEvent(state$state, {
+        if (state$state == "converged") {
+
+            if (input$numSimul > 0){
+                shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!',
+                                    detail="Please don't close your browser", value = 0, {
+
+                    j <- OptimisationCounter$new(par = 0, iteration = 0)
+
+                    state$optim$hessian <- numDeriv::hessian(x=state$optim$par,
+                                                            func=iterateHessian,
+                                                            fp = spectrumFilesState$combinedData(),
+                                                            likdat = state$likelihood(),
+                                                            i = j)
+                })
+
+                state$simul <- tryCatch({
+                    runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul)
+                }, error = function(e) {
+                    str(e)
+                    state$state <- "error"
+                })
+            }
+
+        }
     })
 
     renderOutputs(output, state, spectrumFilesState)
@@ -79,12 +103,11 @@ renderOutputs <- function(output, state, spectrumFilesState) {
 
                 plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
                 state$fp, state$mod, spectrumFilesState$country, out_evertest)
-                state$state <- "finished"
+
             }, error = function(e) {
                 str(e)
                 state$state <- "error"
             })
-
         }
     })
 
