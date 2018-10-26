@@ -6,6 +6,7 @@ local({r <- getOption("repos")
 })
 
 install.packages("tidyr")
+install.packages("numDeriv")
 install.packages("shiny")
 install.packages("shinyjs")
 install.packages("glue")

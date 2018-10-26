@@ -40,6 +40,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
 
     # Run the model and the simulations
     shiny::observeEvent(input$runModel, {
+
         state$optim <- tryCatch({
             fitModel(input$maxIterations, state$likelihood(), spectrumFilesState$combinedData())
         }, error = function(e) {
