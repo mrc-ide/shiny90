@@ -204,3 +204,7 @@ a.light, a.light:hover, a.light:focus {
     padding: 0;
     margin: 0;
 }
+
+#maxIterations, #numSimul {
+    width: 100px;
+}
