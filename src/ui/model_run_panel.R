@@ -9,15 +9,20 @@ panelModelRun <- function() {
             shiny::conditionalPanel(
                 condition = "output.showAdvancedOptions",
                 shiny::fluidRow(
-                    shiny::div("", class = "col-sm-3 col-xs-12",
-                        shiny::div("", class = "mt-3 form-group",
-                            shiny::tags$label(`for`="maxIterations", "Maximum iterations"),
-                                shiny::tags$input(id = "maxIterations", type = "number", value = "250", class = "form-control shiny-bound-input")
-
-                        ),
-                        shiny::div("", class = "mt-3 form-group",
-                             shiny::tags$label(`for`="numSimul", "Number of simulations"),
-                                 shiny::tags$input(id = "numSimul", type = "number", value = "20000", class = "form-control shiny-bound-input")
+                    shiny::div("", class = "col-sm-5 col-xs-12",
+                        shiny::div("", class="well mt-3 form form-horizontal",
+                            shiny::div("", class = "form-group",
+                                shiny::tags$label(`for`="maxIterations", "Maximum iterations", class="control-label col-xs-4"),
+                                shiny::div("", class="col-xs-8",
+                                    shiny::tags$input(id = "maxIterations", type = "number", value = "250", class = "form-control shiny-bound-input")
+                                )
+                            ),
+                            shiny::div("", class = "form-group",
+                                shiny::tags$label(`for`="numSimul", "Number of simulations",  class="control-label col-xs-4"),
+                                shiny::div("", class="col-xs-8",
+                                    shiny::tags$input(id = "numSimul", type = "number", value = "20000", class = "form-control shiny-bound-input")
+                                )
+                            )
                         )
                     )
                 )

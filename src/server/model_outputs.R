@@ -58,8 +58,12 @@ iterateHessian <- function(theta, fp, likdat, i){
     first90::ll_hts(theta, fp, likdat)
 }
 
-simCallback <- function(maxRuns, iteration){
-    shiny::incProgress(1/maxRuns, detail=glue::glue("Running simulation {iteration} of {maxRuns}"))
+make_progress <- function(n) {
+    counter <- 0L
+    function() {
+        counter <<- counter + 1L
+        shiny::incProgress(1/n, detail = glue::glue("Running simulation {counter} of {n}"))
+    }
 }
 
 runSimulations <- function(opt, likdat, spectrumData, numSimul) {
@@ -68,7 +72,7 @@ runSimulations <- function(opt, likdat, spectrumData, numSimul) {
     if (!testMode) {
 
         shiny::withProgress(message = 'Running simulations', value = 0, {
-            simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, sim_callback = simCallback, likdat = likdat)
+            simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, progress = make_progress(numSimul), likdat = likdat)
         })
     }
 

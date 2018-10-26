@@ -23,6 +23,24 @@ spectrumFiles <- function(input, output, state) {
         }
     })
 
+    state$anyDataPop <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$pop)) })
+    state$anyDataPlhiv <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$plhiv)) })
+    state$anyDataPrv <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$prevalence)) })
+    state$anyDataInc <- shiny::reactive({
+
+        if (!is.null(state$pjnz_summary())){
+            df <- na.omit(data.frame(year = state$pjnz_summary()[["year"]], inc = state$pjnz_summary()[["incidence"]]))
+            df <- df[df$year >= 2000,]
+
+            str(length(df$inc) )
+            length(df$inc) > 0
+        }
+        else {
+            FALSE
+        }
+
+        })
+
     state$asDataFrame <- shiny::reactive({
         if (is.null(state$pjnz_summary())) {
             NULL
@@ -86,7 +104,7 @@ spectrumFiles <- function(input, output, state) {
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
 
     renderSpectrumFileList(input, output, state)
-    renderSpectrumPlots(output, state$pjnz_summary)
+    renderSpectrumPlots(output, state$pjnz_summary, state)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
@@ -124,28 +142,28 @@ renderSpectrumFileList <- function(input, output, state) {
     })
 }
 
-renderSpectrumPlots <- function(output, pjnz_summary) {
+renderSpectrumPlots <- function(output, pjnz_summary, state) {
 
     output$spectrumTotalPop <- shiny::renderPlot({
-        if (!is.null(pjnz_summary())) {
+        if (state$anyDataPop()) {
             first90::plot_pjnz_pop(pjnz_summary())
         }
     })
 
     output$spectrumPLHIV <- shiny::renderPlot({
-        if (!is.null(pjnz_summary())) {
+        if (state$anyDataPlhiv()) {
             first90::plot_pjnz_plhiv(pjnz_summary())
         }
     })
 
     output$spectrumPrevalence <- shiny::renderPlot({
-        if (!is.null(pjnz_summary())) {
+        if (state$anyDataPrv()) {
             first90::plot_pjnz_prv(pjnz_summary())
         }
     })
 
     output$spectrumIncidence <- shiny::renderPlot({
-        if (!is.null(pjnz_summary())) {
+        if (state$anyDataInc()) {
             first90::plot_pjnz_inc(pjnz_summary())
         }
     })

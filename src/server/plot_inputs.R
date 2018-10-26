@@ -1,19 +1,27 @@
 plotInputs <- function(output, surveyAndProgramData, spectrumFilesState) {
 
     output$reviewTotalPop <- shiny::renderPlot({
-        first90::plot_pjnz_pop(spectrumFilesState$pjnz_summary())
+        if (spectrumFilesState$anyDataPop()){
+           first90::plot_pjnz_pop(spectrumFilesState$pjnz_summary())
+        }
     })
 
     output$reviewPLHIV <- shiny::renderPlot({
-        first90::plot_pjnz_plhiv(spectrumFilesState$pjnz_summary())
+        if (spectrumFilesState$anyDataPlhiv()){
+            first90::plot_pjnz_plhiv(spectrumFilesState$pjnz_summary())
+        }
     })
 
     output$reviewPrevalence <- shiny::renderPlot({
-        first90::plot_pjnz_prv(spectrumFilesState$pjnz_summary())
+        if (spectrumFilesState$anyDataPrv()){
+            first90::plot_pjnz_prv(spectrumFilesState$pjnz_summary())
+        }
     })
 
     output$reviewIncidence <- shiny::renderPlot({
-        first90::plot_pjnz_inc(spectrumFilesState$pjnz_summary())
+        if (spectrumFilesState$anyDataInc()){
+            first90::plot_pjnz_inc(spectrumFilesState$pjnz_summary())
+        }
     })
 
     output$reviewTotalTests <- shiny::renderPlot({
