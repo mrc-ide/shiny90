@@ -60,19 +60,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             if (input$numSimul > 0){
 
                 state$optim$hessian <- tryCatch({
-
-                    shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!',
-                                        detail="Please don't close your browser", value = 0, {
-
-                        j <- OptimisationCounter$new(par = 0, iteration = 0)
-
-                        numDeriv::hessian(x=state$optim$par,
-                                            func=iterateHessian,
-                                            fp = spectrumFilesState$combinedData(),
-                                            likdat = state$likelihood(),
-                                            i = j)
-                    })
-
+                    calculateHessian(state$optim, state$likelihood(), spectrumFilesState$combinedData())
                 }, error = function(e) {
                     str(e)
                     state$state <- "error"

@@ -32,7 +32,6 @@ spectrumFiles <- function(input, output, state) {
             df <- na.omit(data.frame(year = state$pjnz_summary()[["year"]], inc = state$pjnz_summary()[["incidence"]]))
             df <- df[df$year >= 2000,]
 
-            str(length(df$inc) )
             length(df$inc) > 0
         }
         else {

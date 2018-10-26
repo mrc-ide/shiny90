@@ -8,8 +8,5 @@ file.writeText <- function(path, text) {
     writeLines(text, f)
 }
 
-invert <- function(f) function(...) -f(...)
-
-OptimisationCounter <- methods::setRefClass("OptimisationCounter",fields=list(iteration="numeric",
-                                                                                par="numeric"))
-
+Counter <- methods::setRefClass("Counter",fields=list(iteration="numeric",
+                                                       par="numeric"))

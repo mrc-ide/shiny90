@@ -12,7 +12,7 @@ fitModel <- function(maxIterations, likelihood, spectrumData) {
 
     shiny::withProgress(message = 'Fitting model', value = 0, {
 
-        i <- OptimisationCounter$new(par = 0, iteration = 0)
+        i <- Counter$new(par = 0, iteration = 0)
 
         opt <- optim(
             theta0,
@@ -67,14 +67,25 @@ make_progress <- function(n) {
 }
 
 runSimulations <- function(opt, likdat, spectrumData, numSimul) {
-    testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
-    simul <- NULL
-    if (!testMode) {
 
-        shiny::withProgress(message = 'Running simulations', value = 0, {
-            simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, progress = make_progress(numSimul), likdat = likdat)
-        })
-    }
+    shiny::withProgress(message = 'Running simulations', value = 0, {
+        simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, progress = make_progress(numSimul), likdat = likdat)
+    })
 
     simul
+}
+
+calculateHessian <- function(opt, likdat, spectrumData) {
+
+    shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!',
+                        detail="Please don't close your browser", value = 0, {
+
+        j <- Counter$new(par = 0, iteration = 0)
+
+        numDeriv::hessian(x=opt$par,
+                        func=iterateHessian,
+                        fp = spectrumData,
+                        likdat = likdat,
+                        i = j)
+    })
 }
