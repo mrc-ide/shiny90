@@ -26,7 +26,7 @@ panelModelRun <- function() {
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'converged'",
             shiny::div("", class = "mt-3",
-                shiny::h3("Model fitting complete")
+                shiny::h3("Model run complete")
             )
         ),
         shiny::conditionalPanel(
