@@ -1,4 +1,4 @@
-fitModel <- function(maxIterations, likelihood, spectrumData) {
+fitModelInner <- function(maxIterations, likelihood, spectrumData) {
     # Starting parameters
     data("theta0", package="first90")
 
@@ -75,7 +75,7 @@ runSimulations <- function(opt, likdat, spectrumData, numSimul) {
     simul
 }
 
-calculateHessian <- function(opt, likdat, spectrumData) {
+calculateHessianInner <- function(opt, likdat, spectrumData) {
 
     shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!',
                         detail="Please don't close your browser", value = 0, {
@@ -89,3 +89,7 @@ calculateHessian <- function(opt, likdat, spectrumData) {
                         i = j)
     })
 }
+
+
+fitModel <- memoise::memoise(fitModelInner)
+calculateHessian <- memoise::memoise(calculateHessianInner)
