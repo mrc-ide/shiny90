@@ -40,3 +40,13 @@ modal <- function(title, id, cancelId, ...) {
         )
     )
 }
+
+errorAlert <- function(condition, id, message){
+    shiny::conditionalPanel(
+        condition = condition,
+            shiny::div("", id=id, class = "alert alert-danger",
+            shiny::icon("exclamation-triangle", lib="font-awesome"),
+            shiny::span(message)
+        )
+    )
+}

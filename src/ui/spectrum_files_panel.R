@@ -5,7 +5,9 @@ panelSpectrum <- function() {
         shiny::div("", class = "mt-3 mb-5",
             shiny::fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz")),
             shiny::conditionalPanel(condition = "output.spectrumFileError != null",
-                shiny::div("Spectrum file not valid!", class = "alert alert-warning",
+                shiny::div("", class = "alert alert-danger",
+                    shiny::icon("exclamation-triangle", lib="font-awesome"),
+                    shiny::span("Error: Spectrum file not valid!"),
                     shiny::textOutput("spectrumFileError", inline = TRUE)
                 )
             )

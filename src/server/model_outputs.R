@@ -12,15 +12,15 @@ fitModelInner <- function(maxIterations, likelihood, spectrumData) {
 
     shiny::withProgress(message = 'Fitting model', value = 0, {
 
-        i <- Counter$new(par = 0, iteration = 0)
+        maxRuns <- maxIterations*2*length(theta0)
+        # this is a heuristic for how many times the model is run by optim
 
         opt <- optim(
             theta0,
             iterate,
             fp = spectrumData,
             likdat = likelihood,
-            maxRuns = maxIterations*2*length(theta0), # this is a heuristic for how many times the model is run by optim
-            i = i,
+            progress = makeProgressFittingModel(maxRuns, theta0),
             method = "BFGS",
             control = list(fnscale = -1, trace=4, REPORT=1, maxit=maxIterations)
         )
@@ -30,35 +30,52 @@ fitModelInner <- function(maxIterations, likelihood, spectrumData) {
     opt
 }
 
-iterate <- function(theta, fp, likdat, maxRuns, i){
+iterate <- function(theta, fp, likdat, progress){
 
     val <- first90::ll_hts(theta, fp, likdat)
-
-    if (isGradientStep(theta, i$par) || is.nan(val)){
-        shiny::incProgress((1/(maxRuns)))
-    }
-    else {
-        shiny::incProgress((1/(maxRuns)), detail= paste("Converging: ", round(val, 2)))
-    }
-
-    i$par <- theta
-    i$iteration <- i$iteration + 1
+    progress(theta, val)
     val
+}
+
+makeProgressFittingModel <- function(n, theta0) {
+    counter <- 0L
+    params <- theta0
+    function(theta, val) {
+        counter <<- counter + 1L
+
+        if (isGradientStep(theta, params) || is.nan(val)) {
+            shiny::incProgress(1/n)
+        }
+        else {
+            params <<- theta
+            shiny::incProgress((1/n), detail= paste("Converging: ", round(val, 2)))
+        }
+    }
 }
 
 isGradientStep <- function(theta1, theta2){
     length(which(theta1 != theta2)) < 2
 }
 
-iterateHessian <- function(theta, fp, likdat, i){
+makeHessianProgress <- function(n) {
+    step <- 0L
+    time <- Sys.time()
+    function() {
+        if (step == 0L){
+            time <<- Sys.time()
+        }
+        step <<- step + 1L
+        estimatedTimeLeft <- (difftime(Sys.time(),time,units="secs")/ step) * (n - step)
+        shiny::incProgress(1/n, detail = glue::glue("Estimated time left: {round(estimatedTimeLeft)} seconds"))
+    }
+}
 
-    shiny::incProgress(1/7300) # 7300 is an approximation of how many times the model will be run to calculate the hessian
-    i$iteration <- i$iteration + 1
-
+iterateHessian <- function(theta, fp, likdat, progress){
+    progress()
     first90::ll_hts(theta, fp, likdat)
 }
 
-make_progress <- function(n) {
+makeProgress <- function(n) {
     counter <- 0L
     function() {
         counter <<- counter + 1L
@@ -69,7 +86,7 @@ make_progress <- function(n) {
 runSimulations <- function(opt, likdat, spectrumData, numSimul) {
 
     shiny::withProgress(message = 'Running simulations', value = 0, {
-        simul <- first90::simul.test(opt, spectrumData, nsir = numSimul, SIR = TRUE, progress = make_progress(numSimul), likdat = likdat)
+        simul <- first90::simul.test(opt, spectrumData, nsir = numSimul - 1, SIR = TRUE, progress = makeProgress(numSimul), likdat = likdat)
     })
 
     simul
@@ -78,15 +95,12 @@ runSimulations <- function(opt, likdat, spectrumData, numSimul) {
 calculateHessianInner <- function(opt, likdat, spectrumData) {
 
     shiny::withProgress(message = 'Calculating Hessian matrix: this may take a while!',
-                        detail="Please don't close your browser", value = 0, {
-
-        j <- Counter$new(par = 0, iteration = 0)
-
+                        value = 0, {
         numDeriv::hessian(x=opt$par,
                         func=iterateHessian,
                         fp = spectrumData,
                         likdat = likdat,
-                        i = j)
+                        progress = makeHessianProgress(7300)) # 7300 is an approximation of how many times the model will be run
     })
 }
 

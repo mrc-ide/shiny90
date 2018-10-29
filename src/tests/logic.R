@@ -53,16 +53,27 @@ verifyPJNZFileUpload <- function(filename) {
     checkTopLeftTableCellHasThisValue("Data", ".spectrum-combined-data", "2022")
 }
 
-editWorkingSetMetadata <- function(wd, name = NULL, notes = NULL) {
+editWorkingSetMetaInner <- function(wd, name, notes = NULL){
     wd$findElement("css", "a#editWorkingSet")$clickElement()
-    if (!is.null(name)) {
-        enterText(wd$findElement("css", "#editWorkingSet_name"), name, clear = TRUE)
-    }
+
+    enterText(wd$findElement("css", "#editWorkingSet_name"), name, clear = TRUE)
+
     if (!is.null(notes)) {
         enterText(wd$findElement("css", "#editWorkingSet_notes"), notes, clear = TRUE)
     }
 
     wd$findElement("css", "#editWorkingSet_update")$clickElement()
+}
+
+editWorkingSetMetadata <- function(wd, name, notes = NULL) {
+
+    editWorkingSetMetaInner(wd, name, notes)
+
+    waitForAndTryAgain(function() {
+        getText(wd$findElement("css", "#workingSet_name")) == name
+    }, failureCallBack = function() {
+       editWorkingSetMetaInner(wd, name, notes)
+    })
 }
 
 runModel <- function(numSimulations) {

@@ -7,6 +7,3 @@ file.writeText <- function(path, text) {
     on.exit(close(f))
     writeLines(text, f)
 }
-
-Counter <- methods::setRefClass("Counter",fields=list(iteration="numeric",
-                                                       par="numeric"))

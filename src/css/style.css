@@ -191,9 +191,9 @@ a.light, a.light:hover, a.light:focus {
     display: block;
 }
 
-.progress-bar {
-   background-color: #e31837!important;
-}
+/*.progress-bar {*/
+   /*background-color: #e31837!important;*/
+/*}*/
 
 .working-set-notes pre {
     background: none;
