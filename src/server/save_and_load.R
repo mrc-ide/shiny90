@@ -136,6 +136,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                     if (file.exists(simulPath)) {
                         modelRunState$simul <- readRDS(simulPath)
                     }
+                    modelRunState$state <- "converged"
                 } else {
                     modelRunState$optim <- NULL
                     modelRunState$state <- "not_run"

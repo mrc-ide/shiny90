@@ -23,7 +23,6 @@ testthat::test_that("can walk through app", {
     switchTab(wd, "Run model")
     runModel()
 
-    switchTab(wd, "View model outputs")
     expectElementPresent(wd, inActivePane("#outputs_totalNumberOfTests"))
     expectElementPresent(wd, inActivePane("#outputs_numberOfPositiveTests"))
     expectElementPresent(wd, inActivePane("#outputs_percentageNegativeOfTested"))

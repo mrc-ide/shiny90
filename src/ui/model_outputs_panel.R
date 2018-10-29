@@ -4,7 +4,7 @@ panelModelOutputs <- function() {
     shiny::div("",
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'converged'",
-            shiny::div("",
+            shiny::div("", id="model-outputs",
                 shiny::div("", class="mb-5 suggest-save",
                     shiny::span("Now that the model has been run, you can "),
                     shiny::tags$a(href = "", class="shiny-download-link", id="digestDownload2", "download a digest file", target = "_blank", download = NA),

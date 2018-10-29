@@ -48,33 +48,26 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             state$state <- "error"
         })
 
+        if (input$numSimul > 0){
+
+            state$optim$hessian <- tryCatch({
+                calculateHessian(state$optim, state$likelihood(), spectrumFilesState$combinedData())
+            }, error = function(e) {
+                str(e)
+                state$state <- "error"
+            })
+
+            state$simul <- tryCatch({
+                runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul-1)
+            }, error = function(e) {
+                str(e)
+                state$state <- "error"
+            })
+        }
+
         state$state <- "converged"
         print("Completed model run")
 
-
-    })
-
-    shiny::observeEvent(state$state, {
-        if (state$state == "converged") {
-
-            if (input$numSimul > 0){
-
-                state$optim$hessian <- tryCatch({
-                    calculateHessian(state$optim, state$likelihood(), spectrumFilesState$combinedData())
-                }, error = function(e) {
-                    str(e)
-                    state$state <- "error"
-                })
-
-                state$simul <- tryCatch({
-                    runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul)
-                }, error = function(e) {
-                    str(e)
-                    state$state <- "error"
-                })
-            }
-
-        }
     })
 
     renderOutputs(output, state, spectrumFilesState)

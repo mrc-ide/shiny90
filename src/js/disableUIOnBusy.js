@@ -21,6 +21,7 @@ function updateBusyIndicator() {
         setTimeout(showBusyIndicator, 250);
     } else {
         $(".busy-indicator").hide();
+        $('.modal-dialog').show();
     }
 }
 

@@ -64,11 +64,12 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     downloadFileFromLink(link, "from_review.zip.shiny90")
 
     # Save it from outputs tab
-    editWorkingSetMetadata(wd, name = "from_outputs")
     switchTab(wd, "Run model")
     runModel()
-    switchTab(wd, "View model outputs")
+
+    editWorkingSetMetadata(wd, name = "from_outputs")
     link = wd$findElement("css", inActivePane(".suggest-save a"))
+    waitForVisible(link)
     expectTextEqual("download a digest file", link)
 
     downloadFileFromLink(link, "from_outputs.zip.shiny90")
@@ -76,18 +77,18 @@ testthat::test_that("can save digest from review tab and outputs tab", {
     # Load each one and check them
     loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "from_review.zip.shiny90")
     expectTextEqual("from_review", wd$findElement("css", "#workingSet_name"))
-    testthat::expect_false(isTabEnabled(wd, "View model outputs"))
-    expectTextToContain(
-        "You need to run the model before you can see any outputs",
-        wd$findElement("css", inActivePane(".alert"))
-    )
+
     switchTab(wd, "Upload spectrum file(s)")
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "from_outputs.zip.shiny90")
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_name"))
+
+    switchTab(wd, "Upload spectrum file(s)")
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
-    testthat::expect_true(isTabEnabled(wd, "View model outputs"))
-    switchTab(wd, "View model outputs")
+
+    switchTab(wd, "Run model")
+    waitFor(function() { isVisible(wd$findElement("css", "#model-outputs")) })
+
     expectTextToContain("Now that the model has been run", wd$findElement("css", inActivePane(".suggest-save")))
 })
