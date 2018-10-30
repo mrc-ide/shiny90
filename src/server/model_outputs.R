@@ -73,11 +73,19 @@ iterateHessian <- function(theta, fp, likdat, progress){
     first90::ll_hts(theta, fp, likdat)
 }
 
-makeProgress <- function(n) {
+makeProgress <- function(n, every = 0.1) {
     counter <- 0L
+    last_time <- as.numeric(Sys.time()) - every * 2
+    last_counter <- 0L
     function() {
         counter <<- counter + 1L
-        shiny::incProgress(1/n, detail = glue::glue("Running simulation {counter} of {n}"))
+        now <- as.numeric(Sys.time())
+        if (counter >= n || now - last_time > every) {
+            inc <- (counter - last_counter) / n
+            shiny::incProgress(inc, detail = glue::glue("Running simulation {counter} of {n}"))
+            last_time <<- now
+            last_counter <<- counter
+        }
     }
 }
 
@@ -102,6 +110,6 @@ calculateHessianInner <- function(opt, likdat, spectrumData) {
     })
 }
 
-
-fitModel <- memoise::memoise(fitModelInner)
-calculateHessian <- memoise::memoise(calculateHessianInner)
+cache <- memoise::cache_filesystem(normalizePath("cache"))
+fitModel <- memoise::memoise(fitModelInner, cache = cache)
+calculateHessian <- memoise::memoise(calculateHessianInner, cache = cache)
