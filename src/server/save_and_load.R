@@ -26,10 +26,10 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             file.writeText(path, spectrumFilesState$country)
         })
         paths <- doAndRememberPath(paths, "survey.csv", function(path) {
-            write.csv(surveyAndProgramData$survey, file = path, row.names = FALSE)
+            write.csv(surveyAndProgramData$survey_data_human_readable(), file = path, row.names = FALSE)
         })
         paths <- doAndRememberPath(paths, "program.csv", function(path) {
-            write.csv(surveyAndProgramData$program_data, file = path, row.names = FALSE)
+            write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE)
         })
     }
     if (!is.null(modelRunState$optim)) {
@@ -94,9 +94,9 @@ readCountry <- function() {
     }
 }
 
-readCSVIfPresent <- function(fileName) {
+readCSVIfPresent <- function(fileName, headers) {
     if (file.exists(fileName)) {
-        read.csv(fileName)
+        mapHeadersFromHumanReadable(read.csv(fileName), headers)
     } else {
         NULL
     }
@@ -121,8 +121,8 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
             withDir(scratch, {
                 spectrumFilesState$country <- readCountry()
                 workingSet$notes <- file.readText("notes.txt")
-                surveyAndProgramData$survey <- readCSVIfPresent("survey.csv")
-                surveyAndProgramData$program_data <- readCSVIfPresent("program.csv")
+                surveyAndProgramData$survey <- readCSVIfPresent("survey.csv", surveyDataHeaders)
+                surveyAndProgramData$program_data <- readCSVIfPresent("program.csv", programDataHeaders)
                 spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
                     list(
                         name = removeExtension(path, "rds"),
