@@ -1,5 +1,5 @@
 # __TITLE__
-This folder contains data exported from the UN Aids Shiny90 app.
+This folder contains data exported from the UNAIDS Shiny90 app.
 
 Principally, this file is intended to be used with that app - you can load this 
 data into the app by uploading a zip file of this folder.
