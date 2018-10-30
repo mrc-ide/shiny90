@@ -38,10 +38,8 @@ iterate <- function(theta, fp, likdat, progress){
 }
 
 makeProgressFittingModel <- function(n, theta0) {
-    counter <- 0L
     params <- theta0
     function(theta, val) {
-        counter <<- counter + 1L
 
         if (isGradientStep(theta, params) || is.nan(val)) {
             shiny::incProgress(1/n)
