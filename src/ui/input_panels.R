@@ -5,16 +5,12 @@ panelSurvey <- function() {
              by uploading a new CSV file.", class = "mb-3"),
         downloadButton("downloadSurveyTemplate", "Download survey data"),
         shiny::h3("Upload new data"),
-        shiny::conditionalPanel(
-        condition = "output.wrongSurveyHeaders",
-            shiny::div("Invalid headers! Survey data must match the given column headers. If you are missing data points please just input NA.",
-                        id="wrongSurveyHeadersError", class = "alert alert-warning")
-        ),
-        shiny::conditionalPanel(
-
-        condition = "output.wrongSurveyCountry",
-            shiny::div("You cannot upload survey data for a different country.", id="wrongSurveyCountryError", class = "alert alert-warning")
-        ),
+        errorAlert(id = "wrongSurveyHeadersError",
+                    condition = "output.wrongSurveyHeaders",
+                    message = "Error: Invalid headers! Survey data must match the given column headers. This file has been ignored."),
+        errorAlert(id = "wrongSurveyCountryError",
+                condition = "output.wrongSurveyCountry",
+                message = "Error: You cannot upload survey data for a different country. This file has been ignored."),
         shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
         shiny::h3("Or edit data in place"),
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
@@ -46,15 +42,10 @@ panelProgram <- function() {
         shiny::div("", class="mb-3 text-muted"),
         downloadButton("downloadProgramTemplate", "Download programmatic data"),
         shiny::h3("Upload new data"),
-        shiny::conditionalPanel(
-            condition = "output.wrongProgramHeaders",
-            shiny::div("Invalid headers! Program data must match the given column headers. If you are missing data points please just input NA.",
-            id="wrongProgramHeadersError", class = "alert alert-warning")
-        ),
-        shiny::conditionalPanel(
-            condition = "output.wrongProgramCountry",
-            shiny::div("You cannot upload program data for a different country.", id="wrongProgramCountryError", class = "alert alert-warning")
-        ),
+        errorAlert(id = "wrongProgramHeadersError", condition="output.wrongProgramHeaders",
+                message = "Error: Invalid headers! Program data must match the given column headers. This file has been ignored."),
+        errorAlert(condition="output.wrongProgramCountry", id="wrongProgramCountryError",
+            message="Error: You cannot upload program data for a different country. This file has been ignored."),
         shiny::fileInput("programData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
         shiny::h3("Or edit data in place"),
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted"),
@@ -77,7 +68,8 @@ panelReviewInput <- function() {
         ),
         shiny::conditionalPanel(
             condition = "output.incompleteProgramData",
-                shiny::div("The programmatic data for your country is incomplete. Please fill in missing values if you have them.", class = "mt-5 alert alert-warning")
+                shiny::div("The programmatic data for your country is incomplete. Please fill in missing values if you have them.",
+                class = "mt-5 alert alert-warning", id="incomplete-warning")
         ),
         shiny::div("", class = "row",
             shiny::conditionalPanel(

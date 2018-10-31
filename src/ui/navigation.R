@@ -4,8 +4,7 @@ navigationPanel <- function() {
         panelWithTitle("Upload survey data", panelSurvey()),
         panelWithTitle("Upload programmatic data", panelProgram()),
         panelWithTitle("Review input data", panelReviewInput()),
-        panelWithTitle("Run model", panelModelRun()),
-        panelWithTitle("View model outputs", panelModelOutputs())
+        panelWithTitle("Run model", panelModelRun())
     )
 }
 
@@ -22,9 +21,6 @@ enableNavLinks <- function(input, output, spectrumFilesState, modelRunState, sur
     enableTabWhen("Upload programmatic data", function() { spectrumFilesState$anyDataSets() })
     enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() })
     enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() })
-    enableTabWhen("View model outputs", function() {
-        spectrumFilesState$anyDataSets() && modelRunState$state == "finished"
-    })
 }
 
 enableTabWhen <- function(tabTitle, condition) {

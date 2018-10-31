@@ -101,8 +101,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$anyProgramDataAnc <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$anc)) })
     state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
 
-    output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() ||
-        !state$anyProgramDataAnc() || !state$anyProgramDataAncPos()})
+    output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
 
     output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
     output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
@@ -170,6 +169,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
         }
 
+        shinyjs::reset("surveyData")
+
     })
 
     shiny::observeEvent(input$programData, {
@@ -181,9 +182,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         
         newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
-        str(sort(names(newProgram)))
-        str(sort(names(state$program_data_human_readable())))
-
         state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 
         state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newProgram)
@@ -191,6 +189,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
             state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
         }
+
+        shinyjs::reset("programData")
     })
 
     # We track change events so that we know when to reset the model run state.

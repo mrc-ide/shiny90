@@ -16,7 +16,11 @@ testthat::test_that("warning is not shown if complete program data is present", 
 
     uploadSpectrumFileAndSwitchTab("Review input data")
 
-    expectElementNotVisible(wd, ".alert-warning")
+    warning <- wd$findElement("css", ".mt-5.alert.alert-warning")
+
+    waitFor(function() {
+        !isVisible(warning)
+    })
 })
 
 testthat::test_that("can upload a new set of program data for the same country", {
@@ -44,7 +48,7 @@ testthat::test_that("cannot upload progam data with wrong headers", {
 
     errorAlert <- wd$findElement("css", "#wrongProgramHeadersError")
     waitForVisible(errorAlert)
-    expectTextEqual("Invalid headers! Program data must match the given column headers. If you are missing data points please just input NA.", errorAlert)
+    expectTextEqual("Error: Invalid headers! Program data must match the given column headers. This file has been ignored.", errorAlert)
 
 })
 
@@ -61,5 +65,5 @@ testthat::test_that("cannot upload program data for a different country", {
 
     errorAlert <- wd$findElement("css", "#wrongProgramCountryError")
     waitForVisible(errorAlert)
-    expectTextEqual("You cannot upload program data for a different country.", errorAlert)
+    expectTextEqual("Error: You cannot upload program data for a different country. This file has been ignored.", errorAlert)
 })

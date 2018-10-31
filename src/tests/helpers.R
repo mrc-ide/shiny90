@@ -35,9 +35,9 @@ getText <- function(element) {
 }
 
 enterText <- function(element, text, clear = FALSE) {
- #   if (clear) {
-        element$clearElement()
- #   }
+
+    element$clearElement()
+
     element$click
     element$sendKeysToElement(list(text))
 }
@@ -60,11 +60,6 @@ expectElementPresent <- function(wd, cssSelector) {
         ok = length(elements) > 0,
         failure_message = glue::glue("Expected an element in the page to match {cssSelector}")
     )
-}
-
-expectElementNotVisible <- function(wd, cssSelector){
-    element <- wd$findElement("css", cssSelector)
-    testthat::expect_true(element$isElementDisplayed() == "FALSE")
 }
 
 getElementIfPresent <- function(wd, cssSelector) {
