@@ -110,14 +110,5 @@ calculateHessianInner <- function(opt, likdat, spectrumData) {
     })
 }
 
-getCache <- function(){
-    if (testMode){
-        memoise::cache_filesystem(normalizePath("cache"))
-    }
-    else {
-        memoise::cache_memory()
-    }
-}
-
-fitModel <- memoise::memoise(fitModelInner, cache = getCache())
-calculateHessian <- memoise::memoise(calculateHessianInner, cache = getCache())
+fitModel <- memoise::memoise(fitModelInner)
+calculateHessian <- memoise::memoise(calculateHessianInner)
