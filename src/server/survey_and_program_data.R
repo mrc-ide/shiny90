@@ -24,25 +24,19 @@ mapColumnsToNumeric <- function(dataframe, colnames) {
     dataframe
 }
 
-mapHeader <- function(dataframe, key, value) {
-    colnames(dataframe)[names(dataframe) == key] <- value
+mapHeaders <- function(dataframe, from, to) {
+    i <- match(from, names(dataframe))
+    j <- !is.na(i)
+    names(dataframe)[i[j]] <- to[j]
     dataframe
 }
 
 mapHeadersToHumanReadable <- function(dataframe, headers) {
-
-    for (key in names(headers)){
-        dataframe <- mapHeader(dataframe, key, headers[[key]])
-    }
-    dataframe
+    mapHeaders(dataframe, names(headers), unname(headers))
 }
 
 mapHeadersFromHumanReadable <- function(dataframe, headers) {
-
-    for (key in names(headers)){
-        dataframe <- mapHeader(dataframe, headers[[key]], key)
-    }
-    dataframe
+    mapHeaders(dataframe, unname(headers), names(headers))
 }
 
 sharedHeaders <- list(country= "Country",

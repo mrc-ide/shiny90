@@ -5,7 +5,7 @@ welcomeView <- function() {
                 shiny::div("", class = "col-md-8 col-sm-12 col-md-offset-2",
                 shiny::h1("Shiny 90", class = "title"),
                     shiny::p("",
-                        shiny::HTML('UN Aids have an ambitious treatment target to help end the AIDS epidemic,
+                        shiny::HTML('UNAIDS have an ambitious treatment target to help end the AIDS epidemic,
                              <a href="http://www.unaids.org/en/resources/documents/2017/90-90-90">the three 90s</a>:'),
                         shiny::tags$ul("",
                             shiny::tags$li("By 2020, 90% of all people living with HIV will know their HIV status."),
@@ -15,7 +15,7 @@ welcomeView <- function() {
                     ),
                     shiny::p("This tool models the 1st 90: what percentage of the popultation living with HIV (plHIV) have been diagnosed?"),
                     shiny::p("",
-                        shiny::span("You will need input data from the UN AIDS"),
+                        shiny::span("You will need input data from the UNAIDS"),
                         shiny::HTML('<a href="http://www.unaids.org/en/dataanalysis/datatools/spectrum-epp">Spectrum tool</a>.'),
                         shiny::span(
                             "This will be combined with survey and programmatic data. You can provide your own
