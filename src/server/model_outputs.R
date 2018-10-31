@@ -2,8 +2,6 @@ fitModelInner <- function(maxIterations, likelihood, spectrumData) {
     # Starting parameters
     data("theta0", package="first90")
 
-    testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
-
     if (testMode) {
         maxIterations <- 2
     }
@@ -29,6 +27,8 @@ fitModelInner <- function(maxIterations, likelihood, spectrumData) {
 
     opt
 }
+
+testMode <- Sys.getenv("SHINY90_TEST_MODE") == "TRUE"
 
 iterate <- function(theta, fp, likdat, progress){
 
@@ -110,6 +110,14 @@ calculateHessianInner <- function(opt, likdat, spectrumData) {
     })
 }
 
-cache <- memoise::cache_filesystem(normalizePath("cache"))
-fitModel <- memoise::memoise(fitModelInner, cache = cache)
-calculateHessian <- memoise::memoise(calculateHessianInner, cache = cache)
+getCache <- function(){
+    if (testMode){
+        memoise::cache_filesystem(normalizePath("cache"))
+    }
+    else {
+        memoise::cache_memory()
+    }
+}
+
+fitModel <- memoise::memoise(fitModelInner, cache = getCache())
+calculateHessian <- memoise::memoise(calculateHessianInner, cache = getCache())
