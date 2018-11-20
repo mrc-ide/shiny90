@@ -96,7 +96,7 @@ readCountry <- function() {
 
 readCSVIfPresent <- function(fileName, headers) {
     if (file.exists(fileName)) {
-        mapHeadersFromHumanReadable(read.csv(fileName), headers)
+        mapHeadersFromHumanReadable(read.csv(fileName, check.names=FALSE), headers)
     } else {
         NULL
     }
