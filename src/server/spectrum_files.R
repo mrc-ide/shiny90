@@ -6,8 +6,9 @@ spectrumFiles <- function(input, output, state) {
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <- shiny::reactive({
         if (state$anyDataSets()) {
-            # TODO use all files, not just first one
-            state$dataSets[[1]]$data
+            data_list <- lapply(state$dataSets, function(x) {x$data})
+            pjnz_aggr <- first90::combine_inputs(data_list)
+            first90::prepare_inputs_from_aggregate(pjnz_aggr)
         }
         else {
             NULL
@@ -72,7 +73,7 @@ spectrumFiles <- function(input, output, state) {
                     }
 
                     dataSet = list(name = inFile$name,
-                                    data = first90::prepare_inputs(inFile$datapath))
+                                    data = first90::extract_pjnz(inFile$datapath))
 
                     state$dataSets <- c(state$dataSets, list(dataSet))
                 }
