@@ -1,0 +1,19 @@
+packages:
+  -tidyr
+  -numDeriv
+  -shiny
+  -shinyjs
+  -glue
+  -devtools
+  -purrr
+  -rhandsontable
+  -data.table
+  -ggplot2
+  -memoise
+  -magrittr
+
+package_sources:
+  github:
+  - mrc-ide/first90
+  - mrc-ide/eppasm
+  - andrewsali/shinycssloaders
