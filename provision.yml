@@ -11,6 +11,9 @@ packages:
   - ggplot2
   - memoise
   - magrittr
+  - eppasm
+  - first90
+  - shinycssloaders
 
 package_sources:
   github:
