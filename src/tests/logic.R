@@ -83,7 +83,7 @@ runModel <- function(numSimulations) {
     wd$findElement("css", "#showAdvancedOptions")$clickElement()
     numSimul <- waitForElement(wd, "#numSimul")
 
-    enterText(numSimul, "0")
+    enterText(numSimul, numSimulations)
 
     runModelButton$clickElement()
     waitForShinyToNotBeBusy(wd)
