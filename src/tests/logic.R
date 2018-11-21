@@ -76,7 +76,7 @@ editWorkingSetMetadata <- function(wd, name, notes = NULL) {
     })
 }
 
-runModel <- function(numSimulations) {
+runModel <- function() {
 
     runModelButton <- wd$findElement("css", inActivePane("#runModel"))
 

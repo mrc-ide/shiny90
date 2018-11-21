@@ -96,7 +96,7 @@ readCountry <- function() {
 
 readCSVIfPresent <- function(fileName, headers) {
     if (file.exists(fileName)) {
-        mapHeadersFromHumanReadable(read.csv(fileName), headers)
+        mapHeadersFromHumanReadable(read.csv(fileName, check.names=FALSE), headers)
     } else {
         NULL
     }
@@ -122,7 +122,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 spectrumFilesState$country <- readCountry()
                 workingSet$notes <- file.readText("notes.txt")
                 surveyAndProgramData$survey <- readCSVIfPresent("survey.csv", surveyDataHeaders)
-                surveyAndProgramData$program_data <- readCSVIfPresent("program.csv", programDataHeaders)
+                surveyAndProgramData$program_data <- readCSVIfPresent("program.csv", c(programDataHeaders, sharedHeaders))
                 spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
                     list(
                         name = removeExtension(path, "rds"),
