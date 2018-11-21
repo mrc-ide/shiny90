@@ -76,14 +76,14 @@ editWorkingSetMetadata <- function(wd, name, notes = NULL) {
     })
 }
 
-runModel <- function(numSimulations) {
+runModel <- function() {
 
     runModelButton <- wd$findElement("css", inActivePane("#runModel"))
 
     wd$findElement("css", "#showAdvancedOptions")$clickElement()
     numSimul <- waitForElement(wd, "#numSimul")
 
-    enterText(numSimul, numSimulations)
+    enterText(numSimul, "0")
 
     runModelButton$clickElement()
     waitForShinyToNotBeBusy(wd)
