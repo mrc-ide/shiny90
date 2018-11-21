@@ -40,4 +40,4 @@ options(shiny.autoreload = TRUE, shiny.autoreload.pattern = glob2rx("**/*.R"))
 options(shiny.maxRequestSize = 30*1024^2)
 
 shiny::addResourcePath('images', file.path('images'))
-shiny::runApp("src", port = 8080)
+shiny::shinyAppDir("src")
