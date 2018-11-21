@@ -93,8 +93,6 @@ renderOutputs <- function(output, state, spectrumFilesState) {
                 # output for Spectrum re-ingestion
                 state$spectrum_outputs <- first90::spectrum_output_table(state$mod, state$fp)
 
-                str(state$spectrum_outputs)
-
                 plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
                                     state$fp, state$mod, spectrumFilesState$country, out_evertest, state$simul)
 
