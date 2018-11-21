@@ -80,9 +80,15 @@ makeProgress <- function(n, every = 0.1) {
     function() {
         counter <<- counter + 1L
         now <- as.numeric(Sys.time())
-        if (counter >= n || now - last_time > every) {
+        if (now - last_time > every) {
             inc <- (counter - last_counter) / n
             shiny::incProgress(inc, detail = glue::glue("Running simulation {counter} of {n}"))
+            last_time <<- now
+            last_counter <<- counter
+        }
+        if (counter >= n) {
+            inc <- (counter - last_counter) / n
+            shiny::incProgress(inc, detail = glue::glue("Updating results. Please wait a few more seconds."))
             last_time <<- now
             last_counter <<- counter
         }
