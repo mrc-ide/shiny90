@@ -1,16 +1,16 @@
 packages:
-  -tidyr
-  -numDeriv
-  -shiny
-  -shinyjs
-  -glue
-  -devtools
-  -purrr
-  -rhandsontable
-  -data.table
-  -ggplot2
-  -memoise
-  -magrittr
+  - tidyr
+  - numDeriv
+  - shiny
+  - shinyjs
+  - glue
+  - devtools
+  - purrr
+  - rhandsontable
+  - data.table
+  - ggplot2
+  - memoise
+  - magrittr
 
 package_sources:
   github:
