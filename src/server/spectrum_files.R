@@ -58,33 +58,40 @@ spectrumFiles <- function(input, output, state) {
 
     shiny::observeEvent(input$spectrumFile, {
 
+
         inFile <- input$spectrumFile
         state$spectrumFileError <- NULL
 
         if (!is.null(inFile)) {
-             tryCatch({
-                newCountry <- eppasm::read_country(inFile$datapath)
 
-                if (!state$anyDataSets() || newCountry == state$country){
+            by(inFile, 1:nrow(inFile), function(row) {
 
-                    if (!state$anyDataSets()) {
-                        state$country = newCountry
+                tryCatch({
+                    newCountry <- eppasm::read_country(row$datapath)
+
+                    if (!state$anyDataSets() || newCountry == state$country){
+
+                        if (!state$anyDataSets()) {
+                            state$country = newCountry
+                        }
+
+                        dataSet = list(name = row$name,
+                                        data = first90::extract_pjnz(row$datapath))
+
+                        state$dataSets <- c(state$dataSets, list(dataSet))
                     }
+                    else {
+                        state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
+                        shinyjs::reset("spectrumFile")
+                    }
+                },
+                error=function(condition) {
+                    state$spectrumFileError <- glue::glue("Unable to read the contents of this file: {condition}")
+                    NULL
+                })
 
-                    dataSet = list(name = inFile$name,
-                                    data = first90::extract_pjnz(inFile$datapath))
-
-                    state$dataSets <- c(state$dataSets, list(dataSet))
-                }
-                else {
-                    state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
-                    shinyjs::reset("spectrumFile")
-                }
-            },
-            error=function(condition) {
-                state$spectrumFileError <- glue::glue("Unable to read the contents of this file: {condition}")
-                NULL
             })
+
         }
     })
 

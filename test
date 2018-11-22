@@ -4,7 +4,7 @@ rm -r selenium_screenshots
 set -e
 
 # Start shiny APP
-SHINY90_QUIET=TRUE SHINY90_TEST_MODE=TRUE ./app.R &
+SHINY90_QUIET=TRUE SHINY90_TEST_MODE=TRUE ./run.R &
 SHINY_PID="$!"
 
 # Start selenium server
