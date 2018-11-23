@@ -90,6 +90,9 @@ renderOutputs <- function(output, state, spectrumFilesState) {
                 # model output
                 out_evertest = first90::get_out_evertest(state$mod, state$fp)
 
+                # output for Spectrum re-ingestion
+                state$spectrum_outputs <- first90::spectrum_output_table(state$mod, state$fp)
+
                 plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
                                     state$fp, state$mod, spectrumFilesState$country, out_evertest, state$simul)
 
@@ -97,6 +100,9 @@ renderOutputs <- function(output, state, spectrumFilesState) {
                 str(e)
                 state$state <- "error"
             })
+        }
+        else {
+            state$spectrum_outputs <- NULL
         }
     })
 

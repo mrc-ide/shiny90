@@ -42,6 +42,11 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
                 saveRDS(modelRunState$simul, file = path)
             })
         }
+        if (!is.null(modelRunState$spectrum_outputs)){
+            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
+                write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
+            })
+        }
     }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
