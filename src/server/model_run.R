@@ -48,7 +48,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             state$state <- "error"
         })
 
-        if (input$numSimul > 0){
+        if (!is.na(input$numSimul) && input$numSimul > 0){
 
             state$optim$hessian <- tryCatch({
                 calculateHessian(state$optim, state$likelihood(), spectrumFilesState$combinedData())
@@ -108,7 +108,7 @@ renderOutputs <- function(output, state, spectrumFilesState) {
 
     # Render tables of results
     output$outputs_table_ever_tested <- renderModelResultsTable(state, function(state) {
-        first90::tab_out_evertest(state$mod, state$fp, simul = state$simul)
+        first90::tab_out_evertest(state$mod, state$fp, simul = state$simul, hiv = 'positive')
     })
     output$outputs_table_aware <- renderModelResultsTable(state, function(state) {
         first90::tab_out_aware(state$mod, state$fp, simul = state$simul)
