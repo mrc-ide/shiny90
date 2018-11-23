@@ -3,7 +3,6 @@ workingSetLogic <- function(input, output, session, workingSet, spectrumFileStat
     output$workingSet_selected <- shiny::reactive({ workingSet$selected || ! is.null(spectrumFileState$country)})
     output$workingSet_name <- shiny::reactive({ workingSet$name() })
     output$workingSet_notes <- shiny::reactive({ workingSet$notes})
-    output$workingSet_creation_error <- shiny::reactive({ workingSet$creation_error})
 
     # Creating a new one
     workingSet$notes <- ""

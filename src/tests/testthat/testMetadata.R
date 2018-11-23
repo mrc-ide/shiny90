@@ -6,11 +6,25 @@ testthat::test_that("can edit working set name and notes", {
 
     startNewWorkingSet(wd)
 
-    waitFor(function(){
+    editWorkingSetMetadata(wd, "some notes")
 
-        editWorkingSetMetadata(wd, name = "a new name", notes = "multiline\nnotes")
-        getText(wd$findElement("css", "#workingSet_name")) == "a new name"
-    })
+    expectTextEqual("some notes", wd$findElement("css", "#workingSet_notes"))
+})
 
-    expectTextEqual("multiline\nnotes", wd$findElement("css", "#workingSet_notes"))
+testthat::test_that("country name is displayed in header", {
+
+    wd$navigate(appURL)
+
+    loadDigestFromWelcome(wd)
+
+    expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
+})
+
+testthat::test_that("unknown country is displayed in header", {
+
+    wd$navigate(appURL)
+
+    startNewWorkingSet(wd)
+
+    expectTextEqual("Unknown", wd$findElement("css", "#workingSet_name"))
 })
