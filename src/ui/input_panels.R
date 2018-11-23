@@ -1,6 +1,6 @@
 panelSurvey <- function() {
     shiny::div("",
-        shiny::div("The following is survey data sourced from DHS and PHIA. You can edit the data below in the browser, or copy and
+        shiny::div("The following is survey data sourced from DHS, MICS and PHIA. You can edit the data below in the browser, or copy and
              paste to Excel and edit the data there, then copy and paste back into the table below. You can also replace the data entirely
              by uploading a new CSV file.", class = "mb-3"),
         downloadButton("downloadSurveyTemplate", "Download survey data"),
