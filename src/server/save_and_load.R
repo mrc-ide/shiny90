@@ -51,7 +51,7 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
         content <- readmeTemplate
-        content <- gsub("__TITLE__", workingSet$name, content)
+        content <- gsub("__COUNTRY__", workingSet$name(), content)
         content <- gsub("__NOTES__", workingSet$notes, content)
         content <- gsub("__TIMESTAMP__", as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), content)
         file.writeText(path, content)
@@ -69,7 +69,7 @@ withDir <- function(dir, expr) {
 downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
 
     shiny::downloadHandler(
-        filename = function() { glue::glue("{workingSet$name}.zip.shiny90") },
+        filename = function() { glue::glue("{workingSet$name()}.zip.shiny90") },
         contentType = "application/zip",
         content = function(file) {
             readmeTemplate <- file.readText("template_for_digest_readme.md")
@@ -122,7 +122,6 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
             state$uploadRequested <- FALSE
             scratch <- tempfile()
             unzip(inFile$datapath, exdir = scratch)
-            workingSet$name <- removeExtension(inFile$name, "zip.shiny90$")
             withDir(scratch, {
                 spectrumFilesState$country <- readCountry()
                 workingSet$notes <- file.readText("notes.txt")
