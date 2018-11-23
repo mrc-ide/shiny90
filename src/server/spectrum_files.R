@@ -51,7 +51,6 @@ spectrumFiles <- function(input, output, state) {
                             Incidence = round(summary[["incidence"]]*1000, 2),
                             plhiv = round(summary[["plhiv"]]/100)*100,
                             art_coverage = round((summary[["art_coverage"]]/summary[["plhiv"]])*100,1))
-            f <- f[order(-f$Year),]
             f
         }
     })

@@ -50,7 +50,7 @@ verifyPJNZFileUpload <- function(filename) {
     expectTextEqual(filename, uploadedFile)
 
     # Check data tab
-    checkTopLeftTableCellHasThisValue("Data", ".spectrum-combined-data", "2022")
+    checkTopLeftTableCellHasThisValue("Data", ".spectrum-combined-data", "1970")
 }
 
 editWorkingSetMetaInner <- function(wd, name, notes = NULL){
