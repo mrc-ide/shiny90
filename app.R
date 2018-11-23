@@ -37,7 +37,7 @@ source("src/ui/welcome_view.R")
 source("src/ui/working_set_section.R")
 
 options(shiny.autoreload = TRUE, shiny.autoreload.pattern = glob2rx("**/*.R"))
-options(shiny.maxRequestSize = 30*1024^2)
+options(shiny.maxRequestSize = 60*1024^2)
 
 shiny::addResourcePath('images', file.path('images'))
 shiny::shinyAppDir("src")
