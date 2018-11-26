@@ -47,7 +47,7 @@ spectrumFiles <- function(input, output, state) {
             summary <- state$pjnz_summary()
             f <- data.frame(Year = summary[["year"]],
                             Population = round(summary[["pop"]]/1000)*1000,
-                            Prevalence = round(summary[["prevalence"]], 2),
+                            Prevalence = round(summary[["prevalence"]]*100, 2),
                             Incidence = round(summary[["incidence"]]*1000, 2),
                             plhiv = round(summary[["plhiv"]]/100)*100,
                             art_coverage = round((summary[["art_coverage"]]/summary[["plhiv"]])*100,1))
