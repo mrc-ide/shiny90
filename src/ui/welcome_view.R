@@ -30,7 +30,6 @@ welcomeView <- function() {
                                 actionButtonWithCustomClass("welcomeRequestDigestUpload",
                                     label = "", cssClasses = "btn-sq btn-red text-center",
                                     shiny::icon("upload", "fa-3x", lib = "font-awesome"),
-                                    shiny::tags$br(),
                                     shiny::tags$label(`for`="digest-upload-img", "Load")
                                 )
                             )
@@ -38,19 +37,7 @@ welcomeView <- function() {
                         shiny::div("", class = "col-md-6 welcome-option form-group",
                             shiny::h3("Start a new blank working set"),
                             shiny::div("You will have the option to upload data in a moment", class = "mb-3"),
-                            shiny::tags$label("Name:"),
-                            shiny::div("", class = "input-group",
-                                shiny::tags$input(id = "workingSetName",
-                                    type = "text",
-                                    name = "workingSetName",
-                                    class = "shiny-bound-input input-lg form-control",
-                                    placeholder = "(you can change this later)",
-                                    `data-proxy-click` = "startNewWorkingSet"
-                                ),
-                                shiny::div("", class = "input-group-btn",
-                                    actionButtonWithCustomClass("startNewWorkingSet", "Go", cssClasses = "btn-lg btn btn-red")
-                                )
-                            ),
+                            actionButtonWithCustomClass("startNewWorkingSet", "Go", cssClasses = "btn-sq btn-red text-center"),
                             shiny::conditionalPanel(
                                 condition = "output.workingSet_creation_error",
                                 shiny::div("", class = "has-error",
