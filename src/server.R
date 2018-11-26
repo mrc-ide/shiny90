@@ -23,7 +23,7 @@ server <- function(input, output, session) {
 
     # Logic
     loadState <- handleLoad(input, workingSet, surveyAndProgramData, spectrumFilesState, modelRunState)
-    workingSet <- workingSetLogic(input, output, session, loadState$workingSet)
+    workingSet <- workingSetLogic(input, output, session, loadState$workingSet, loadState$spectrumFilesState)
 
     spectrumFilesState <- spectrumFiles(input, output, loadState$spectrumFilesState)
     surveyAndProgramData <- surveyAndProgramData(input, output, loadState$surveyAndProgramData, spectrumFilesState)

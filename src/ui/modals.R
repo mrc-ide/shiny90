@@ -9,11 +9,10 @@ loadDigestModal <- function() {
 
 editWorkingSetModal <- function() {
     modal(
-        title = "Edit working set",
+        title = "Edit working set notes",
         id = "editWorkingSetModal",
         cancelId = "editWorkingSet_cancel_cross",
         shiny::tags$form("",
-            inputBox("editWorkingSet_name", "Name", type = "text", value = ""),
             inputBox("editWorkingSet_notes", "Notes", multiline = TRUE),
             shiny::fluidRow(
                 div("", class = "col-md-6",

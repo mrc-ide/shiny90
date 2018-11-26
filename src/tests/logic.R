@@ -1,15 +1,30 @@
 startNewWorkingSet <- function(wd) {
-    workingSetName <- wd$findElement("css", "#workingSetName")
-    waitForVisible(workingSetName)
-    enterText(workingSetName, "Selenium working set")
-
-    Sys.sleep(0.5)
 
     waitFor(function() {
         wd$findElement("css", "#startNewWorkingSet")$clickElement()
-        getText(wd$findElement("css", "#workingSet_name")) == "Selenium working set"
+        isVisible(wd$findElement("css", "#workingSet_name"))
+    })
+}
+
+loadDigest <- function(wd, dir, filename, selector) {
+    waitFor(function() {
+        loadButton <- wd$findElement("css", selector)
+        loadButton$clickElement()
+
+        modal <- wd$findElement("css", "#digestModal .modal-dialog")
+        isVisible(modal)
     })
 
+    uploadFile(wd, dir, filename, "#digestUpload")
+    waitForVisible(wd$findElement("css", "#workingSet_name"))
+}
+
+loadDigestFromWelcome <- function(wd, dir="../../../sample_files/", filename = "Malawi.zip.shiny90") {
+    loadDigest(wd, dir, filename, "#welcomeRequestDigestUpload")
+}
+
+loadDigestFromMainUI <- function(wd, dir="../../../sample_files/", filename = "Malawi.zip.shiny90") {
+    loadDigest(wd, dir, filename, "#requestDigestUpload")
 }
 
 uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
@@ -53,26 +68,22 @@ verifyPJNZFileUpload <- function(filename) {
     checkTopLeftTableCellHasThisValue("Data", ".spectrum-combined-data", "1970")
 }
 
-editWorkingSetMetaInner <- function(wd, name, notes = NULL){
+editWorkingSetMetaInner <- function(wd,notes){
     wd$findElement("css", "a#editWorkingSet")$clickElement()
 
-    enterText(wd$findElement("css", "#editWorkingSet_name"), name, clear = TRUE)
-
-    if (!is.null(notes)) {
-        enterText(wd$findElement("css", "#editWorkingSet_notes"), notes, clear = TRUE)
-    }
+    enterText(wd$findElement("css", "#editWorkingSet_notes"), notes, clear = TRUE)
 
     wd$findElement("css", "#editWorkingSet_update")$clickElement()
 }
 
-editWorkingSetMetadata <- function(wd, name, notes = NULL) {
+editWorkingSetMetadata <- function(wd, notes) {
 
-    editWorkingSetMetaInner(wd, name, notes)
+    editWorkingSetMetaInner(wd, notes)
 
     waitForAndTryAgain(function() {
-        getText(wd$findElement("css", "#workingSet_name")) == name
+        getText(wd$findElement("css", "#workingSet_notes")) == notes
     }, failureCallBack = function() {
-       editWorkingSetMetaInner(wd, name, notes)
+       editWorkingSetMetaInner(wd, notes)
     })
 }
 

@@ -4,6 +4,10 @@ downloadedFiles <- normalizePath("selenium_files", mustWork = TRUE)
 dir.create("selenium_screenshots", showWarnings = FALSE)
 screenshotsFolder <- normalizePath("selenium_screenshots", mustWork = TRUE)
 
+removeFile <- function(name) {
+    file.remove(file.path(downloadedFiles, name))
+}
+
 appURL <- "http://localhost:8080"
 profile <- RSelenium::makeFirefoxProfile(list(
     # This is an enum, '2' means use the value in the next parameter
