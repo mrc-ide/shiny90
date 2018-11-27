@@ -70,14 +70,14 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
 
     })
 
-    renderOutputs(output, state, spectrumFilesState)
+    renderOutputs(input, output, state, spectrumFilesState)
 
     state <- invalidateOutputsWhenInputsChange(state, surveyAndProgramData, spectrumFilesState)
     
     state
 }
 
-renderOutputs <- function(output, state, spectrumFilesState) {
+renderOutputs <- function(input, output, state, spectrumFilesState) {
     # Plot the results
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
@@ -108,7 +108,14 @@ renderOutputs <- function(output, state, spectrumFilesState) {
 
     # Render tables of results
     output$outputs_table_ever_tested <- renderModelResultsTable(state, function(state) {
-        first90::tab_out_evertest(state$mod, state$fp, simul = state$simul, hiv = 'positive')
+
+        rbindlist(lapply(input$ever_test_status, function(status) {
+            rbindlist(lapply(input$ever_test_sex, function(sex) {
+                rbindlist(lapply(input$ever_test_agegr, function(age) {
+                    first90::tab_out_evertest(state$mod, state$fp, age_grp = age, simul = state$simul, hiv = status, gender = sex)
+                }))
+            }))
+        }))
     })
     output$outputs_table_aware <- renderModelResultsTable(state, function(state) {
         first90::tab_out_aware(state$mod, state$fp, simul = state$simul)

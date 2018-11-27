@@ -31,6 +31,21 @@ panelModelOutputs <- function() {
                     ),
                     shiny::tabPanel("Proportion ever tested",
                         div("", class="outputs-ever-tested",
+                            shiny::selectizeInput(
+                                'ever_test_agegr', 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
+                                multiple = TRUE,
+                                selected = "15-49"
+                            ),
+                            shiny::selectizeInput(
+                                'ever_test_sex', 'Sex', choices = c("both", "male", "female"),
+                                multiple = TRUE,
+                                selected = "both"
+                            ),
+                            shiny::selectizeInput(
+                                'ever_test_status', 'HIV Status', choices = c("positive", 'negative','all'),
+                                multiple = TRUE,
+                                selected = "positive"
+                            ),
                             shiny::dataTableOutput("outputs_table_ever_tested")
                         )
                     ),

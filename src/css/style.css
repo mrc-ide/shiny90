@@ -211,3 +211,8 @@ a.light, a.light:hover, a.light:focus {
 #maxIterations, #numSimul {
     width: 100px;
 }
+
+.outputs-ever-tested .form-group {
+    display: inline-block;
+    margin-top: 15px;
+}
