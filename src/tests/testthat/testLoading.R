@@ -4,7 +4,11 @@ testthat::context("basic")
 testthat::test_that("can load digest from welcome page", {
     wd$navigate(appURL)
     loadDigestFromWelcome(wd)
-    expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
+
+    waitFor(function() {
+        getText(wd$findElement("css", "#workingSet_name")) == "Malawi"
+    })
+
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")
