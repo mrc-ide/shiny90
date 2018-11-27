@@ -29,38 +29,52 @@ panelModelOutputs <- function() {
                             shiny::div("", class = "col-md-6 col-sm-12", withSpinner(shiny::plotOutput(outputId = "outputs_menEverTested")))
                         )
                     ),
-                    shiny::tabPanel("Proportion ever tested",
-                        div("", class="outputs-ever-tested",
-                            shiny::selectizeInput(
-                                'ever_test_agegr', 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
-                                multiple = TRUE,
-                                selected = "15-49"
-                            ),
-                            shiny::selectizeInput(
-                                'ever_test_sex', 'Sex', choices = c("both", "male", "female"),
-                                multiple = TRUE,
-                                selected = "both"
-                            ),
-                            shiny::selectizeInput(
-                                'ever_test_status', 'HIV Status', choices = c("positive", 'negative','all'),
-                                multiple = TRUE,
-                                selected = "positive"
-                            ),
-                            shiny::dataTableOutput("outputs_table_ever_tested")
-                        )
-                    ),
-                    shiny::tabPanel("Proportion aware",
-                        div("", class="outputs-aware",
+                    shiny::tabPanel("Knowledge of status (first 90)",
+                        div("", class="output-table outputs-aware",
+                            select_options("aware"),
                             shiny::dataTableOutput("outputs_table_aware")
                         )
                     ),
+                    shiny::tabPanel("Proportion ever tested",
+                        div("", class="output-table outputs-ever-tested",
+                            select_options("ever_test"),
+                            shiny::dataTableOutput("outputs_table_ever_tested")
+                        )
+                    ),
                     shiny::tabPanel("ART coverage",
-                        div("", class="outputs-art-coverage",
+                        div("", class="output-table outputs-art-coverage",
+                            select_options("art_coverage", includeStatus = FALSE),
                             shiny::dataTableOutput("outputs_table_art_coverage")
                         )
                     )
                 )
             )
         )
+    )
+}
+
+select_options <- function(id, includeStatus = TRUE) {
+
+    if (includeStatus){
+        status <- shiny::selectizeInput(
+                        paste0(id, '_status'),'HIV Status', choices = c("positive", 'negative','all'),
+                        multiple = TRUE,
+                        selected = "positive")
+    }
+    else{
+        status <- NULL
+    }
+    list(
+        shiny::selectizeInput(
+            paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
+            multiple = TRUE,
+            selected = "15-49"
+        ),
+        shiny::selectizeInput(
+            paste0(id, '_sex'), 'Sex', choices = c("both", "male", "female"),
+            multiple = TRUE,
+            selected = "both"
+        ),
+        status
     )
 }
