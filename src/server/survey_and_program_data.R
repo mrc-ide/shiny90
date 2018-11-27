@@ -46,7 +46,6 @@ sharedHeaders <- list(country= "Country",
                         agegr= "Age Group")
 
 surveyDataHeaders <- list(surveyid="Survey Id",
-                            outcome = "Outcome",
                             counts = "Counts",
                             est= "Estimate",
                             se= "Standard Error",
@@ -77,6 +76,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
                 state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
+                state$survey <- subset(state$survey, select = -c(outcome))
                 state$survey$counts = as.integer(state$survey$counts)
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
@@ -132,7 +132,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
