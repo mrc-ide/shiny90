@@ -81,7 +81,6 @@ renderOutputs <- function(output, state, spectrumFilesState) {
     # Plot the results
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
-            str(state$optim)
             tryCatch({
                 # model fit results
                 state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
