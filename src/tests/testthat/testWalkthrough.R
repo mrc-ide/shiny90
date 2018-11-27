@@ -36,7 +36,7 @@ testthat::test_that("can walk through app", {
     checkTopLeftTableCellHasThisValue(tabName = "Proportion ever tested",
         tableSelector = ".outputs-ever-tested",
         expectedValue = "2010")
-    checkTopLeftTableCellHasThisValue(tabName = "Proportion aware",
+    checkTopLeftTableCellHasThisValue(tabName = "Knowledge of status (first 90)",
         tableSelector = ".outputs-aware",
         expectedValue = "2010")
     checkTopLeftTableCellHasThisValue(tabName = "ART coverage",
