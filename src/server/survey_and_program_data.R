@@ -55,8 +55,8 @@ surveyDataHeaders <- list(surveyid="Survey Id",
 
 programDataHeaders <- list(tot= "Total tests",
                             totpos= "Total positive tests",
-                            vct= "Total HTS tests",
-                            vctpos= "Total positive HTS tests",
+                            vct= "Total HTC tests",
+                            vctpos= "Total positive HTC tests",
                             anc= "Total ANC tests",
                             ancpos= "Total positive ANC tests"
 )
@@ -146,8 +146,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
             rhandsontable::hot_col("Total tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total positive tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total HTS tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive HTS tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total HTC tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total positive HTC tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total ANC tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total positive ANC tests", type="numeric", renderer = number_renderer)
     })

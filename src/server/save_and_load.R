@@ -126,7 +126,7 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 spectrumFilesState$country <- readCountry()
                 workingSet$notes <- file.readText("notes.txt")
                 workingSet$selected <- TRUE
-                surveyAndProgramData$survey <- readCSVIfPresent("survey.csv", surveyDataHeaders)
+                surveyAndProgramData$survey <- readCSVIfPresent("survey.csv", c(surveyDataHeaders, sharedHeaders))
                 surveyAndProgramData$program_data <- readCSVIfPresent("program.csv", c(programDataHeaders, sharedHeaders))
                 spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
                     list(
