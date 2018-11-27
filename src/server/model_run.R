@@ -42,7 +42,10 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     shiny::observeEvent(input$runModel, {
 
         state$optim <- tryCatch({
-            fitModel(input$maxIterations, state$likelihood(), spectrumFilesState$combinedData())
+            opt <- fitModel(input$maxIterations, state$likelihood(), spectrumFilesState$combinedData())
+            state$state <- "converged"
+            print("Completed model run")
+            opt
         }, error = function(e) {
             str(e)
             state$state <- "error"
@@ -65,9 +68,6 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             })
         }
 
-        state$state <- "converged"
-        print("Completed model run")
-
     })
 
     renderOutputs(output, state, spectrumFilesState)
@@ -81,7 +81,7 @@ renderOutputs <- function(output, state, spectrumFilesState) {
     # Plot the results
     shiny::observeEvent(state$optim, {
         if (!is.null(state$optim)) {
-
+            str(state$optim)
             tryCatch({
                 # model fit results
                 state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
