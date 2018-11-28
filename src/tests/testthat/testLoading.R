@@ -73,12 +73,4 @@ testthat::test_that("can save digest from output tab", {
     loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "Malawi.zip.shiny90")
     expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_notes"))
-
-    switchTab(wd, "Upload spectrum file(s)")
-    verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
-
-    switchTab(wd, "Run model")
-    waitFor(function() { isVisible(wd$findElement("css", "#model-outputs")) })
-
-    expectTextToContain("Now that the model has been run", wd$findElement("css", inActivePane(".suggest-save")))
 })
