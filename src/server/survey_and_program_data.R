@@ -78,6 +78,11 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
                 state$survey <- as.data.frame(survey_hts)
                 state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
                 state$survey$counts = as.integer(state$survey$counts)
+                state$survey$ci_l = state$survey$ci_l*100
+                state$survey$ci_u = state$survey$ci_u*100
+                state$survey$est = state$survey$est*100
+                state$survey$se = state$survey$se*100
+
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
             else {

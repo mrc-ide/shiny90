@@ -18,7 +18,13 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         if (is.null(surveyAndProgramData$survey)) {
             NULL
         } else {
-            data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
+            dt <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
+            dt$ci_l = dt$ci_l/100
+            dt$ci_u = dt$ci_u/100
+            dt$est = dt$est/100
+            dt$se = dt$se/100
+
+            dt
         }
     })
 
