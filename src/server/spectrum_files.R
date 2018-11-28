@@ -23,35 +23,34 @@ spectrumFiles <- function(input, output, state) {
         }
     })
 
-    state$anyDataPop <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$pop)) })
-    state$anyDataPlhiv <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$plhiv)) })
-    state$anyDataPrv <- shiny::reactive({ !is.null(state$pjnz_summary()) && !all(is.na(state$pjnz_summary()$prevalence)) })
-    state$anyDataInc <- shiny::reactive({
+    state$anyDataPop <- shiny::reactive({ hasData("Population") })
+    state$anyDataPlhiv <- shiny::reactive({ hasData("plhiv") })
+    state$anyDataPrv <- shiny::reactive({ hasData("Prevalence") })
+    state$anyDataInc <- shiny::reactive({ hasData("Incidence") })
 
-        if (!is.null(state$pjnz_summary())){
-            df <- na.omit(data.frame(year = state$pjnz_summary()[["year"]], inc = state$pjnz_summary()[["incidence"]]))
-            df <- df[df$year >= 2000,]
-
-            length(df$inc) > 0
+    hasData <- function(column_name) {
+        if (!is.null(state$asDataFrame())){
+            df <- na.omit(state$asDataFrame()[[column_name]])
+            length(df) > 0
         }
         else {
             FALSE
         }
-
-        })
+    }
 
     state$asDataFrame <- shiny::reactive({
         if (is.null(state$pjnz_summary())) {
             NULL
         } else {
             summary <- state$pjnz_summary()
-            f <- data.frame(Year = summary[["year"]],
+            df <- data.frame(Year = summary[["year"]],
                             Population = round(summary[["pop"]]/1000)*1000,
                             Prevalence = round(summary[["prevalence"]]*100, 2),
                             Incidence = round(summary[["incidence"]]*1000, 2),
                             plhiv = round(summary[["plhiv"]]/100)*100,
                             art_coverage = round((summary[["art_coverage"]]/summary[["plhiv"]])*100,1))
-            f
+            df <- df[df$Year >= 2000,]
+            df
         }
     })
 
