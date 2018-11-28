@@ -78,6 +78,11 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
                 state$survey <- as.data.frame(survey_hts)
                 state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
                 state$survey$counts = as.integer(state$survey$counts)
+                state$survey$ci_l = state$survey$ci_l*100
+                state$survey$ci_u = state$survey$ci_u*100
+                state$survey$est = state$survey$est*100
+                state$survey$se = state$survey$se*100
+
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
             else {
@@ -130,14 +135,17 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }"
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
+        rhandsontable::rhandsontable(state$survey_data_human_readable(),
+        colHeaders = c("Survey Id","Country","Year","HIV Status","Sex","Age Group", "Estimate (%)", "Standard Error (%)",
+        "Lower Confidence Interval (%)",
+        "Upper Confidence Interval (%)", "Counts", "Outcome"), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
             rhandsontable::hot_col("Outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
-            rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Lower Confidence Interval", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Upper Confidence Interval", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Estimate (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Standard Error (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Lower Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Upper Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Year", type="numeric", format = "0")
     })
 
