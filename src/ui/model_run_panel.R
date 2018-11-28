@@ -20,7 +20,7 @@ panelModelRun <- function() {
                             shiny::div("", class = "form-group",
                                 shiny::tags$label(`for`="numSimul", "Number of simulations",  class="control-label col-xs-4"),
                                 shiny::div("", class="col-xs-8",
-                                    shiny::tags$input(id = "numSimul", type = "number", value = "20000", class = "form-control shiny-bound-input")
+                                    shiny::tags$input(id = "numSimul", type = "number", value = "3000", class = "form-control shiny-bound-input")
                                 )
                             )
                         )
