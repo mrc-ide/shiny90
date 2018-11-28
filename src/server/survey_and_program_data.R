@@ -65,6 +65,17 @@ castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
 
+mapSurveyToInternalModel <- function(df, country) {
+    df <- df[df$country == country & df$outcome == "evertest", ]
+    df$counts = as.integer(df$counts)
+    df$ci_l = df$ci_l*100
+    df$ci_u = df$ci_u*100
+    df$est = df$est*100
+    df$se = df$se*100
+
+    subset(df, select = -c(outcome))
+}
+
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
@@ -76,12 +87,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
-                state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-                state$survey$counts = as.integer(state$survey$counts)
-                state$survey$ci_l = state$survey$ci_l*100
-                state$survey$ci_u = state$survey$ci_u*100
-                state$survey$est = state$survey$est*100
-                state$survey$se = state$survey$se*100
+                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$country)
 
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
@@ -138,9 +144,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         rhandsontable::rhandsontable(state$survey_data_human_readable(),
         colHeaders = c("Survey Id","Country","Year","HIV Status","Sex","Age Group", "Estimate (%)", "Standard Error (%)",
         "Lower Confidence Interval (%)",
-        "Upper Confidence Interval (%)", "Counts", "Outcome"), rowHeaders = NULL, stretchH = "all") %>%
+        "Upper Confidence Interval (%)", "Counts"), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("Estimate (%)", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Standard Error (%)", type="numeric", renderer = number_renderer) %>%
