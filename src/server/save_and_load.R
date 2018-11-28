@@ -32,21 +32,11 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE)
         })
     }
-    if (!is.null(modelRunState$optim)) {
+    if (!is.null(modelRunState$spectrum_outputs)) {
         dir.create("model_outputs")
-        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("optim.rds")), function(path) {
-            saveRDS(modelRunState$optim, file = path)
+        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
+            write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
         })
-        if (!is.null(modelRunState$simul)) {
-            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("simul.rds")), function(path) {
-                saveRDS(modelRunState$simul, file = path)
-            })
-        }
-        if (!is.null(modelRunState$spectrum_outputs)){
-            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
-                write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
-            })
-        }
     }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
@@ -134,18 +124,11 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                         data = readRDS(file.path("spectrum_data", path))
                     )
                 })
-                outputsPath <- "model_outputs/optim.rds"
-                if (file.exists(outputsPath)) {
-                    modelRunState$optim <- readRDS(outputsPath)
-                    simulPath <- "model_outputs/simul.rds"
-                    if (file.exists(simulPath)) {
-                        modelRunState$simul <- readRDS(simulPath)
-                    }
-                    modelRunState$state <- "converged"
-                } else {
-                    modelRunState$optim <- NULL
-                    modelRunState$state <- "not_run"
-                }
+
+                modelRunState$optim <- NULL
+                modelRunState$simul <- NULL
+                modelRunState$state <- "not_run"
+
             })
 
             surveyAndProgramData$loadNewData <- FALSE
