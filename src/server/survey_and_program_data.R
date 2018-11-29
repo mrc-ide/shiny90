@@ -96,7 +96,9 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$survey_data_human_readable <- shiny::reactive({
-        mapHeadersToHumanReadable(state$survey, c(surveyDataHeaders,sharedHeaders))
+        survey <- state$survey
+        survey <- survey[with(survey, order(survey$year, survey$age, survey$sex, survey$hivstatus)), ]
+        mapHeadersToHumanReadable(survey, c(surveyDataHeaders,sharedHeaders))
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
