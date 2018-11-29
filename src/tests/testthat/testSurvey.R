@@ -65,5 +65,6 @@ testthat::test_that("can reset to built in data", {
         length(rows) > 4
     })
 
+    rows <- wd$findElements("css", "#hot_survey .ht_master tbody tr")
     testthat::expect_gt(length(rows), 4)
 })
