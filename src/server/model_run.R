@@ -23,6 +23,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             dt$ci_u = dt$ci_u/100
             dt$est = dt$est/100
             dt$se = dt$se/100
+            dt$outcome = "evertest"
 
             dt
         }
