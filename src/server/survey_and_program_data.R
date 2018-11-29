@@ -67,13 +67,22 @@ castToNumeric <- function(dataframe, headers){
 
 mapSurveyToInternalModel <- function(df, country) {
     df <- df[df$country == country & df$outcome == "evertest", ]
-    df$counts = as.integer(df$counts)
-    df$ci_l = df$ci_l*100
-    df$ci_u = df$ci_u*100
-    df$est = df$est*100
-    df$se = df$se*100
 
-    subset(df, select = -c(outcome))
+    df <- data.frame(df$country,
+                df$surveyid,
+                df$year,
+                df$agegr,
+                df$sex,
+                df$hivstatus,
+                df$est*100,
+                df$se*100,
+                df$ci_l*100,
+                df$ci_u*100,
+                as.integer(df$counts))
+
+    colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
+
+    df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -142,7 +151,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey_data_human_readable(),
-        colHeaders = c("Survey Id","Country","Year","HIV Status","Sex","Age Group", "Estimate (%)", "Standard Error (%)",
+        colHeaders = c("Country","Survey Id","Year","Age Group","Sex","HIV Status","Estimate (%)", "Standard Error (%)",
         "Lower Confidence Interval (%)",
         "Upper Confidence Interval (%)", "Counts"), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
