@@ -44,3 +44,25 @@ testthat::test_that("cannot upload a csv for a different country", {
     errorAlert <- wd$findElement("css", "#wrongSurveyCountryError")
     expectTextEqual("Error: You cannot upload survey data for a different country. This file has been ignored.", errorAlert)
 })
+
+
+testthat::test_that("can reset to built in data", {
+
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
+
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
+
+    Sys.sleep(2)
+    rows <- wd$findElements("css", "#hot_survey .ht_master tbody tr")
+
+    # there are more than 4 rows in the original survey data, 4 in the test data
+    testthat::expect_equal(length(rows), 4)
+
+    waitFor(function() {
+
+        wd$findElement("css", "#resetSurveyData")$clickElement()
+        rows <- wd$findElements("css", "#hot_survey .ht_master tbody tr")
+        length(rows) > 4
+    })
+
+})

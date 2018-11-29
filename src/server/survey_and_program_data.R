@@ -53,12 +53,12 @@ surveyDataHeaders <- list(surveyid="Survey Id",
                             ci_l= "Lower Confidence Interval",
                             ci_u= "Upper Confidence Interval")
 
-programDataHeaders <- list(tot= "Total tests",
-                            totpos= "Total positive tests",
-                            vct= "Total HTC tests",
-                            vctpos= "Total positive HTC tests",
-                            anc= "Total ANC tests",
-                            ancpos= "Total positive ANC tests"
+programDataHeaders <- list(tot= "Total Tests",
+                            totpos= "Total Positive Tests",
+                            vct= "Total HTC Tests",
+                            vctpos= "Total Positive HTC Tests",
+                            anc= "Total ANC Tests",
+                            ancpos= "Total Positive ANC Tests"
 )
 
 castToNumeric <- function(dataframe, headers){
@@ -74,6 +74,11 @@ mapSurveyToInternalModel <- function(df, country) {
     df$se = df$se*100
 
     subset(df, select = -c(outcome))
+}
+
+resetSurveyToDefaults <- function(state, country) {
+    state$survey <- as.data.frame(survey_hts)
+    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), country)
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -157,12 +162,12 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Total tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total HTC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive HTC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total ANC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive ANC tests", type="numeric", renderer = number_renderer)
+            rhandsontable::hot_col("Total Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive HTC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total ANC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer)
     })
 
     shiny::observeEvent(input$surveyData, {
@@ -204,6 +209,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
 
         shinyjs::reset("programData")
+    })
+
+    shiny::observeEvent(input$resetSurveyData, {
+        resetSurveyToDefaults(state, spectrumFilesState$country)
     })
 
     # We track change events so that we know when to reset the model run state.
