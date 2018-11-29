@@ -29,32 +29,28 @@ panelProgram <- function() {
     shiny::div("",
         shiny::tags$p("The following is programmatic data sourced from national testing programs. Please review, update, and correct (if applicable)
         the programmatic data below that describes the annual number of HIV tests* performed at the national level among the population aged 15+
-        years of age (and the number of positive tests). The required columsn are:"),
+        years of age (and the number of positive tests)."),
         shiny::tags$ul(
-            shiny::HTML("<li><strong>Country</strong>"),
-            shiny::HTML("<li><strong>Year</strong>"),
-            shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
-                This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
-                during antenatal care (ANC), and for which the clients received the results.</li>"),
-            shiny::HTML("<li><strong>Total Positive Tests:</strong> Out of the total annual number of tests, how many were found to be HIV positive.
-                This number should be equal to the number of positive tests found during HTC (in non-pregnant population) and during ANC among
-                pregnant women.</li>"),
-            shiny::HTML("<li><strong>Total HTC Tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of
-            ANC services,
-                 and for which clients received the results. If only the overall total is available, please input NA.</li>"),
-            shiny::HTML("<li><strong>Total HTC Positive Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
-            shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
-            shiny::HTML("<li><strong>Total ANC Positive Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
-            shiny::HTML("<li><strong>Age Group</strong>"),
-            shiny::HTML("<li><strong>Sex</strong>"),
-            shiny::HTML("<li><strong>HIV Status</strong>")
+        shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
+                            This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
+                            during antenatal care (ANC), and for which the clients received the results.</li>"),
+        shiny::HTML("<li><strong>Total Positive Tests:</strong> Out of the total annual number of tests, how many were found to be HIV positive.
+                            This number should be equal to the number of positive tests found during HTC (in non-pregnant population) and during ANC among
+                            pregnant women.</li>"),
+        shiny::HTML("<li><strong>Total HTC Tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of
+                        ANC services,
+                             and for which clients received the results. If only the overall total is available, please input NA.</li>"),
+        shiny::HTML("<li><strong>Total HTC Positive Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
+        shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
+        shiny::HTML("<li><strong>Total ANC Positive Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>")
         ),
-        shiny::span("*A person should only be counted as testing once even if up to three different assays are performed to confirm an HIV-positive diagnosis according to the national testing algorithm.
+        shiny::p("*A person should only be counted as testing once even if up to three different assays are performed to confirm an HIV-positive diagnosis according to the national testing algorithm.
         A person who is tested twice during the year should be counted as contributing two tests."),
         shiny::tags$p("You can edit the data below in the browser, or copy and paste to Excel and edit the data there, then copy
-                        and paste back into the table below. You can also replace the data entirely by uploading a new CSV file.",
-            class = "mb-3"),
-        shiny::div("", class="mb-3 text-muted"),
+                        and paste back into the table below. You can also replace the data entirely by uploading a new CSV file. The required column headers are:"),
+        shiny::HTML("<p><strong>Country, Year, Total Tests, Total Positive Tests, Total HTC Tests, Total Positive HTC Tests, Total ANC Tests, Total Positive ANC Tests, Age Group, Sex, HIV Status</strong></p>"),
+        shiny::p("The app will not accept an uploaded CSV with the wrong headers.
+        It may be useful to download the existing programmatic data as a template:"),
         downloadButton("downloadProgramTemplate", "Download programmatic data"),
         shiny::h3("Upload new data"),
         errorAlert(id = "wrongProgramHeadersError", condition="output.wrongProgramHeaders",
