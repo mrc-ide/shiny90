@@ -87,6 +87,10 @@
     background-color: #b9132c;
 }
 
+.btn.shiny-download-link {
+    border-color: #e31837;
+}
+
 .main-content {
     height: calc(100vh - 60px);
 }
