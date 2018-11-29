@@ -20,6 +20,8 @@ testthat::test_that("country name is displayed in header", {
     waitFor(function() {
         getText(wd$findElement("css", "#workingSet_name")) == "Malawi"
     })
+
+    expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
 })
 
 testthat::test_that("unknown country is displayed in header", {
