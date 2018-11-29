@@ -98,7 +98,7 @@ makeProgress <- function(n, every = 0.1) {
 runSimulations <- function(opt, likdat, spectrumData, numSimul) {
 
     shiny::withProgress(message = 'Running simulations', value = 0, {
-        simul <- first90::simul.test(opt, spectrumData, nsir = numSimul - 1, SIR = TRUE, progress = makeProgress(numSimul), likdat = likdat)
+        simul <- first90::simul.test(opt, spectrumData, nsir = numSimul - 1, progress = makeProgress(numSimul), likdat = likdat)
     })
 
     simul
