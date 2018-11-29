@@ -32,11 +32,21 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE)
         })
     }
-    if (!is.null(modelRunState$spectrum_outputs)) {
+    if (!is.null(modelRunState$optim)) {
         dir.create("model_outputs")
-        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
-            write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
+        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("par.rds")), function(path) {
+            saveRDS(modelRunState$optim$par, file = path)
         })
+        if (!is.null(modelRunState$spectrum_outputs)) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
+                write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
+            })
+        }
+        # if (!is.null(modelRunState$simul)) {
+        #     paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("simul.rds")), function(path) {
+        #         saveRDS(modelRunState$simul, file = path)
+        #     })
+        # }
     }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
