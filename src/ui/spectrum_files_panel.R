@@ -23,7 +23,7 @@ panelSpectrum <- function() {
             one pair per subnational region. You will have to upload regions one at a time.",
                 class = "mb-5"),
                 shiny::div("", class = "mt-3 mb-5",
-                shiny::fileInput("pjFile", "Choose pair of PJN and DP files", accept = c(".pj", ".pjn"), multiple=TRUE),
+                shiny::fileInput("spectrumFilePair", "Choose pair of PJN and DP files", accept = c(".dp", ".pjn"), multiple=TRUE),
                 shiny::conditionalPanel(condition = "output.spectrumFilePairError != null",
                     shiny::div("", class = "alert alert-danger",
                         shiny::icon("exclamation-triangle", lib="font-awesome"),

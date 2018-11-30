@@ -56,7 +56,6 @@ spectrumFiles <- function(input, output, state) {
 
     shiny::observeEvent(input$spectrumFile, {
 
-
         inFile <- input$spectrumFile
         state$spectrumFileError <- NULL
 
@@ -84,6 +83,7 @@ spectrumFiles <- function(input, output, state) {
                     }
                 },
                 error=function(condition) {
+                    shinyjs::reset("spectrumFile")
                     state$spectrumFileError <- glue::glue("Unable to read the contents of this file: {condition}")
                     NULL
                 })
@@ -105,25 +105,40 @@ spectrumFiles <- function(input, output, state) {
             }
             else {
 
-                data <- by(inFiles, 1:nrow(inFiles), function(row) {
+                newCountry <- NULL
+                data <- tryCatch({
+                        dp <- NULL
+                        pjn <- NULL
 
-                    tryCatch({
+                        by(inFiles, 1:nrow(inFiles), function(row) {
 
-                        if (grep1(tolower(row$datapath), ".dp")){
-                            # TODO do something with dp file
+                            if (grepl(".dp", tolower(row$datapath))){
+                                dp <<- row$datapath
+                            }
+                            if (grepl(".pjn", tolower(row$datapath))){
+                                pjn <<- row$datapath
+                            }
+                        })
+
+                        if (is.null(pjn) || is.null(dp)){
+                            shinyjs::reset("spectrumFilePair")
+                            state$spectrumFilePairError <- "You must provide one .PJN and one .DP file. Please check your selected files."
+                            NULL
                         }
-                        if (grep1(tolower(row$datapath), ".pjn")){
-                            # TODO do something with pjn file
+                        else {
+                            newCountry <<- first90::get_pjn_country(read.csv(pjn, as.is = TRUE))
+                            str(newCountry)
+                            data <- first90::extract_pjnz(dp_file = dp, pjn_file = pjn)
+                            data
                         }
 
-                        newCountry <- "ReadFromEppasm"
-                        "extracted data"
                     },
                     error=function(condition) {
-                        state$spectrumFilePairError <- glue::glue("Unable to read the contents of this file: {condition}")
+                        str(condition)
+                        shinyjs::reset("spectrumFilePair")
+                        state$spectrumFilePairError <- glue::glue("Unable to read the contents of these files: {condition}")
                         NULL
                     })
-                })
 
                 if (!is.null(data)) {
                     if (!state$anyDataSets() || newCountry == state$country){
@@ -131,7 +146,7 @@ spectrumFiles <- function(input, output, state) {
                             state$country = newCountry
                         }
 
-                        dataSet = list(name = paste(inFiles$datapath), data = data)
+                        dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
                         state$dataSets <- c(state$dataSets, list(dataSet))
                     }
                     else {
@@ -161,12 +176,14 @@ spectrumFiles <- function(input, output, state) {
         )
     ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
+    output$spectrumFilePairError <- shiny::reactive({ state$spectrumFilePairError })
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$pjnz_summary, state)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "spectrumFilePairError", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "usePJNZ", suspendWhenHidden = FALSE)
 
     state
