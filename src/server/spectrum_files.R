@@ -93,6 +93,10 @@ spectrumFiles <- function(input, output, state) {
         }
     })
 
+    output$usePJNZ <- shiny::reactive({
+        input$spectrumFileType == ".PJNZ"
+    })
+
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
     output$spectrumFilesCountry <- shiny::reactive({ state$country })
     output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = c(
@@ -112,6 +116,7 @@ spectrumFiles <- function(input, output, state) {
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "usePJNZ", suspendWhenHidden = FALSE)
 
     state
 }

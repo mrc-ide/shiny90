@@ -1,14 +1,35 @@
 panelSpectrum <- function() {
     shiny::div("",
-        shiny::div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
-            class = "mb-5"),
-        shiny::div("", class = "mt-3 mb-5",
-            shiny::fileInput("spectrumFile", "Choose PJNZ File", accept = c(".pjnz"), multiple=TRUE),
-            shiny::conditionalPanel(condition = "output.spectrumFileError != null",
-                shiny::div("", class = "alert alert-danger",
-                    shiny::icon("exclamation-triangle", lib="font-awesome"),
-                    shiny::span("Error: Spectrum file not valid!"),
-                    shiny::textOutput("spectrumFileError", inline = TRUE)
+        shiny::tags$p("This app accepts .PJNZ files from Spectrum, but in the case where your .PJNZ file is very large,
+        uploads may be very slow. In this case you can instead upload pairs of .DP and .PJN files extracted from the .PJNZ."),
+        shiny::selectInput("spectrumFileType", label = "Use:", choices = c(".PJNZ", '.DP and .PJN')),
+        shiny::tags$hr("", style="height: 1px;"),
+        shiny::conditionalPanel(condition = "output.usePJNZ",
+            shiny::div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
+                class = "mb-5"),
+            shiny::div("", class = "mt-3 mb-5",
+                shiny::fileInput("spectrumFile", "Choose PJNZ File(s)", accept = c(".pjnz"), multiple=TRUE),
+                shiny::conditionalPanel(condition = "output.spectrumFileError != null",
+                    shiny::div("", class = "alert alert-danger",
+                        shiny::icon("exclamation-triangle", lib="font-awesome"),
+                        shiny::span("Error: Spectrum file not valid!"),
+                        shiny::textOutput("spectrumFileError", inline = TRUE)
+                    )
+                )
+            )
+        ),
+        shiny::conditionalPanel(condition = "output.usePJNZ == 'FALSE'",
+            shiny::div("Please upload either one pair of PJ and DP files for the whole country, or multiple pairs of files, one pair per subnational region.",
+                class = "mb-5"),
+                shiny::div("", class = "mt-3 mb-5",
+                shiny::fileInput("pjFile", "Choose PJ File(s)", accept = c(".pj"), multiple=TRUE),
+                shiny::fileInput("dpFile", "Choose DP File(s)", accept = c(".pj"), multiple=TRUE),
+                shiny::conditionalPanel(condition = "output.spectrumFileError != null",
+                    shiny::div("", class = "alert alert-danger",
+                        shiny::icon("exclamation-triangle", lib="font-awesome"),
+                        shiny::span("Error: Spectrum file not valid!"),
+                        shiny::textOutput("pjFileError", inline = TRUE)
+                    )
                 )
             )
         ),
@@ -23,7 +44,7 @@ panelSpectrum <- function() {
             shiny::div("",
                 shiny::h3("", class = "mt-5",
                     shiny::textOutput("spectrumFilesCountry", inline = TRUE),
-                    shiny::span("PJNZ data (combined)")
+                    shiny::span("data")
                 ),
 
                 shiny::tabsetPanel(
