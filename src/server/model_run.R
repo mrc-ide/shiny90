@@ -50,28 +50,32 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
 
         state$optim <- tryCatch({
             opt <- fitModel(input$maxIterations, state$likelihood(), spectrumFilesState$combinedData())
-            state$state <- "converged"
-            print("Completed model run")
+            if (opt$convergence == 0 || testMode){
+                state$state <- "converged"
+            }
+            else {
+                setError(state,"The model failed to converge. Please try increasing the maximum iterations allowed under 'advanced options'.")
+            }
             opt
         }, error = function(e) {
             str(e)
-            state$state <- "error"
+            setError(state,"Model fitting failed. Please check your input data.")
         })
 
-        if (!is.na(input$numSimul) && input$numSimul > 0){
+        if (state$state == "converged" && !is.na(input$numSimul) && input$numSimul > 0){
 
             state$optim$hessian <- tryCatch({
                 calculateHessian(state$optim, state$likelihood(), spectrumFilesState$combinedData())
             }, error = function(e) {
                 str(e)
-                state$state <- "error"
+                setError(state, "Calculating the Hessian matrix failed. Please check your input data.")
             })
 
             state$simul <- tryCatch({
                 runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul)
             }, error = function(e) {
                 str(e)
-                state$state <- "error"
+                setError(state, "Running simulations failed. Please check your input data.")
             })
         }
 
@@ -80,14 +84,23 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     renderOutputs(input, output, state, spectrumFilesState)
 
     state <- invalidateOutputsWhenInputsChange(state, surveyAndProgramData, spectrumFilesState)
-    
+
+    output$modelRunError <- shiny::reactive({
+        state$errorMessage
+    })
+
     state
+}
+
+setError <- function(state, message){
+    state$state <- "error"
+    state$errorMessage <- message
 }
 
 renderOutputs <- function(input, output, state, spectrumFilesState) {
     # Plot the results
     shiny::observeEvent(state$optim, {
-        if (!is.null(state$optim)) {
+        if (state$state == "converged" && !is.null(state$optim)) {
             tryCatch({
                 # model fit results
                 state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
@@ -104,7 +117,7 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
 
             }, error = function(e) {
                 str(e)
-                state$state <- "error"
+                setError(state,"Plotting results failed. Please check your input data.")
             })
         }
         else {
