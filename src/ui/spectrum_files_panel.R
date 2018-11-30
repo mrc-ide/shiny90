@@ -8,7 +8,7 @@ panelSpectrum <- function() {
             shiny::div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
                 class = "mb-5"),
             shiny::div("", class = "mt-3 mb-5",
-                shiny::fileInput("spectrumFile", "Choose PJNZ File(s)", accept = c(".pjnz"), multiple=TRUE),
+                shiny::fileInput("spectrumFile", "Choose PJNZ file(s)", accept = c(".pjnz"), multiple=TRUE),
                 shiny::conditionalPanel(condition = "output.spectrumFileError != null",
                     shiny::div("", class = "alert alert-danger",
                         shiny::icon("exclamation-triangle", lib="font-awesome"),
@@ -18,17 +18,17 @@ panelSpectrum <- function() {
                 )
             )
         ),
-        shiny::conditionalPanel(condition = "output.usePJNZ == 'FALSE'",
-            shiny::div("Please upload either one pair of PJ and DP files for the whole country, or multiple pairs of files, one pair per subnational region.",
+        shiny::conditionalPanel(condition = "!output.usePJNZ",
+            shiny::div("Please upload either one pair of PJ and DP files for the whole country, or multiple pairs of files,
+            one pair per subnational region. You will have to upload regions one at a time.",
                 class = "mb-5"),
                 shiny::div("", class = "mt-3 mb-5",
-                shiny::fileInput("pjFile", "Choose PJ File(s)", accept = c(".pj"), multiple=TRUE),
-                shiny::fileInput("dpFile", "Choose DP File(s)", accept = c(".pj"), multiple=TRUE),
-                shiny::conditionalPanel(condition = "output.spectrumFileError != null",
+                shiny::fileInput("pjFile", "Choose pair of PJN and DP files", accept = c(".pj", ".pjn"), multiple=TRUE),
+                shiny::conditionalPanel(condition = "output.spectrumFilePairError != null",
                     shiny::div("", class = "alert alert-danger",
                         shiny::icon("exclamation-triangle", lib="font-awesome"),
-                        shiny::span("Error: Spectrum file not valid!"),
-                        shiny::textOutput("pjFileError", inline = TRUE)
+                        shiny::span("Error: Spectrum file pair not valid!"),
+                        shiny::textOutput("spectrumFilePairError", inline = TRUE)
                     )
                 )
             )

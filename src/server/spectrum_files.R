@@ -93,6 +93,57 @@ spectrumFiles <- function(input, output, state) {
         }
     })
 
+    shiny::observeEvent(input$spectrumFilePair, {
+
+        inFiles <- input$spectrumFilePair
+        state$spectrumFilePairError <- NULL
+
+        if (!is.null(inFiles)) {
+
+            if (nrow(inFiles) != 2){
+                state$spectrumFilePairError <- "Please select a pair of files - one .PJN and one .DP"
+            }
+            else {
+
+                data <- by(inFiles, 1:nrow(inFiles), function(row) {
+
+                    tryCatch({
+
+                        if (grep1(tolower(row$datapath), ".dp")){
+                            # TODO do something with dp file
+                        }
+                        if (grep1(tolower(row$datapath), ".pjn")){
+                            # TODO do something with pjn file
+                        }
+
+                        newCountry <- "ReadFromEppasm"
+                        "extracted data"
+                    },
+                    error=function(condition) {
+                        state$spectrumFilePairError <- glue::glue("Unable to read the contents of this file: {condition}")
+                        NULL
+                    })
+                })
+
+                if (!is.null(data)) {
+                    if (!state$anyDataSets() || newCountry == state$country){
+                        if (!state$anyDataSets()) {
+                            state$country = newCountry
+                        }
+
+                        dataSet = list(name = paste(inFiles$datapath), data = data)
+                        state$dataSets <- c(state$dataSets, list(dataSet))
+                    }
+                    else {
+                        state$spectrumFilePairError <- "You can only work with one country at a time.
+                        If you want to upload data for a different country you will have to remove the previously loaded files."
+                        shinyjs::reset("spectrumFilePair")
+                    }
+                }
+            }
+        }
+    })
+
     output$usePJNZ <- shiny::reactive({
         input$spectrumFileType == ".PJNZ"
     })
