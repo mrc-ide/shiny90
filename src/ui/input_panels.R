@@ -6,7 +6,7 @@ panelSurvey <- function() {
          <p><strong>Survey Id, Country, Year, HIV Status, Sex, Age Group, Estimate, Standard Error,
         Lower Confidence Interval,
         Upper Confidence Interval, Counts</strong></p> <p>Estimates, Standard Error, and Lower and Upper Confidence Intervals
-        should all be given as percentages.<p><p> The app will not accept an uploaded CSV with the wrong headers.
+        should all be given as percentages. Where values are unknown, please just leave blank.</p><p> The app will not accept an uploaded CSV with the wrong headers.
         It may be useful to download the existing survey data as a template:</p>"),
         shiny::downloadButton("downloadSurveyTemplate", "Download survey data"),
         shiny::h3("Upload new data"),
@@ -49,7 +49,7 @@ panelProgram <- function() {
         shiny::tags$p("You can edit the data below in the browser, or copy and paste to Excel and edit the data there, then copy
                         and paste back into the table below. You can also replace the data entirely by uploading a new CSV file. The required column headers are:"),
         shiny::HTML("<p><strong>Country, Year, Total Tests, Total Positive Tests, Total HTC Tests, Total Positive HTC Tests, Total ANC Tests, Total Positive ANC Tests, Age Group, Sex, HIV Status</strong></p>"),
-        shiny::p("The app will not accept an uploaded CSV with the wrong headers.
+        shiny::p("Where values are unknown, please just leave blank. The app will not accept an uploaded CSV with the wrong headers.
         It may be useful to download the existing programmatic data as a template:"),
         downloadButton("downloadProgramTemplate", "Download programmatic data"),
         shiny::h3("Upload new data"),
