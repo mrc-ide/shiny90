@@ -258,7 +258,7 @@ downloadTemplate <- function(dataframe, filename) {
         filename = filename,
             contentType = "text/csv",
             content = function(file) {
-                write.csv(dataframe, file, row.names = FALSE)
+                write.csv(dataframe, file, row.names = FALSE, na = "")
             }
     )
 }
