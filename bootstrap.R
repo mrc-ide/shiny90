@@ -24,4 +24,3 @@ install.packages("testthat")
 
 devtools::install_github('andrewsali/shinycssloaders')
 devtools::install_github("mrc-ide/first90")
-devtools::install_github("mrc-ide/eppasm")

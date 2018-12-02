@@ -11,12 +11,10 @@ packages:
   - ggplot2
   - memoise
   - magrittr
-  - eppasm
   - first90
   - shinycssloaders
 
 package_sources:
   github:
-  - mrc-ide/first90
-  - mrc-ide/eppasm
+  - mrc-ide/first90@add-eppasm
   - andrewsali/shinycssloaders
