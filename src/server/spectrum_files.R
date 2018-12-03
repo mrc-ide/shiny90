@@ -66,7 +66,7 @@ spectrumFiles <- function(input, output, state) {
               tryCatch({
                     pjn_file <- first90::file_in_zip(row$datapath, ".PJN$")
                     pjn <- read.csv(pjn_file, as.is = TRUE)
-                    newCountry <- get_pjn_country(pjn)
+                    newCountry <- first90::get_pjn_country(pjn)
 
                     if (!state$anyDataSets() || newCountry == state$country){
 
