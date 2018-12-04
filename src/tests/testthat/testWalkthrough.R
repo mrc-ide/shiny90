@@ -42,4 +42,17 @@ testthat::test_that("can walk through app", {
     checkTopLeftTableCellHasThisValue(tabName = "ART coverage",
         tableSelector = ".outputs-art-coverage",
         expectedValue = "2010")
+
+    switchTab(wd, "Advanced outputs")
+    expectElementPresent(wd, inActivePane("#outputs_retest_neg"))
+    expectElementPresent(wd, inActivePane("#outputs_retest_pos"))
+    expectElementPresent(wd, inActivePane("#outputs_prv_pos_yld"))
+
+    checkTopLeftTableCellHasThisValue(tabName = "Estimated parameters",
+        tableSelector = ".outputs-parameters",
+    expectedValue = "RR testing: men in 2005")
+
+    checkTopLeftTableCellHasThisValue(tabName = "Pregnant women",
+        tableSelector = ".outputs-preg",
+    expectedValue = "2010")
 })
