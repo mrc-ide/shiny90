@@ -104,7 +104,7 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
             tryCatch({
                 # model fit results
                 state$fp <- first90::create_hts_param(state$optim$par, spectrumFilesState$combinedData())
-                state$mod <- eppasm::simmod.specfp(state$fp)
+                state$mod <- first90::simmod(state$fp)
 
                 # model output
                 out_evertest = first90::get_out_evertest(state$mod, state$fp)

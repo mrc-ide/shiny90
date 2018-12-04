@@ -1,4 +1,3 @@
-library(eppasm)
 
 spectrumFiles <- function(input, output, state) {
 
@@ -63,8 +62,10 @@ spectrumFiles <- function(input, output, state) {
 
             by(inFile, 1:nrow(inFile), function(row) {
 
-                tryCatch({
-                    newCountry <- eppasm::read_country(row$datapath)
+              tryCatch({
+                    pjn_file <- first90::file_in_zip(row$datapath, ".PJN$")
+                    pjn <- read.csv(pjn_file, as.is = TRUE)
+                    newCountry <- first90::get_pjn_country(pjn)
 
                     if (!state$anyDataSets() || newCountry == state$country){
 
