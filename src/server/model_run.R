@@ -113,7 +113,7 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
                 state$spectrum_outputs <- first90::spectrum_output_table(state$mod, state$fp)
 
                 plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
-                                    state$fp, state$mod, spectrumFilesState$country, out_evertest, state$simul)
+                                    state$fp, state$mod, spectrumFilesState$country, out_evertest, state$simul, state)
 
             }, error = function(e) {
                 str(e)
@@ -194,7 +194,7 @@ renderModelResultsTable <- function(state, func) {
     }, options = defaultDataTableOptions())
 }
 
-plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, country, out_evertest, simul) {
+plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, country, out_evertest, simul, state) {
     output$outputs_totalNumberOfTests <- shiny::renderPlot({
         first90::plot_out_nbtest(mod, fp, likdat, country, simul)
     })
@@ -226,4 +226,25 @@ plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, coun
     output$outputs_menEverTested <- shiny::renderPlot({
         first90::plot_out_evertest_mbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
     })
+
+    output$outputs_advanced_params <- renderModelResultsTable(state, function(state) {
+        first90::optimized_par(state$optim)
+    })
+
+    output$outputs_prv_pos_yld <- shiny::renderPlot({
+        first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2018)
+    })
+
+    output$outputs_retest_neg <- shiny::renderPlot({
+        first90::plot_retest_test_neg(mod, fp, likdat, country)
+    })
+
+    output$outputs_retest_pos <- shiny::renderPlot({
+        first90::plot_retest_test_pos(mod, fp, likdat, country)
+    })
+
+    output$outputs_tab_out_pregprev <- renderModelResultsTable(state, function(state) {
+        first90::tab_out_pregprev(mod, fp)
+    })
+
 }
