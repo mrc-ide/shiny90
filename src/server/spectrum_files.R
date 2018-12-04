@@ -105,57 +105,54 @@ spectrumFiles <- function(input, output, state) {
                 state$spectrumFilePairError <- "Please select a pair of files - one .PJN and one .DP"
             }
             else {
+                tryCatch({
+                    newCountry <- NULL
+                    dp_file <- NULL
+                    pjn_file <- NULL
 
-                newCountry <- NULL
-                data <- tryCatch({
-                        dp <- NULL
-                        pjn <- NULL
+                    by(inFiles, 1:nrow(inFiles), function(row) {
 
-                        by(inFiles, 1:nrow(inFiles), function(row) {
-
-                            if (grepl(".dp", tolower(row$datapath))){
-                                dp <<- row$datapath
-                            }
-                            if (grepl(".pjn", tolower(row$datapath))){
-                                pjn <<- row$datapath
-                            }
-                        })
-
-                        if (is.null(pjn) || is.null(dp)){
-                            shinyjs::reset("spectrumFilePair")
-                            state$spectrumFilePairError <- "You must provide one .PJN and one .DP file. Please check your selected files."
-                            NULL
+                        if (grepl(".dp", tolower(row$datapath))){
+                            dp_file <<- row$datapath
                         }
-                        else {
-                            newCountry <<- first90::get_pjn_country(read.csv(pjn, as.is = TRUE))
-                            str(newCountry)
-                            data <- first90::extract_pjnz(dp_file = dp, pjn_file = pjn)
-                            data
+                        if (grepl(".pjn", tolower(row$datapath))){
+                            pjn_file <<- row$datapath
                         }
-
-                    },
-                    error=function(condition) {
-                        str(condition)
-                        shinyjs::reset("spectrumFilePair")
-                        state$spectrumFilePairError <- glue::glue("Unable to read the contents of these files: {condition}")
-                        NULL
                     })
 
-                if (!is.null(data)) {
-                    if (!state$anyDataSets() || newCountry == state$country){
-                        if (!state$anyDataSets()) {
-                            state$country = newCountry
-                        }
-
-                        dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
-                        state$dataSets <- c(state$dataSets, list(dataSet))
+                    if (is.null(pjn_file) || is.null(dp_file)){
+                        shinyjs::reset("spectrumFilePair")
+                        state$spectrumFilePairError <- "You must provide one .PJN and one .DP file. Please check your selected files."
+                        data <- NULL
                     }
                     else {
-                        state$spectrumFilePairError <- "You can only work with one country at a time.
-                        If you want to upload data for a different country you will have to remove the previously loaded files."
-                        shinyjs::reset("spectrumFilePair")
+                        pjn <- read.csv(pjn_file, as.is = TRUE)
+                        newCountry <- first90::get_pjn_country(pjn)
+                        data <- first90::extract_pjnz(dp_file = dp_file, pjn_file = pjn_file)
                     }
-                }
+
+                    if (!is.null(data)){
+                        if (!state$anyDataSets() || newCountry == state$country){
+                            if (!state$anyDataSets()) {
+                                state$country = newCountry
+                            }
+
+                            dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
+                            state$dataSets <- c(state$dataSets, list(dataSet))
+                        }
+                        else {
+                            state$spectrumFilePairError <- "You can only work with one country at a time.
+                        If you want to upload data for a different country you will have to remove the previously loaded files."
+                            shinyjs::reset("spectrumFilePair")
+                            NULL
+                        }
+                    }
+                },
+                error=function(condition) {
+                    str(condition)
+                    shinyjs::reset("spectrumFilePair")
+                    state$spectrumFilePairError <- glue::glue("Unable to read the contents of these files: {condition}")
+                })
             }
         }
     })
