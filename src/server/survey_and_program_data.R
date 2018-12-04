@@ -66,7 +66,7 @@ castToNumeric <- function(dataframe, headers){
 }
 
 mapSurveyToInternalModel <- function(df, country) {
-    df <- df[df$country == country & df$outcome == "evertest", ]
+    df <- df[df$country == iconv(country, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
 
     df <- data.frame(df$country,
                 df$surveyid,
