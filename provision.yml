@@ -16,5 +16,5 @@ packages:
 
 package_sources:
   github:
-  - mrc-ide/first90@add-eppasm
+  - mrc-ide/first90@exports
   - andrewsali/shinycssloaders
