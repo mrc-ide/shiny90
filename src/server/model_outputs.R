@@ -95,11 +95,13 @@ makeProgress <- function(n, every = 0.1) {
     }
 }
 
-runSimulations <- function(opt, likdat, spectrumData, numSimul) {
+runSimulations <- function(opt, likdat, spectrumData, numSimul, modelRunState) {
 
-    shiny::withProgress(message = 'Running simulations', value = 0, {
+    shiny::withProgress(message = 'Running simulations', value = 0, detail="Drawing sample", {
         sample <- first90::simul.sample(opt$hessian, opt$par, spectrumData, likdat = likdat)
+        shiny::incProgress(1/2, detail = "Running model")
         simul <- first90::simul.run(sample, spectrumData)
+        modelRunState$sample <- sample
     })
 
     simul

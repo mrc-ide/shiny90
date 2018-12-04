@@ -61,7 +61,7 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             })
 
             state$simul <- tryCatch({
-                runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul)
+                runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul, state)
             }, error = function(e) {
                 str(e)
                 state$state <- "error"
