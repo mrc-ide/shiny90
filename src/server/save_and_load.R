@@ -46,6 +46,10 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("sample.rds")), function(path) {
                 saveRDS(modelRunState$sample, file = path)
             })
+
+            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("hessian.rds")), function(path) {
+                saveRDS(modelRunState$optim$hessian, file = path)
+            })
         }
     }
 
@@ -142,14 +146,15 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
 
                 outputsPath <- "model_outputs/par.rds"
                 if (file.exists(outputsPath)) {
-                    # modelRunState$optim$par <- readRDS(outputsPath)
-                    # modelRunState$optim$hessian <- calculateHessian(modelRunState$optim,
-                    #                                                 modelRunState$likelihood(),
-                    #                                                 spectrumFilesState$combinedData())
-                    # samplePath <- "model_outputs/sample.rds"
-                    # if (file.exists(samplePath)) {
-                    #     sample <- readRDS(simulPath)
-                    # }
+                    modelRunState$optim <- list(par=readRDS(outputsPath))
+                    hessianPath <- "model_outputs/hessian.rds"
+                    if (file.exists(hessianPath)) {
+                        modelRunState$optim$hessian < readRDS(hessianPath)
+                    }
+                    samplePath <- "model_outputs/sample.rds"
+                    if (file.exists(samplePath)) {
+                        sample <- readRDS(samplePath)
+                    }
                     modelRunState$state <- "converged"
                 }
 
