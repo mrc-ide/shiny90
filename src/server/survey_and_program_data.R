@@ -53,16 +53,41 @@ surveyDataHeaders <- list(surveyid="Survey Id",
                             ci_l= "Lower Confidence Interval",
                             ci_u= "Upper Confidence Interval")
 
-programDataHeaders <- list(tot= "Total tests",
-                            totpos= "Total positive tests",
-                            vct= "Total HTC tests",
-                            vctpos= "Total positive HTC tests",
-                            anc= "Total ANC tests",
-                            ancpos= "Total positive ANC tests"
+programDataHeaders <- list(tot= "Total Tests",
+                            totpos= "Total Positive Tests",
+                            vct= "Total HTC Tests",
+                            vctpos= "Total Positive HTC Tests",
+                            anc= "Total ANC Tests",
+                            ancpos= "Total Positive ANC Tests"
 )
 
 castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
+}
+
+mapSurveyToInternalModel <- function(df, country) {
+    df <- df[df$country == country & df$outcome == "evertest", ]
+
+    df <- data.frame(df$country,
+                df$surveyid,
+                df$year,
+                df$agegr,
+                df$sex,
+                df$hivstatus,
+                df$est*100,
+                df$se*100,
+                df$ci_l*100,
+                df$ci_u*100,
+                as.integer(df$counts))
+
+    colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
+
+    df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
+}
+
+resetSurveyToDefaults <- function(state, country) {
+    state$survey <- as.data.frame(survey_hts)
+    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), country)
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -76,8 +101,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$country)){
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
-                state$survey <- state$survey[state$survey$country == spectrumFilesState$country & state$survey$outcome == "evertest", ]
-                state$survey$counts = as.integer(state$survey$counts)
+                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$country)
+
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
             else {
@@ -130,26 +155,28 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }"
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
+        rhandsontable::rhandsontable(state$survey_data_human_readable(),
+        colHeaders = c("Country","Survey Id","Year","Age Group","Sex","HIV Status","Estimate (%)", "Standard Error (%)",
+        "Lower Confidence Interval (%)",
+        "Upper Confidence Interval (%)", "Counts"), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Outcome", allowInvalid = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
-            rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Lower Confidence Interval", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Upper Confidence Interval", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Estimate (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Standard Error (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Lower Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Upper Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Year", type="numeric", format = "0")
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Total tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total HTC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive HTC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total ANC tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total positive ANC tests", type="numeric", renderer = number_renderer)
+            rhandsontable::hot_col("Total Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive HTC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total ANC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer)
     })
 
     shiny::observeEvent(input$surveyData, {
@@ -193,6 +220,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         shinyjs::reset("programData")
     })
 
+    shiny::observeEvent(input$resetSurveyData, {
+        resetSurveyToDefaults(state, spectrumFilesState$country)
+    })
+
     # We track change events so that we know when to reset the model run state.
     # See comment in model_run.R
     state$surveyTableChanged <- 0
@@ -227,7 +258,7 @@ downloadTemplate <- function(dataframe, filename) {
         filename = filename,
             contentType = "text/csv",
             content = function(file) {
-                write.csv(dataframe, file, row.names = FALSE)
+                write.csv(dataframe, file, row.names = FALSE, na = "")
             }
     )
 }

@@ -26,10 +26,10 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             file.writeText(path, spectrumFilesState$country)
         })
         paths <- doAndRememberPath(paths, "survey.csv", function(path) {
-            write.csv(surveyAndProgramData$survey_data_human_readable(), file = path, row.names = FALSE)
+            write.csv(surveyAndProgramData$survey_data_human_readable(), file = path, row.names = FALSE, na = "")
         })
         paths <- doAndRememberPath(paths, "program.csv", function(path) {
-            write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE)
+            write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE, na = "")
         })
     }
     if (!is.null(modelRunState$optim)) {
@@ -101,7 +101,8 @@ readCountry <- function() {
 
 readCSVIfPresent <- function(fileName, headers) {
     if (file.exists(fileName)) {
-        mapHeadersFromHumanReadable(read.csv(fileName, check.names=FALSE), headers)
+        mapHeadersFromHumanReadable(read.csv(fileName, check.names=FALSE, na.strings=c("NA","NaN", " ")), headers)
+
     } else {
         NULL
     }
