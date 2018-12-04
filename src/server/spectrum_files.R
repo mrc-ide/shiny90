@@ -1,6 +1,6 @@
-
 spectrumFiles <- function(input, output, state) {
 
+    state$touched <- FALSE
     state$country <- NULL
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <- shiny::reactive({
@@ -77,6 +77,7 @@ spectrumFiles <- function(input, output, state) {
                                         data = first90::extract_pjnz(row$datapath))
 
                         state$dataSets <- c(state$dataSets, list(dataSet))
+                        state$touched <- TRUE
                     }
                     else {
                         state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
@@ -92,6 +93,7 @@ spectrumFiles <- function(input, output, state) {
             })
 
         }
+
     })
 
     shiny::observeEvent(input$spectrumFilePair, {
@@ -139,6 +141,7 @@ spectrumFiles <- function(input, output, state) {
 
                             dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
                             state$dataSets <- c(state$dataSets, list(dataSet))
+                            state$touched <- TRUE
                         }
                         else {
                             state$spectrumFilePairError <- "You can only work with one country at a time.
@@ -207,6 +210,7 @@ renderSpectrumFileList <- function(input, output, state) {
                 if (length(state$dataSets) == 0){
                     state$country <- NULL
                 }
+                #state$touched <- TRUE
             })
 
             shiny::tags$li("", class = "list-group-item",

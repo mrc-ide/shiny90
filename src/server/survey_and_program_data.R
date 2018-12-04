@@ -94,6 +94,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     data("survey_hts", package="first90")
     data("prgm_dat", package="first90")
 
+    state$touched <- FALSE
     state$loadNewData <- TRUE
 
     shiny::observeEvent(spectrumFilesState$country, {
@@ -194,6 +195,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
             state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
+            state$touched <- TRUE
         }
 
         shinyjs::reset("surveyData")
@@ -215,6 +217,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
             state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
+            state$touched <- TRUE
         }
 
         shinyjs::reset("programData")
@@ -222,16 +225,21 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(input$resetSurveyData, {
         resetSurveyToDefaults(state, spectrumFilesState$country)
+        state$touched <- TRUE
     })
 
     # We track change events so that we know when to reset the model run state.
-    # See comment in model_run.R
     state$surveyTableChanged <- 0
     state$programTableChanged <- 0
 
     shiny::observeEvent(input$hot_survey, {
         if(!is.null(input$hot_survey)){
             state$survey <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
+            # for unknown reasons this event fires twice on first load
+            # so only track changes after the first 2 changes
+            if (state$surveyTableChanged > 1){
+                state$touched <- TRUE
+            }
             state$surveyTableChanged <<- state$surveyTableChanged + 1
         }
     })
@@ -239,6 +247,11 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
             state$program_data <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
+            # for unknown reasons this event fires twice on first load
+            # so only track changes after the first 2 changes
+            if (state$programTableChanged > 1){
+                state$touched <- TRUE
+            }
             state$programTableChanged <<- state$programTableChanged + 1
         }
     })

@@ -140,6 +140,21 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 modelRunState$simul <- NULL
                 modelRunState$state <- "not_run"
 
+                outputsPath <- "model_outputs/par.rds"
+                if (file.exists(outputsPath)) {
+                    # modelRunState$optim$par <- readRDS(outputsPath)
+                    # modelRunState$optim$hessian <- calculateHessian(modelRunState$optim,
+                    #                                                 modelRunState$likelihood(),
+                    #                                                 spectrumFilesState$combinedData())
+                    # samplePath <- "model_outputs/sample.rds"
+                    # if (file.exists(samplePath)) {
+                    #     sample <- readRDS(simulPath)
+                    # }
+                    modelRunState$state <- "converged"
+                }
+
+                surveyAndProgramData$touched <- FALSE
+                spectrumFilesState$touched <- FALSE
             })
 
             surveyAndProgramData$loadNewData <- FALSE
