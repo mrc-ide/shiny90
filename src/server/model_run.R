@@ -99,7 +99,7 @@ setError <- function(state, message){
 
 renderOutputs <- function(input, output, state, spectrumFilesState) {
     # Plot the results
-    shiny::observeEvent(state$optim, {
+    shiny::observeEvent(state$optim, ignoreNULL = FALSE, {
         if (state$state == "converged" && !is.null(state$optim)) {
             tryCatch({
                 # model fit results
@@ -165,19 +165,19 @@ invalidateOutputsWhenInputsChange <- function(state, surveyAndProgramData, spect
     # A change event will occur the first time the user navigates to the input data page
     # but this first change event doesn't represent a change to the data.
     # So we only reset the state on subsequent change events.
-    shiny::observeEvent(surveyAndProgramData$survey, {
+    shiny::observeEvent(surveyAndProgramData$survey, ignoreNULL = FALSE, {
         if (surveyAndProgramData$surveyTableChanged > 1){
             invalidateOutputs()
         }
     })
 
-    shiny::observeEvent(surveyAndProgramData$program_data, {
+    shiny::observeEvent(surveyAndProgramData$program_data, ignoreNULL = FALSE, {
         if (surveyAndProgramData$programTableChanged > 1){
             invalidateOutputs()
         }
     })
 
-    shiny::observeEvent(spectrumFilesState$combinedData(), {
+    shiny::observeEvent(spectrumFilesState$combinedData(), ignoreNULL = FALSE, {
         invalidateOutputs()
     })
 

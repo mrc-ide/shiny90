@@ -204,6 +204,9 @@ renderSpectrumFileList <- function(input, output, state) {
             state$observerList <- addDynamicObserver(input, state$observerList, removeEventId, function() {
                 index <- match(f$name, purrr::map(state$dataSets, function(x) { x$name }))
                 state$dataSets <- state$dataSets[-index]
+                if (length(state$dataSets) == 0){
+                    state$country <- NULL
+                }
             })
 
             shiny::tags$li("", class = "list-group-item",
