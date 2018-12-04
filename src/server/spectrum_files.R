@@ -55,7 +55,6 @@ spectrumFiles <- function(input, output, state) {
 
     shiny::observeEvent(input$spectrumFile, {
 
-
         inFile <- input$spectrumFile
         state$spectrumFileError <- NULL
 
@@ -85,6 +84,7 @@ spectrumFiles <- function(input, output, state) {
                     }
                 },
                 error=function(condition) {
+                    shinyjs::reset("spectrumFile")
                     state$spectrumFileError <- glue::glue("Unable to read the contents of this file: {condition}")
                     NULL
                 })
@@ -92,6 +92,73 @@ spectrumFiles <- function(input, output, state) {
             })
 
         }
+    })
+
+    shiny::observeEvent(input$spectrumFilePair, {
+
+        inFiles <- input$spectrumFilePair
+        state$spectrumFilePairError <- NULL
+
+        if (!is.null(inFiles)) {
+
+            if (nrow(inFiles) != 2){
+                state$spectrumFilePairError <- "Please select a pair of files - one .PJN and one .DP"
+            }
+            else {
+                tryCatch({
+                    newCountry <- NULL
+                    dp_file <- NULL
+                    pjn_file <- NULL
+
+                    by(inFiles, 1:nrow(inFiles), function(row) {
+
+                        if (grepl(".dp", tolower(row$datapath))){
+                            dp_file <<- row$datapath
+                        }
+                        if (grepl(".pjn", tolower(row$datapath))){
+                            pjn_file <<- row$datapath
+                        }
+                    })
+
+                    if (is.null(pjn_file) || is.null(dp_file)){
+                        shinyjs::reset("spectrumFilePair")
+                        state$spectrumFilePairError <- "You must provide one .PJN and one .DP file. Please check your selected files."
+                        data <- NULL
+                    }
+                    else {
+                        pjn <- read.csv(pjn_file, as.is = TRUE)
+                        newCountry <- first90::get_pjn_country(pjn)
+                        data <- first90::extract_pjnz(dp_file = dp_file, pjn_file = pjn_file)
+                    }
+
+                    if (!is.null(data)){
+                        if (!state$anyDataSets() || newCountry == state$country){
+                            if (!state$anyDataSets()) {
+                                state$country = newCountry
+                            }
+
+                            dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
+                            state$dataSets <- c(state$dataSets, list(dataSet))
+                        }
+                        else {
+                            state$spectrumFilePairError <- "You can only work with one country at a time.
+                        If you want to upload data for a different country you will have to remove the previously loaded files."
+                            shinyjs::reset("spectrumFilePair")
+                            NULL
+                        }
+                    }
+                },
+                error=function(condition) {
+                    str(condition)
+                    shinyjs::reset("spectrumFilePair")
+                    state$spectrumFilePairError <- glue::glue("Unable to read the contents of these files: {condition}")
+                })
+            }
+        }
+    })
+
+    output$usePJNZ <- shiny::reactive({
+        input$spectrumFileType == ".PJNZ"
     })
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
@@ -107,12 +174,15 @@ spectrumFiles <- function(input, output, state) {
         )
     ))
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
+    output$spectrumFilePairError <- shiny::reactive({ state$spectrumFilePairError })
 
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$pjnz_summary, state)
 
     shiny::outputOptions(output, "anySpectrumDataSets", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "spectrumFilePairError", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "usePJNZ", suspendWhenHidden = FALSE)
 
     state
 }
