@@ -5,7 +5,10 @@ panelSpectrum <- function() {
         shiny::selectInput("spectrumFileType", label = "Use:", choices = c(".PJNZ", '.DP and .PJN')),
         shiny::tags$hr("", style="height: 1px;"),
         shiny::conditionalPanel(condition = "output.usePJNZ",
-            shiny::div("Please upload either one national PJNZ file or multiple files, one per subnational region.",
+            shiny::div("Please upload either one national or subnationl PJNZ file or multiple files, one per subnational region.
+            If you upload a single regional file we will use regional data and run everything at the regional level.
+            If you include multiple regions we will use national data and run the model at a national level,
+            so make sure you upload a complete covering set of subnational files.",
                 class = "mb-5"),
             shiny::div("", class = "mt-3 mb-5",
                 shiny::fileInput("spectrumFile", "Choose PJNZ file(s)", accept = c(".pjnz"), multiple=TRUE),
@@ -35,7 +38,7 @@ panelSpectrum <- function() {
         ),
         shiny::conditionalPanel(condition = "output.anySpectrumDataSets",
             shiny::div("", class = "mb-5 uploadedSpectrumFilesSection",
-                shiny::h3("Uploaded PJNZ files", class = "mt-5"),
+                shiny::h3("Uploaded Spectrum files", class = "mt-5"),
                 shiny::tags$ul("", class = "list-group",
                     shiny::uiOutput("spectrumFileList")
                 )
@@ -43,10 +46,15 @@ panelSpectrum <- function() {
 
             shiny::div("",
                 shiny::h3("", class = "mt-5",
-                    shiny::textOutput("spectrumFilesCountry", inline = TRUE),
+                    shiny::textOutput("countryOrRegionName", inline = TRUE),
                     shiny::span("data")
                 ),
-
+                shiny::conditionalPanel(condition = "output.aggregatingToNational",
+                    class="alert alert-warning",
+                    "You have uploaded files for multiple regions
+                     so we will run the model at national level. Please make sure you have included Spectrum data for
+                      all subnational regions otherwise results will not be valid."
+                ),
                 shiny::tabsetPanel(
                 shiny::tabPanel("Figures",
                     shiny::div("", class = "row",

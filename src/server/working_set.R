@@ -12,7 +12,7 @@ workingSetLogic <- function(input, output, session, workingSet, spectrumFileStat
             "Unknown"
         }
         else {
-            spectrumFileState$country
+            spectrumFileState$countryOrRegionName()
         }
     })
 
