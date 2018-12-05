@@ -149,11 +149,17 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                     modelRunState$optim <- list(par=readRDS(outputsPath))
                     hessianPath <- "model_outputs/hessian.rds"
                     if (file.exists(hessianPath)) {
-                        modelRunState$optim$hessian < readRDS(hessianPath)
+                        modelRunState$optim$hessian<- readRDS(hessianPath)
                     }
                     samplePath <- "model_outputs/sample.rds"
                     if (file.exists(samplePath)) {
-                        sample <- readRDS(samplePath)
+                        modelRunState$sample <- readRDS(samplePath)
+                        shiny::withProgress(message = 'Running simulations', value = 0, {
+                            shiny::incProgress(1/10)
+                            simul <- first90::simul.run(modelRunState$sample, spectrumFilesState$combinedData(),
+                                                        progress=makeProgress(nrow(modelRunState$sample)))
+                            modelRunState$simul <- simul
+                        })
                     }
                     modelRunState$state <- "converged"
                 }
