@@ -101,7 +101,7 @@ spectrumFiles <- function(input, output, state) {
 
                     if (!state$anyDataSets() || newCountry == state$country){
                         data <- first90::extract_pjnz(row$datapath)
-                        addDataSet(state, data, inFile$name, newCountry, newRegion)
+                        addDataSet(state, data, row$name, newCountry, newRegion)
                     }
                     else {
                         state$spectrumFileError <- "You can only work with one country at a time.
