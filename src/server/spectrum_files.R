@@ -35,7 +35,6 @@ spectrumFiles <- function(input, output, state) {
     })
 
     state$aggregatingToNational <- shiny::reactive({
-        str(state$regions())
         !is.null(state$regions()) && length(state$regions()) > 1
     })
 
@@ -44,7 +43,6 @@ spectrumFiles <- function(input, output, state) {
     })
 
     state$countryOrRegionName <- shiny::reactive({
-        str(state$treatAsRegional())
         if (state$treatAsRegional()){
             state$regions()[[1]]
         }

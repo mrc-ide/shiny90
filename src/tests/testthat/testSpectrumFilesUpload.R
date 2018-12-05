@@ -60,3 +60,16 @@ testthat::test_that("cannot upload spectrum files from different countrues", {
     waitForVisible(errorBox)
     expectTextToContain("one country at a time", errorBox)
 })
+
+testthat::test_that("warning is shown if multiple regional files are uploaded", {
+    wd$navigate(appURL)
+    startNewWorkingSet(wd)
+
+    uploadSpectrumFile(wd, filename = "Togo_Centrale_2018.PJNZ")
+    waitForVisible(wd$findElement("css", ".uploadedSpectrumFilesSection"))
+
+    uploadSpectrumFile(wd, filename = "Togo_Maritime_2018.PJNZ")
+    warningBox <- wd$findElement("css", inActivePane("#multiple-region-warning"))
+    waitForVisible(warningBox)
+    expectTextToContain("You have uploaded files for multiple regions", warningBox)
+})
