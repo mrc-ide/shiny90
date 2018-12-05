@@ -210,7 +210,6 @@ renderSpectrumFileList <- function(input, output, state) {
                 if (length(state$dataSets) == 0){
                     state$country <- NULL
                 }
-                #state$touched <- TRUE
             })
 
             shiny::tags$li("", class = "list-group-item",

@@ -166,14 +166,12 @@ invalidateOutputsWhenInputsChange <- function(state, surveyAndProgramData, spect
     }
 
     shiny::observeEvent(surveyAndProgramData$touched,  {
-        str(surveyAndProgramData$touched)
         if (surveyAndProgramData$touched){
             invalidateOutputs()
         }
     })
 
     shiny::observeEvent(spectrumFilesState$touched, {
-        str(surveyAndProgramData$touched)
         if (spectrumFilesState$touched){
             invalidateOutputs()
         }
