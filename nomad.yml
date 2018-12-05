@@ -46,4 +46,4 @@ package_sources: ~
 git: false
 r: true
 rstudio: true
-rtools: false
+rtools: true
