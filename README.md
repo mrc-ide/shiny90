@@ -49,3 +49,10 @@ git submodule init
 git submodule update
 ls sample_files
 ```
+
+# Build a USB stick
+
+```r
+# remotes::install_github("reconhub/nomad", upgrade = FALSE)
+nomad::build("mrc-ide/shiny90@usb", "destination")
+```
