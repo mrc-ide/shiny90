@@ -11,6 +11,7 @@ build_usb <- function(destination, path = ".", r_version = "3.5") {
     nomad::build_path(path, destination)
   }
   build_library(destination)
+  file.copy(path, file.path(destination, "shiny"), recursive = TRUE)
 }
 
 
