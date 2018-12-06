@@ -49,3 +49,14 @@ git submodule init
 git submodule update
 ls sample_files
 ```
+
+# Build a USB stick
+
+```r
+install.packages("drat")
+drat:::add("mrc-ide")
+install.packages(c("provisionr", "buildr", "nomad"))
+
+source("scripts/build_library.R")
+build_usb("destination")
+```
