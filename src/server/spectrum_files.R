@@ -1,6 +1,6 @@
-
 spectrumFiles <- function(input, output, state) {
 
+    state$touched <- FALSE
     state$country <- NULL
     state$dataSets <- NULL
 
@@ -116,6 +116,7 @@ spectrumFiles <- function(input, output, state) {
             })
 
         }
+
     })
 
     shiny::observeEvent(input$spectrumFilePair, {
@@ -231,6 +232,7 @@ addDataSet <- function(state, data, name, newCountry, newRegion){
 
     dataSet = list(name = name, data = data, region = newRegion)
     state$dataSets <- c(state$dataSets, list(dataSet))
+    state$touched <- TRUE
 
 }
 

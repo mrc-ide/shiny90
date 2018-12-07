@@ -70,7 +70,26 @@ testthat::test_that("can save digest from output tab", {
     downloadFileFromLink(link, "Malawi.zip.shiny90")
 
     # Load and check
-    loadDigestFromMainUI(wd, dir = "../../../selenium_files/", filename = "Malawi.zip.shiny90")
+    wd$navigate(appURL)
+    loadDigestFromWelcome(wd, dir = "../../../selenium_files/")
     expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_notes"))
+
+    switchTab(wd, "Run model")
+    waitForVisible(wd$findElement("css", "#outputs_totalNumberOfTests"))
+
+    expectElementPresent(wd, inActivePane("#outputs_totalNumberOfTests"))
+    expectElementPresent(wd, inActivePane("#outputs_numberOfPositiveTests"))
+    expectElementPresent(wd, inActivePane("#outputs_percentageNegativeOfTested"))
+    expectElementPresent(wd, inActivePane("#outputs_percentagePLHIVOfTested"))
+    expectElementPresent(wd, inActivePane("#outputs_percentageTested"))
+    expectElementPresent(wd, inActivePane("#outputs_firstAndSecond90"))
+    expectElementPresent(wd, inActivePane("#outputs_womenEverTested"))
+    expectElementPresent(wd, inActivePane("#outputs_menEverTested"))
+
+    switchTab(wd, "Advanced outputs")
+    expectElementPresent(wd, inActivePane("#outputs_retest_neg"))
+    expectElementPresent(wd, inActivePane("#outputs_retest_pos"))
+    expectElementPresent(wd, inActivePane("#outputs_prv_pos_yld"))
+
 })

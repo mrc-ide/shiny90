@@ -13,7 +13,7 @@ welcomeView <- function() {
                             shiny::tags$li("By 2020, 90% of all people receiving antiretroviral therapy will have viral suppression.")
                         )
                     ),
-                    shiny::p("This tool models the first 90: what percentage of the popultation living with HIV (plHIV) have been diagnosed?"),
+                    shiny::p("This tool models the 1st 90: what percentage of people living with HIV know their status?"),
                     shiny::p("",
                         shiny::span("To use the model, you will need your Spectrum national file or subnational files. Estimates
                             and data from Spectrum, including the population size, HIV prevalence, incidence (per thousand), people living

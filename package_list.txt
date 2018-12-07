@@ -1,0 +1,14 @@
+tidyr
+numDeriv
+shiny
+shinyjs
+glue
+devtools
+purrr
+rhandsontable
+data.table
+ggplot2
+memoise
+magrittr
+first90
+shinycssloaders
