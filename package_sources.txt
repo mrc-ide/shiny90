@@ -1,2 +1,2 @@
-mrc-ide/first90@exports
+mrc-ide/first90
 andrewsali/shinycssloaders
