@@ -34,20 +34,20 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
     }
     if (!is.null(modelRunState$optim)) {
         dir.create("model_outputs")
-        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("par.rds")), function(path) {
+        paths <- doAndRememberPath(paths, file.path("model_outputs", "par.rds"), function(path) {
             saveRDS(modelRunState$optim$par, file = path)
         })
         if (!is.null(modelRunState$spectrum_outputs)) {
-            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "spectrum_output.csv"), function(path) {
                 write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
             })
         }
         if (!is.null(modelRunState$sample)) {
-            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("sample.rds")), function(path) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "sample.rds"), function(path) {
                 saveRDS(modelRunState$sample, file = path)
             })
 
-            paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("hessian.rds")), function(path) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "hessian.rds"), function(path) {
                 saveRDS(modelRunState$optim$hessian, file = path)
             })
         }

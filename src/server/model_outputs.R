@@ -81,7 +81,7 @@ makeProgress <- function(n, every = 0.1) {
         counter <<- counter + 1L
         now <- as.numeric(Sys.time())
         if (now - last_time > every) {
-            inc <- ((counter - last_counter) / n)*0.9
+            inc <- ((counter - last_counter) / n)*(1-SAMPLE_DRAW_PROGRESS)
             shiny::incProgress(inc, detail = glue::glue("Running simulation {counter} of {n}"))
             last_time <<- now
             last_counter <<- counter
@@ -89,11 +89,13 @@ makeProgress <- function(n, every = 0.1) {
     }
 }
 
+SAMPLE_DRAW_PROGRESS <- 0.1
+
 runSimulations <- function(opt, likdat, spectrumData, numSimul, modelRunState) {
 
     shiny::withProgress(message = 'Running simulations', value = 0, detail="Drawing sample", {
         sample <- first90::simul.sample(opt$hessian, opt$par, spectrumData, sim = numSimul, likdat = likdat)
-        shiny::incProgress(1/10)
+        shiny::incProgress(SAMPLE_DRAW_PROGRESS)
         simul <- first90::simul.run(sample, spectrumData, progress=makeProgress(numSimul))
         modelRunState$sample <- sample
     })
