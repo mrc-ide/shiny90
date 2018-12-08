@@ -28,6 +28,7 @@ mapHeaders <- function(dataframe, from, to) {
     i <- match(from, names(dataframe))
     j <- !is.na(i)
     names(dataframe)[i[j]] <- to[j]
+    str(dataframe)
     dataframe
 }
 
@@ -67,11 +68,12 @@ castToNumeric <- function(dataframe, headers){
 
 mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion) {
     if (isRegion){
-        key <- paste(country, countryOrRegionName, "-")
+        key <- paste(country, countryOrRegionName, sep="-")
     }
     else {
         key <- country
     }
+    str(key)
 
     df <- df[df$country == iconv(key, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
 
@@ -90,7 +92,6 @@ mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion)
     colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
 
     df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
-
 }
 
 resetSurveyToDefaults <- function(state, country, countryOrRegionName, isRegion) {
@@ -111,7 +112,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
                 state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$country, spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
-
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
             else {
