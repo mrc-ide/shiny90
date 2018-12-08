@@ -11,6 +11,6 @@ source("src/tests/logic.R")
 source("src/tests/webDriverNavigation.R")
 
 tryCatch({
-     testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE, stop_on_warning = TRUE)
-   # testthat::test_file("src/tests/testthat/testSurvey.R")
+    testthat::test_dir("src/tests/testthat", stop_on_failure = TRUE, stop_on_warning = TRUE)
+  #  testthat::test_file("src/tests/testthat/testLoading.R")
 }, finally={wd$close()})

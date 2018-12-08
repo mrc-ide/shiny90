@@ -72,12 +72,15 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
             })
 
             state$simul <- tryCatch({
-                runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul)
+                runSimulations(state$optim, state$likelihood(), spectrumFilesState$combinedData(), input$numSimul, state)
             }, error = function(e) {
                 str(e)
                 setError(state, "Running simulations failed. Please check your input data.")
             })
         }
+
+        surveyAndProgramData$touched <- FALSE
+        spectrumFilesState$touched <- FALSE
 
     })
 
@@ -162,23 +165,16 @@ invalidateOutputsWhenInputsChange <- function(state, surveyAndProgramData, spect
         state$simul <- NULL
     }
 
-    # A change event will occur the first time the user navigates to the input data page
-    # but this first change event doesn't represent a change to the data.
-    # So we only reset the state on subsequent change events.
-    shiny::observeEvent(surveyAndProgramData$survey, ignoreNULL = FALSE, {
-        if (surveyAndProgramData$surveyTableChanged > 1){
+    shiny::observeEvent(surveyAndProgramData$touched,  {
+        if (surveyAndProgramData$touched){
             invalidateOutputs()
         }
     })
 
-    shiny::observeEvent(surveyAndProgramData$program_data, ignoreNULL = FALSE, {
-        if (surveyAndProgramData$programTableChanged > 1){
+    shiny::observeEvent(spectrumFilesState$touched, {
+        if (spectrumFilesState$touched){
             invalidateOutputs()
         }
-    })
-
-    shiny::observeEvent(spectrumFilesState$combinedData(), ignoreNULL = FALSE, {
-        invalidateOutputs()
     })
 
     state

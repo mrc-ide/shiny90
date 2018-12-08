@@ -32,11 +32,25 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
             write.csv(surveyAndProgramData$program_data_human_readable(), file = path, row.names = FALSE, na = "")
         })
     }
-    if (!is.null(modelRunState$spectrum_outputs)) {
+    if (!is.null(modelRunState$optim)) {
         dir.create("model_outputs")
-        paths <- doAndRememberPath(paths, file.path("model_outputs", glue::glue("spectrum_output.csv")), function(path) {
-            write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
+        paths <- doAndRememberPath(paths, file.path("model_outputs", "par.rds"), function(path) {
+            saveRDS(modelRunState$optim$par, file = path)
         })
+        if (!is.null(modelRunState$spectrum_outputs)) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "spectrum_output.csv"), function(path) {
+                write.csv(modelRunState$spectrum_outputs, file = path, row.names = FALSE)
+            })
+        }
+        if (!is.null(modelRunState$sample)) {
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "sample.rds"), function(path) {
+                saveRDS(modelRunState$sample, file = path)
+            })
+
+            paths <- doAndRememberPath(paths, file.path("model_outputs", "hessian.rds"), function(path) {
+                saveRDS(modelRunState$optim$hessian, file = path)
+            })
+        }
     }
 
     paths <- doAndRememberPath(paths, "README.md", function(path) {
@@ -130,6 +144,28 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 modelRunState$simul <- NULL
                 modelRunState$state <- "not_run"
 
+                outputsPath <- "model_outputs/par.rds"
+                if (file.exists(outputsPath)) {
+                    modelRunState$optim <- list(par=readRDS(outputsPath))
+                    hessianPath <- "model_outputs/hessian.rds"
+                    if (file.exists(hessianPath)) {
+                        modelRunState$optim$hessian<- readRDS(hessianPath)
+                    }
+                    samplePath <- "model_outputs/sample.rds"
+                    if (file.exists(samplePath)) {
+                        modelRunState$sample <- readRDS(samplePath)
+                        shiny::withProgress(message = 'Running simulations', value = 0, {
+                            shiny::incProgress(1/10)
+                            simul <- first90::simul.run(modelRunState$sample, spectrumFilesState$combinedData(),
+                                                        progress=makeProgress(nrow(modelRunState$sample)))
+                            modelRunState$simul <- simul
+                        })
+                    }
+                    modelRunState$state <- "converged"
+                }
+
+                surveyAndProgramData$touched <- FALSE
+                spectrumFilesState$touched <- FALSE
             })
 
             surveyAndProgramData$loadNewData <- FALSE
