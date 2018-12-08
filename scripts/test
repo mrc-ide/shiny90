@@ -25,5 +25,5 @@ function cleanup {
 }
 trap cleanup exit INT TERM
 
-src/tests/unittest.R
-src/tests/test.R
+$PWD/src/tests/unittest.R
+$PWD/src/tests/test.R
