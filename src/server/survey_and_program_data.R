@@ -65,45 +65,37 @@ castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
 
-mapSurveyToInternalModel <- function(df, countryOrRegionName, isRegion) {
+mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion) {
     if (isRegion){
-
+        key <- paste(country, countryOrRegionName, "-")
     }
     else {
-        df <- df[df$country == iconv(countryOrRegionName, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
-
-        df <- data.frame(df$country,
-                        df$surveyid,
-                        df$year,
-                        df$agegr,
-                        df$sex,
-                        df$hivstatus,
-                        df$est*100,
-                        df$se*100,
-                        df$ci_l*100,
-                        df$ci_u*100,
-                        as.integer(df$counts))
-
-        colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
-
-        df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
+        key <- country
     }
+
+    df <- df[df$country == iconv(key, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
+
+    df <- data.frame(df$country,
+                    df$surveyid,
+                    df$year,
+                    df$agegr,
+                    df$sex,
+                    df$hivstatus,
+                    df$est*100,
+                    df$se*100,
+                    df$ci_l*100,
+                    df$ci_u*100,
+                    as.integer(df$counts))
+
+    colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
+
+    df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
 
 }
 
-mapProgramToInternalModel <- function(df, countryOrRegionName, isRegion) {
-
-    if (isRegion){
-
-    }
-    else{
-        castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$countryOrRegionName, NULL), programDataHeaders)
-    }
-}
-
-resetSurveyToDefaults <- function(state, country) {
+resetSurveyToDefaults <- function(state, country, countryOrRegionName, isRegion) {
     state$survey <- as.data.frame(survey_hts)
-    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), country)
+    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), country, countryOrRegionName, isRegion)
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -118,7 +110,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$countryOrRegionName())){
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
-                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
+                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$country, spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
 
                 state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
             }
@@ -240,7 +232,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     shiny::observeEvent(input$resetSurveyData, {
-        resetSurveyToDefaults(state, spectrumFilesState$country)
+        resetSurveyToDefaults(state, spectrumFilesState$country, spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
         state$touched <- TRUE
     })
 
