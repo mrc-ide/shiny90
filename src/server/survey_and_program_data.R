@@ -68,7 +68,7 @@ castToNumeric <- function(dataframe, headers){
 
 mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion) {
     if (isRegion){
-        key <- paste(country, countryOrRegionName, sep="-")
+        key <- paste(country, countryOrRegionName, sep=" - ")
     }
     else {
         key <- country
