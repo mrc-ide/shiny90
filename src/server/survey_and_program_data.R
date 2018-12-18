@@ -28,7 +28,6 @@ mapHeaders <- function(dataframe, from, to) {
     i <- match(from, names(dataframe))
     j <- !is.na(i)
     names(dataframe)[i[j]] <- to[j]
-    str(dataframe)
     dataframe
 }
 
@@ -73,7 +72,6 @@ mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion)
     else {
         key <- country
     }
-    str(key)
 
     df <- df[df$country == iconv(key, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
 
