@@ -10,10 +10,10 @@ jobs:
       - run: ./scripts/install_geckodriver.sh
       - restore_cache:
           keys:
-            - R-{{ checksum "bootstrap.R" }}
+            - R-{{ checksum "./scripts/bootstrap.R" }}
             - R- # used if checksum fails
       - run: ./scripts/bootstrap
-      - run: ./sccripts/bootstrap-dev.R
+      - run: ./scripts/bootstrap-dev.R
       - save_cache:
           key: R-{{ checksum "bootstrap.R" }}
           paths:
