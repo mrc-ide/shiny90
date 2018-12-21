@@ -84,5 +84,5 @@ testthat::test_that("warning is not shown if single regional file is uploaded an
 
     warningBox <- wd$findElement("css", inActivePane("#multiple-region-warning"))
     testthat::expect_false(isVisible(warningBox))
-    expectTextEqual("Centrale", wd$findElement("css", "#workingSet_name"))
+    expectTextEqual("Togo - Centrale", wd$findElement("css", "#workingSet_name"))
 })

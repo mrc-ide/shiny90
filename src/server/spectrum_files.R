@@ -42,9 +42,9 @@ spectrumFiles <- function(input, output, state) {
         !is.null(state$regions()) && length(state$regions()) == 1
     })
 
-    state$countryOrRegionName <- shiny::reactive({
+    state$countryAndRegionName <- shiny::reactive({
         if (state$treatAsRegional()){
-            state$regions()[[1]]
+            paste(state$country, state$regions()[[1]], sep=" - ")
         }
         else {
             state$country
@@ -197,8 +197,8 @@ spectrumFiles <- function(input, output, state) {
         state$aggregatingToNational()
     })
 
-    output$countryOrRegionName <- shiny::reactive({
-        state$countryOrRegionName()
+    output$countryAndRegionName <- shiny::reactive({
+        state$countryAndRegionName()
     })
 
     renderSpectrumFileList(input, output, state)
@@ -209,7 +209,7 @@ spectrumFiles <- function(input, output, state) {
     shiny::outputOptions(output, "spectrumFilePairError", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "usePJNZ", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "aggregatingToNational", suspendWhenHidden = FALSE)
-    shiny::outputOptions(output, "countryOrRegionName", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "countryAndRegionName", suspendWhenHidden = FALSE)
 
     state
 }

@@ -48,7 +48,7 @@ panelSpectrum <- function() {
 
             shiny::div("",
                 shiny::h3("", class = "mt-5",
-                    shiny::textOutput("countryOrRegionName", inline = TRUE),
+                    shiny::textOutput("countryAndRegionName", inline = TRUE),
                     shiny::span("data")
                 ),
                 shiny::conditionalPanel(condition = "output.aggregatingToNational",

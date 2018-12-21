@@ -65,15 +65,9 @@ castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
 
-mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion) {
-    if (isRegion){
-        key <- paste(country, countryOrRegionName, sep=" - ")
-    }
-    else {
-        key <- country
-    }
+mapSurveyToInternalModel <- function(df, countryAndRegionName) {
 
-    df <- df[df$country == iconv(key, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
+    df <- df[df$country == iconv(countryAndRegionName, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
 
     df <- data.frame(df$country,
                     df$surveyid,
@@ -92,9 +86,9 @@ mapSurveyToInternalModel <- function(df, country, countryOrRegionName, isRegion)
     df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
 }
 
-resetSurveyToDefaults <- function(state, country, countryOrRegionName, isRegion) {
+resetSurveyToDefaults <- function(state, country, countryAndRegionName) {
     state$survey <- as.data.frame(survey_hts)
-    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), country, countryOrRegionName, isRegion)
+    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), countryAndRegionName)
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -104,13 +98,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$touched <- FALSE
     state$loadNewData <- TRUE
 
-    shiny::observeEvent(spectrumFilesState$countryOrRegionName(), {
+    shiny::observeEvent(spectrumFilesState$dataSets, {
 
-        if (!is.null(spectrumFilesState$countryOrRegionName())){
+        if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
                 state$survey <- as.data.frame(survey_hts)
-                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$country, spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
-                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$country, NULL), programDataHeaders)
+                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$countryAndRegionName())
+                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
             }
             else {
                 state$loadNewData <- TRUE
@@ -197,7 +191,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
-        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newSurvey)
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", Country) == spectrumFilesState$countryAndRegionName())) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
             state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
@@ -219,7 +213,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$country)) < nrow(newProgram)
+        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$countryAndRegionName())) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
             state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
@@ -230,7 +224,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     shiny::observeEvent(input$resetSurveyData, {
-        resetSurveyToDefaults(state, spectrumFilesState$country, spectrumFilesState$countryOrRegionName(), spectrumFilesState$treatAsRegional())
+        resetSurveyToDefaults(state, spectrumFilesState$country, spectrumFilesState$countryAndRegionName())
         state$touched <- TRUE
     })
 
