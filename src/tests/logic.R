@@ -97,7 +97,7 @@ runModel <- function() {
     enterText(numSimul, "0")
 
     runModelButton$clickElement()
-    waitForShinyToNotBeBusy(wd)
+    waitForShinyToNotBeBusy(wd, 20)
 }
 
 waitForDownloadedFile <- function(name) {
