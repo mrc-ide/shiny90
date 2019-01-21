@@ -4,7 +4,7 @@ workingSetSection <- function() {
             edit_link("editWorkingSet")
         ),
         shiny::div("",
-            shiny::tags$strong("Country:"),
+            shiny::tags$strong("Country or region:"),
             shiny::span(id = "workingSet_name", class = "shiny-text-output"),
             shiny::tags$br(),
             shiny::tags$strong("Working set notes:"),

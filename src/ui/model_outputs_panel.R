@@ -43,7 +43,7 @@ panelModelOutputs <- function() {
                     ),
                     shiny::tabPanel("ART coverage",
                         div("", class="output-table outputs-art-coverage",
-                            select_options("art_coverage", includeStatus = FALSE),
+                            select_options("art_coverage", includeStatus = FALSE, includeAge = FALSE),
                             shiny::dataTableOutput("outputs_table_art_coverage")
                         )
                     )
@@ -53,7 +53,7 @@ panelModelOutputs <- function() {
     )
 }
 
-select_options <- function(id, includeStatus = TRUE) {
+select_options <- function(id, includeStatus = TRUE, includeAge = TRUE) {
 
     if (includeStatus){
         status <- shiny::selectizeInput(
@@ -64,17 +64,21 @@ select_options <- function(id, includeStatus = TRUE) {
     else{
         status <- NULL
     }
-    list(
-        shiny::selectizeInput(
-            paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
-            multiple = TRUE,
-            selected = "15-49"
-        ),
-        shiny::selectizeInput(
+    if (includeAge){
+        age <- shiny::selectizeInput(
+                        paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
+                        multiple = TRUE,
+                        selected = "15-49")
+    }
+    else{
+        age <- NULL
+    }
+    list(shiny::selectizeInput(
             paste0(id, '_sex'), 'Sex', choices = c("both", "male", "female"),
             multiple = TRUE,
             selected = "both"
         ),
+        age,
         status
     )
 }

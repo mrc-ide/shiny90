@@ -26,7 +26,7 @@ panelSurvey <- function() {
 }
 
 panelProgram <- function() {
-    shiny::div("",
+    shiny::div("", class="mb-3",
         shiny::tags$p("The following is programmatic data sourced from national testing programs. Please review, update, and correct (if applicable)
         the programmatic data below that describes the annual number of HIV tests* performed at the national level among the population aged 15+
         years of age (and the number of positive tests)."),

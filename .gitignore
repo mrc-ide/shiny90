@@ -8,3 +8,5 @@ nohup\.out
 packages/*
 selenium_files/*
 selenium_screenshots/*
+.Rhistory
+*/.Rhistory

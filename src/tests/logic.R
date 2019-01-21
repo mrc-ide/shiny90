@@ -51,7 +51,7 @@ verifyPJNZFileUpload <- function(filename) {
 
     waitFor(function(){
         heading <- waitForChildElement(section, "h3")
-        getText(heading) == "Uploaded PJNZ files"
+        getText(heading) == "Uploaded Spectrum files"
     })
 
     uploadedFile <- waitForChildElement(section, "li > span")

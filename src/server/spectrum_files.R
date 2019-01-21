@@ -2,6 +2,8 @@ spectrumFiles <- function(input, output, state) {
 
     state$touched <- FALSE
     state$country <- NULL
+    state$dataSets <- NULL
+
     state$anyDataSets <- shiny::reactive({ length(state$dataSets) > 0 })
     state$combinedData <- shiny::reactive({
         if (state$anyDataSets()) {
@@ -19,6 +21,33 @@ spectrumFiles <- function(input, output, state) {
         }
         else {
             first90::get_pjnz_summary_data(state$combinedData())
+        }
+    })
+
+    state$regions <- shiny::reactive({
+        if (state$anyDataSets()) {
+            regions <- lapply(state$dataSets, function(x) if (is.null(x$region)) NA else x$region)
+            regions[!is.na(regions)]
+        }
+        else {
+            c()
+        }
+    })
+
+    state$aggregatingToNational <- shiny::reactive({
+        !is.null(state$regions()) && length(state$regions()) > 1
+    })
+
+    state$treatAsRegional <- shiny::reactive({
+        !is.null(state$regions()) && length(state$regions()) == 1
+    })
+
+    state$countryAndRegionName <- shiny::reactive({
+        if (state$treatAsRegional()){
+            paste(state$country, state$regions()[[1]], sep=" - ")
+        }
+        else {
+            state$country
         }
     })
 
@@ -66,21 +95,15 @@ spectrumFiles <- function(input, output, state) {
                     pjn_file <- first90::file_in_zip(row$datapath, ".PJN$")
                     pjn <- read.csv(pjn_file, as.is = TRUE)
                     newCountry <- first90::get_pjn_country(pjn)
+                    newRegion <- first90::get_pjn_region(pjn)
 
                     if (!state$anyDataSets() || newCountry == state$country){
-
-                        if (!state$anyDataSets()) {
-                            state$country = newCountry
-                        }
-
-                        dataSet = list(name = row$name,
-                                        data = first90::extract_pjnz(row$datapath))
-
-                        state$dataSets <- c(state$dataSets, list(dataSet))
-                        state$touched <- TRUE
+                        data <- first90::extract_pjnz(row$datapath)
+                        addDataSet(state, data, row$name, newCountry, newRegion)
                     }
                     else {
-                        state$spectrumFileError <- "You can only work with one country at a time. If you want to upload data for a different country you will have to remove the previously loaded file."
+                        state$spectrumFileError <- "You can only work with one country at a time.
+                        If you want to upload data for a different country you will have to remove the previously loaded files."
                         shinyjs::reset("spectrumFile")
                     }
                 },
@@ -130,24 +153,16 @@ spectrumFiles <- function(input, output, state) {
                     else {
                         pjn <- read.csv(pjn_file, as.is = TRUE)
                         newCountry <- first90::get_pjn_country(pjn)
-                        data <- first90::extract_pjnz(dp_file = dp_file, pjn_file = pjn_file)
-                    }
+                        newRegion <- first90::get_pjn_region(pjn)
 
-                    if (!is.null(data)){
                         if (!state$anyDataSets() || newCountry == state$country){
-                            if (!state$anyDataSets()) {
-                                state$country = newCountry
-                            }
-
-                            dataSet = list(name = paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), data = data)
-                            state$dataSets <- c(state$dataSets, list(dataSet))
-                            state$touched <- TRUE
+                            data <- first90::extract_pjnz(dp_file = dp_file, pjn_file = pjn_file)
+                            addDataSet(state, data, paste(inFiles[[1]][[1]],inFiles[[1]][[2]], sep="+"), newCountry, newRegion)
                         }
                         else {
                             state$spectrumFilePairError <- "You can only work with one country at a time.
                         If you want to upload data for a different country you will have to remove the previously loaded files."
                             shinyjs::reset("spectrumFilePair")
-                            NULL
                         }
                     }
                 },
@@ -165,7 +180,6 @@ spectrumFiles <- function(input, output, state) {
     })
 
     output$anySpectrumDataSets <- shiny::reactive({ state$anyDataSets() })
-    output$spectrumFilesCountry <- shiny::reactive({ state$country })
     output$spectrum_combinedData <- shiny::renderDataTable({ state$asDataFrame() }, options = c(
         defaultDataTableOptions(),
         list(
@@ -179,6 +193,14 @@ spectrumFiles <- function(input, output, state) {
     output$spectrumFileError <- shiny::reactive({ state$spectrumFileError })
     output$spectrumFilePairError <- shiny::reactive({ state$spectrumFilePairError })
 
+    output$aggregatingToNational <- shiny::reactive({
+        state$aggregatingToNational()
+    })
+
+    output$countryAndRegionName <- shiny::reactive({
+        state$countryAndRegionName()
+    })
+
     renderSpectrumFileList(input, output, state)
     renderSpectrumPlots(output, state$pjnz_summary, state)
 
@@ -186,6 +208,8 @@ spectrumFiles <- function(input, output, state) {
     shiny::outputOptions(output, "spectrumFileError", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "spectrumFilePairError", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "usePJNZ", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "aggregatingToNational", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "countryAndRegionName", suspendWhenHidden = FALSE)
 
     state
 }
@@ -195,6 +219,21 @@ addDynamicObserver <- function(input, observerList, eventId, handler) {
         observerList[[eventId]] <- shiny::observeEvent(input[[eventId]], ignoreInit = TRUE, { handler() })
     }
     observerList
+}
+
+addDataSet <- function(state, data, name, newCountry, newRegion){
+
+    if (is.null(data))
+        return()
+
+    if (!state$anyDataSets()) {
+        state$country = newCountry
+    }
+
+    dataSet = list(name = name, data = data, region = newRegion)
+    state$dataSets <- c(state$dataSets, list(dataSet))
+    state$touched <- TRUE
+
 }
 
 renderSpectrumFileList <- function(input, output, state) {

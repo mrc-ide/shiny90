@@ -93,3 +93,25 @@ testthat::test_that("can save digest from output tab", {
     expectElementPresent(wd, inActivePane("#outputs_prv_pos_yld"))
 
 })
+
+testthat::test_that("can save and load regional data", {
+    wd$navigate(appURL)
+    startNewWorkingSet(wd)
+
+    uploadSpectrumFile(wd, dir="../../../sample_files/", filename = "Togo_Centrale_2018.PJNZ")
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+
+    downloadPath <- file.path(downloadedFiles, "Togo-Centrale.zip.shiny90")
+    wd$findElement("css", "#digestDownload1")$clickElement()
+    waitForAndTryAgain(function() { file.exists(downloadPath) }, function() { wd$findElement("css", "#digestDownload1")$clickElement()})
+
+    # Load and check
+    wd$navigate(appURL)
+    loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "Togo-Centrale.zip.shiny90")
+
+    expectTextEqual("Togo - Centrale", wd$findElement("css", "#workingSet_name"))
+
+    switchTab(wd, "Upload survey data")
+    switchTab(wd, "Upload programmatic data")
+})

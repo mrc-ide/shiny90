@@ -151,9 +151,7 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
     output$outputs_table_art_coverage <- renderModelResultsTable(state, function(state) {
 
         rbindlist(lapply(input$art_coverage_sex, function(sex) {
-            rbindlist(lapply(input$art_coverage_agegr, function(age) {
-                first90::tab_out_artcov(state$mod, state$fp, age_grp = age, gender = sex)
-            }))
+                first90::tab_out_artcov(state$mod, state$fp, gender = sex)
         }))
     })
 }

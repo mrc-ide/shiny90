@@ -7,17 +7,17 @@ jobs:
       - run: apt-get update && apt-get install iceweasel -y
       - checkout
       - run: git submodule init && git submodule update
-      - run: ./install_geckodriver.sh
+      - run: ./scripts/install_geckodriver.sh
       - restore_cache:
           keys:
-            - R-{{ checksum "bootstrap.R" }}
+            - R-{{ checksum "./scripts/bootstrap.R" }}
             - R- # used if checksum fails
-      - run: ./bootstrap
-      - run: ./bootstrap-dev.R
+      - run: ./scripts/bootstrap
+      - run: ./scripts/bootstrap-dev.R
       - save_cache:
-          key: R-{{ checksum "bootstrap.R" }}
+          key: R-{{ checksum "./scripts/bootstrap.R" }}
           paths:
             - packages
-      - run: ./test
+      - run: ./scripts/test
       - store_artifacts:
           path: selenium_screenshots

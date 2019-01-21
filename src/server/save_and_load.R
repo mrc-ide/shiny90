@@ -18,12 +18,12 @@ writeFilesForDigest <- function(workingSet, spectrumFilesState, surveyAndProgram
     paths <- purrr::reduce(spectrumFilesState$dataSets, .init = paths, function(paths, dataSet) {
         path <- file.path("spectrum_data", glue::glue("{dataSet$name}.rds"))
         doAndRememberPath(paths, path, function(path) {
-            saveRDS(dataSet$data, file = path)
+            saveRDS(dataSet, file = path)
         })
     })
     if (spectrumFilesState$anyDataSets()) {
         paths <- doAndRememberPath(paths, "country.txt", function(path) {
-            file.writeText(path, spectrumFilesState$country)
+            file.writeText(path, spectrumFilesState$countryAndRegionName())
         })
         paths <- doAndRememberPath(paths, "survey.csv", function(path) {
             write.csv(surveyAndProgramData$survey_data_human_readable(), file = path, row.names = FALSE, na = "")
@@ -73,7 +73,10 @@ withDir <- function(dir, expr) {
 downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
 
     shiny::downloadHandler(
-        filename = function() { glue::glue("{workingSet$name()}.zip.shiny90") },
+        filename = function() {
+            name <- gsub(" ", "", workingSet$name())
+            glue::glue("{name}.zip.shiny90")
+        },
         contentType = "application/zip",
         content = function(file) {
             readmeTemplate <- file.readText("template_for_digest_readme.md")
@@ -97,7 +100,7 @@ handleSave <- function(output, workingSet, spectrumFilesState, surveyAndProgramD
 
 readCountry <- function() {
     if (file.exists("country.txt")) {
-        gsub("[\r\n]", "", file.readText("country.txt"))
+        strsplit(gsub("[\r\n]", "", file.readText("country.txt")), " - ")[[1]][1]
     } else {
         NULL
     }
@@ -134,9 +137,11 @@ handleLoad <- function(input, workingSet, surveyAndProgramData, spectrumFilesSta
                 surveyAndProgramData$survey <- readCSVIfPresent("survey.csv", c(surveyDataHeaders, sharedHeaders))
                 surveyAndProgramData$program_data <- readCSVIfPresent("program.csv", c(programDataHeaders, sharedHeaders))
                 spectrumFilesState$dataSets <- purrr::map(list.files("spectrum_data"), function(path) {
+                    ds = readRDS(file.path("spectrum_data", path))
                     list(
                         name = removeExtension(path, "rds"),
-                        data = readRDS(file.path("spectrum_data", path))
+                        data = ds$data,
+                        region = ds$region
                     )
                 })
 
