@@ -20,7 +20,7 @@ wd <- RSelenium::remoteDriver(
     extraCapabilities = c(
         list(
             "moz:firefoxOptions" = list(
-                args = list('--headless')
+                args = list('--headless', "--start-maximized")
             ),
             "screen-resolution" = "1080x1920"
         ),
@@ -94,9 +94,9 @@ numberScreenshot <- local({
 waitFor <- function(predicate, timeout = 7) {
     waited <- 0
     while (!predicate()) {
-        Sys.sleep(0.25)
-        waited <- waited + 0.25
-        if (waited >= timeout) {
+         Sys.sleep(0.25)
+         waited <- waited + 0.25
+         if (waited >= timeout) {
             num <- numberScreenshot()
             screenshotPath <- file.path(screenshotsFolder, glue::glue('test{num}.png'))
             wd$screenshot(file = screenshotPath)
