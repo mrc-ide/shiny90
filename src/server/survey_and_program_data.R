@@ -65,9 +65,13 @@ castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
 
+removeSpecialChars <- function(name) {
+    iconv(name, "UTF-8", "ASCII//TRANSLIT")
+}
+
 mapSurveyToInternalModel <- function(df, countryAndRegionName) {
 
-    df <- df[df$country == iconv(countryAndRegionName, "UTF-8", "ASCII//TRANSLIT") & df$outcome == "evertest", ]
+    df <- df[removeSpecialChars(df$country) == removeSpecialChars(countryAndRegionName) & df$outcome == "evertest", ]
 
     df <- data.frame(df$country,
                     df$surveyid,
@@ -191,7 +195,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
-        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", Country) == spectrumFilesState$countryAndRegionName())) < nrow(newSurvey)
+        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", removeSpecialChars(Country)) == removeSpecialChars(spectrumFilesState$countryAndRegionName()))) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
             state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
