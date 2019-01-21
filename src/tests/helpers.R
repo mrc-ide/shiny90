@@ -91,7 +91,7 @@ numberScreenshot <- local({
     }
 })
 
-waitFor <- function(predicate, timeout = 5) {
+waitFor <- function(predicate, timeout = 7) {
     waited <- 0
     while (!predicate()) {
         Sys.sleep(0.25)
