@@ -15,7 +15,7 @@ jobs:
       - run: ./scripts/bootstrap
       - run: ./scripts/bootstrap-dev.R
       - save_cache:
-          key: R-{{ checksum "bootstrap.R" }}
+          key: R-{{ checksum "./scripts/bootstrap.R" }}
           paths:
             - packages
       - run: ./scripts/test
