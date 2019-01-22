@@ -70,6 +70,20 @@ removeSpecialChars <- function(name) {
     iconv(name, "UTF-8", "ASCII//TRANSLIT")
 }
 
+createEmptySurveyData <- function(countryAndRegionName) {
+    data.frame(country=countryAndRegionName,
+                surveyid=character(1),
+                year=rep(NA_integer_, 1),
+                agegr=character(1),
+                sex=character(1),
+                hivstatus=character(1),
+                est=rep(NA_real_, 1),
+                se=rep(NA_real_, 1),
+                ci_l=rep(NA_real_, 1),
+                ci_u=rep(NA_real_, 1),
+                counts=rep(NA_integer_, 1))
+}
+
 mapSurveyToInternalModel <- function(df, countryAndRegionName) {
 
     df <- df[removeSpecialChars(df$country) == removeSpecialChars(countryAndRegionName) & df$outcome == "evertest", ]
@@ -91,13 +105,7 @@ mapSurveyToInternalModel <- function(df, countryAndRegionName) {
     df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
 }
 
-resetSurveyToDefaults <- function(state, country, countryAndRegionName) {
-    state$survey <- as.data.frame(survey_hts)
-    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), countryAndRegionName)
-}
-
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-    data("survey_hts", package="first90")
 
     state$touched <- FALSE
     state$loadNewData <- TRUE
@@ -106,8 +114,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
-                state$survey <- as.data.frame(survey_hts)
-                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$countryAndRegionName())
+                state$survey <- createEmptySurveyData(spectrumFilesState$countryAndRegionName())
                 state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
             }
             else {
@@ -226,11 +233,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
 
         shinyjs::reset("programData")
-    })
-
-    shiny::observeEvent(input$resetSurveyData, {
-        resetSurveyToDefaults(state, spectrumFilesState$country, spectrumFilesState$countryAndRegionName())
-        state$touched <- TRUE
     })
 
     # We track change events so that we know when to reset the model run state.
