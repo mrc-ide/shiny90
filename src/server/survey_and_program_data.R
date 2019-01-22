@@ -39,7 +39,7 @@ mapHeadersFromHumanReadable <- function(dataframe, headers) {
     mapHeaders(dataframe, unname(headers), names(headers))
 }
 
-sharedHeaders <- list(country= "Country",
+sharedHeaders <- list(country= "Country or region",
                         year= "Year",
                         hivstatus= "HIV Status",
                         sex= "Sex",
@@ -66,6 +66,7 @@ castToNumeric <- function(dataframe, headers){
 }
 
 removeSpecialChars <- function(name) {
+    name <- gsub("\t", "", name)
     iconv(name, "UTF-8", "ASCII//TRANSLIT")
 }
 
@@ -160,10 +161,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey_data_human_readable(),
-        colHeaders = c("Country","Survey Id","Year","Age Group","Sex","HIV Status","Estimate (%)", "Standard Error (%)",
+        colHeaders = c("Country or region","Survey Id","Year","Age Group","Sex","HIV Status","Estimate (%)", "Standard Error (%)",
         "Lower Confidence Interval (%)",
         "Upper Confidence Interval (%)", "Counts"), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("Estimate (%)", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Standard Error (%)", type="numeric", renderer = number_renderer) %>%
@@ -174,7 +175,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
             rhandsontable::hot_col("Total Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total Positive Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
@@ -192,12 +193,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         newSurvey <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongSurveyHeaders <<- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
+        state$wrongSurveyHeaders <- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
-        state$wrongSurveyCountry <<- !state$wrongSurveyHeaders && nrow(subset(newSurvey, gsub("\t", "", removeSpecialChars(Country)) == removeSpecialChars(spectrumFilesState$countryAndRegionName()))) < nrow(newSurvey)
+        state$wrongSurveyCountry <- !state$wrongSurveyHeaders &&
+        nrow(newSurvey[removeSpecialChars(newSurvey[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
-            state$survey <<- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
+            state$survey <- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
             state$touched <- TRUE
         }
 
@@ -214,12 +216,12 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         
         newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
+        state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(subset(newProgram, gsub("\t", "", Country) == spectrumFilesState$countryAndRegionName())) < nrow(newProgram)
+        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgram[removeSpecialChars(newProgram[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
-            state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
+            state$program_data <- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
             state$touched <- TRUE
         }
 
@@ -237,25 +239,25 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(input$hot_survey, {
         if(!is.null(input$hot_survey)){
-            state$survey <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
+            state$survey <- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
             # for unknown reasons this event fires twice on first load
             # so only track changes after the first 2 changes
             if (state$surveyTableChanged > 1){
                 state$touched <- TRUE
             }
-            state$surveyTableChanged <<- state$surveyTableChanged + 1
+            state$surveyTableChanged <- state$surveyTableChanged + 1
         }
     })
 
     shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
-            state$program_data <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
+            state$program_data <- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
             # for unknown reasons this event fires twice on first load
             # so only track changes after the first 2 changes
             if (state$programTableChanged > 1){
                 state$touched <- TRUE
             }
-            state$programTableChanged <<- state$programTableChanged + 1
+            state$programTableChanged <- state$programTableChanged + 1
         }
     })
 

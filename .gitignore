@@ -10,3 +10,5 @@ selenium_files/*
 selenium_screenshots/*
 .Rhistory
 */.Rhistory
+.Rproj.user
+*.Rproj
