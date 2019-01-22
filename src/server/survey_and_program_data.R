@@ -91,13 +91,13 @@ mapSurveyToInternalModel <- function(df, countryAndRegionName) {
 }
 
 resetSurveyToDefaults <- function(state, country, countryAndRegionName) {
-    state$survey <- as.data.frame(survey_hts)
-    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), countryAndRegionName)
+    state$survey <- as.data.frame(survey_hts_master)
+    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts_master), countryAndRegionName)
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-    data("survey_hts", package="first90")
-    data("prgm_dat", package="first90")
+    data("survey_hts_master", package="first90")
+    data("prgm_dat_master", package="first90")
 
     state$touched <- FALSE
     state$loadNewData <- TRUE
@@ -106,9 +106,9 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
-                state$survey <- as.data.frame(survey_hts)
-                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$countryAndRegionName())
-                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
+                state$survey <- as.data.frame(survey_hts_master)
+                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts_master), spectrumFilesState$countryAndRegionName())
+                state$program_data <- castToNumeric(first90::select_prgmdata(prgm_dat_master, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
             }
             else {
                 state$loadNewData <- TRUE
