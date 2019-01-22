@@ -14,13 +14,19 @@ testthat::test_that("warning is shown if incomplete program data is present", {
 
 testthat::test_that("warning is not shown if complete program data is present", {
 
-    uploadSpectrumFileAndSwitchTab("Review input data")
+    uploadSpectrumFileAndSwitchTab("Upload programmatic data")
+    uploadFile(wd, filename = "testprogramdata_malawi.csv", inputId="#programData")
+    Sys.sleep(2)
 
+    switchTab(wd, "Review input data")
     warning <- wd$findElement("css", ".mt-5.alert.alert-warning")
 
     waitFor(function() {
         !isVisible(warning)
     })
+
+    rows <- wd$findElements("css", "#hot_program .ht_master tbody tr")
+    testthat::expect_equal(length(rows), 3)
 })
 
 testthat::test_that("can upload a new set of program data for the same country", {
