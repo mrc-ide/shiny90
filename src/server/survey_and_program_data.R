@@ -84,27 +84,6 @@ createEmptySurveyData <- function(countryAndRegionName) {
                 counts=rep(NA_integer_, 1))
 }
 
-mapSurveyToInternalModel <- function(df, countryAndRegionName) {
-
-    df <- df[removeSpecialChars(df$country) == removeSpecialChars(countryAndRegionName) & df$outcome == "evertest", ]
-
-    df <- data.frame(df$country,
-                    df$surveyid,
-                    df$year,
-                    df$agegr,
-                    df$sex,
-                    df$hivstatus,
-                    df$est*100,
-                    df$se*100,
-                    df$ci_l*100,
-                    df$ci_u*100,
-                    as.integer(df$counts))
-
-    colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
-
-    df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
-}
-
 anySurveyData <- function(df) {
     !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }

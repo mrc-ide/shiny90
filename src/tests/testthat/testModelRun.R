@@ -2,7 +2,10 @@ library(methods)
 testthat::context("basic")
 
 testthat::test_that("changing survey data invalidates model run", {
-    uploadSpectrumFileAndSwitchTab("Run model")
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
+
+    switchTab(wd, "Run model")
     runModel()
 
     testthat::expect_true(isVisible(wd$findElement("css", "#model-outputs")))

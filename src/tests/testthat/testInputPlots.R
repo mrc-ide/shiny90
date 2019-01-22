@@ -6,13 +6,8 @@ testthat::test_that("input plots are rendered", {
 
     startNewWorkingSet(wd)
 
-    uploadSpectrumFile(wd)
-
-    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
-    waitForVisible(section)
-    waitForVisible(wd$findElement("css", "#spectrumFileList"))
-
-    switchTab(wd, "Upload programmatic data", timeout=10)
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
     switchTab(wd, "Review input data", timeout=10)
 
