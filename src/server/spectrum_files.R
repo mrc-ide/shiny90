@@ -184,9 +184,11 @@ spectrumFiles <- function(input, output, state) {
         defaultDataTableOptions(),
         list(
             columns = list(
-                NULL, NULL, list(title="Prevalence (%)"), list(title="Incidence (per thousand)"),
-                list(title = 'People living with HIV'),
-                list(title = 'ART coverage (%)')
+                NULL, list(title="Population<br/>15+"), 
+                list(title="Prevalence (%)<br/>15-49"), 
+                list(title="Incidence (per thousand)<br/>15-49"),
+                list(title = 'People living with HIV<br/>15+'),
+                list(title = 'ART coverage (%)<br/>15+')
             )
         )
     ))
