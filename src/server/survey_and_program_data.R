@@ -72,11 +72,11 @@ removeSpecialChars <- function(name) {
 
 createEmptySurveyData <- function(countryAndRegionName) {
     data.frame(country=countryAndRegionName,
-                surveyid=character(1),
+                surveyid=rep(as.character(NA), 1),
                 year=rep(NA_integer_, 1),
-                agegr=character(1),
-                sex=character(1),
-                hivstatus=character(1),
+                agegr=rep(as.character(NA), 1),
+                sex=rep(as.character(NA), 1),
+                hivstatus=rep(as.character(NA), 1),
                 est=rep(NA_real_, 1),
                 se=rep(NA_real_, 1),
                 ci_l=rep(NA_real_, 1),
@@ -103,6 +103,10 @@ mapSurveyToInternalModel <- function(df, countryAndRegionName) {
     colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
 
     df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
+}
+
+anySurveyData <- function(df) {
+    !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
@@ -132,6 +136,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
+    state$anySurveyData <- shiny::reactive({ anySurveyData(state$survey) })
 
     state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
     state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
