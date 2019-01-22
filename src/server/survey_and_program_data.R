@@ -97,7 +97,6 @@ resetSurveyToDefaults <- function(state, country, countryAndRegionName) {
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-<<<<<<< HEAD
     data("survey_hts_master", package="first90")
 
     state$touched <- FALSE
