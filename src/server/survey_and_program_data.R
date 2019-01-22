@@ -217,12 +217,12 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         
         newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
-        state$wrongProgramHeaders <<- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
+        state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <<- !state$wrongProgramHeaders && nrow(newProgram[removeSpecialChars(newProgram[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
+        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgram[removeSpecialChars(newProgram[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
-            state$program_data <<- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
+            state$program_data <- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
             state$touched <- TRUE
         }
 
@@ -240,25 +240,25 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     shiny::observeEvent(input$hot_survey, {
         if(!is.null(input$hot_survey)){
-            state$survey <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
+            state$survey <- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_survey), c(surveyDataHeaders, sharedHeaders))
             # for unknown reasons this event fires twice on first load
             # so only track changes after the first 2 changes
             if (state$surveyTableChanged > 1){
                 state$touched <- TRUE
             }
-            state$surveyTableChanged <<- state$surveyTableChanged + 1
+            state$surveyTableChanged <- state$surveyTableChanged + 1
         }
     })
 
     shiny::observeEvent(input$hot_program, {
         if(!is.null(input$hot_program)){
-            state$program_data <<- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
+            state$program_data <- mapHeadersFromHumanReadable(rhandsontable::hot_to_r(input$hot_program), c(programDataHeaders,sharedHeaders))
             # for unknown reasons this event fires twice on first load
             # so only track changes after the first 2 changes
             if (state$programTableChanged > 1){
                 state$touched <- TRUE
             }
-            state$programTableChanged <<- state$programTableChanged + 1
+            state$programTableChanged <- state$programTableChanged + 1
         }
     })
 
