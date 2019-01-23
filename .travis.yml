@@ -6,3 +6,8 @@ cache: packages
 
 r_github_packages:
   - mrc-ide/first90
+jobs:
+  include:
+    - stage: test
+      script: ./scripts/test
+      
