@@ -9,7 +9,7 @@ before_install:
   - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files sample_files
   - echo $github_pat > github_token
 install:
-  - sudo apt-get update && apt-get install iceweasel -y
+  - sudo apt-get update && sudo apt-get install iceweasel -y
   - ./scripts/bootstrap
   - ./scripts/bootstrap-dev.R
   - sudo ./scripts/install_geckodriver.sh
