@@ -2,32 +2,13 @@
 
 language: R
 sudo: false
-cache: packages
 git:
   submodules:
     false
 before_install:
-  - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files shiny90/sample_files
-r_github_packages:
-  - mrc-ide/first90
-  - andrewsali/shinycssloaders
-r_packages:
-  - tidyr
-  - numDeriv
-  - shiny
-  - shinyjs
-  - glue
-  - devtools
-  - purrr
-  - rhandsontable
-  - data.table
-  - ggplot2
-  - memoise
-  - httr
-  - RSelenium
-  - testthat
-  - R.utils
-jobs:
-  include:
-    - stage: test
-      script: ./scripts/test
+  - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files sample_files
+  - echo $github_pat > github_token
+install:
+  - ./scripts/bootstrap
+  - ./scripts/bootstrap-dev.R
+script: ./scripts/test
