@@ -70,34 +70,25 @@ removeSpecialChars <- function(name) {
     iconv(name, "UTF-8", "ASCII//TRANSLIT")
 }
 
-mapSurveyToInternalModel <- function(df, countryAndRegionName) {
-
-    df <- df[removeSpecialChars(df$country) == removeSpecialChars(countryAndRegionName) & df$outcome == "evertest", ]
-
-    df <- data.frame(df$country,
-                    df$surveyid,
-                    df$year,
-                    df$agegr,
-                    df$sex,
-                    df$hivstatus,
-                    df$est*100,
-                    df$se*100,
-                    df$ci_l*100,
-                    df$ci_u*100,
-                    as.integer(df$counts))
-
-    colnames(df) <- c("country", "surveyid", "year", "agegr","sex", "hivstatus", "est", "se", "ci_l", "ci_u", "counts")
-
-    df[with(df, order(df$year, df$agegr, df$sex, df$hivstatus)), ]
+createEmptySurveyData <- function(countryAndRegionName) {
+    data.frame(country=countryAndRegionName,
+                surveyid=rep(as.character(NA), 1),
+                year=rep(NA_integer_, 1),
+                agegr=rep(as.character(NA), 1),
+                sex=rep(as.character(NA), 1),
+                hivstatus=rep(as.character(NA), 1),
+                est=rep(NA_real_, 1),
+                se=rep(NA_real_, 1),
+                ci_l=rep(NA_real_, 1),
+                ci_u=rep(NA_real_, 1),
+                counts=rep(NA_integer_, 1))
 }
 
-resetSurveyToDefaults <- function(state, country, countryAndRegionName) {
-    state$survey <- as.data.frame(survey_hts)
-    state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), countryAndRegionName)
+anySurveyData <- function(df) {
+    !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }
 
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
-    data("survey_hts", package="first90")
 
     state$touched <- FALSE
     state$loadNewData <- TRUE
@@ -106,8 +97,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
-                state$survey <- as.data.frame(survey_hts)
-                state$survey <- mapSurveyToInternalModel(as.data.frame(survey_hts), spectrumFilesState$countryAndRegionName())
+                state$survey <- createEmptySurveyData(spectrumFilesState$countryAndRegionName())
                 state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
             }
             else {
@@ -125,6 +115,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
+    state$anySurveyData <- shiny::reactive({ anySurveyData(state$survey) })
 
     state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
     state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
@@ -160,16 +151,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }"
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
-        rhandsontable::rhandsontable(state$survey_data_human_readable(),
-        colHeaders = c("Country or region","Survey Id","Year","Age Group","Sex","HIV Status","Estimate (%)", "Standard Error (%)",
-        "Lower Confidence Interval (%)",
-        "Upper Confidence Interval (%)", "Counts"), rowHeaders = NULL, stretchH = "all") %>%
+        rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
             rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
-            rhandsontable::hot_col("Estimate (%)", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Standard Error (%)", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Lower Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Upper Confidence Interval (%)", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Lower Confidence Interval", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Upper Confidence Interval", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Year", type="numeric", format = "0")
     })
 
@@ -226,11 +214,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
 
         shinyjs::reset("programData")
-    })
-
-    shiny::observeEvent(input$resetSurveyData, {
-        resetSurveyToDefaults(state, spectrumFilesState$country, spectrumFilesState$countryAndRegionName())
-        state$touched <- TRUE
     })
 
     # We track change events so that we know when to reset the model run state.
