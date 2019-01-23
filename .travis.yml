@@ -7,7 +7,7 @@ git:
   submodules:
     false
 before_install:
-  - echo $github_deploy_key > ~/.ssh/id_rsa
+  - echo $github_deploy_key > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
   - git submodule update --init --recursive
 r_github_packages:
   - mrc-ide/first90
