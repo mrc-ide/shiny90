@@ -72,12 +72,12 @@ panelReviewInput <- function() {
             class = "mb-3"
         ),
         shiny::div("", class="suggest-save mb-3",
-            shiny::span("Once you have reviewed your input data, you may want to save your work. This 
-                        downloads a file containing your input data and results. You can re-upload this 
-                        later to view your results again and change your input data.")
+            shiny::span("Please save your work. This downloads a file containing your input data and results. 
+                        If you get disconnected from the server, or if you want to return to the app later 
+                        and review your results, you can re-upload this file and resume where you left off.")
         ),
         shiny::div("", class="save-button",
-            shiny::downloadButton('digestDownload3', "Save your work")
+            downloadButtonWithCustomClass("digestDownload3", "Save your work")
         ),
         shiny::conditionalPanel(
             condition = "output.incompleteProgramData",

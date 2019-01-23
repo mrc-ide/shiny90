@@ -11,7 +11,7 @@ panelModelOutputs <- function() {
                                 also re-upload this file later to view your results again and change your input data.")
                 ),
                 shiny::div("", class="mb-5 save-button",
-                    shiny::downloadButton('digestDownload2', "Download shiny90 outputs for Spectrum")
+                    downloadButtonWithCustomClass("digestDownload2", "Download shiny90 outputs for Spectrum")
                 ),
                 shiny::tabsetPanel(
                     shiny::tabPanel("Figures",
