@@ -63,12 +63,17 @@ programDataHeaders <- list(tot= "Total Tests",
 
 validateProgramData <- function(df) {
 
+    if (is.null(df))
+        return(FALSE)
+
     validateYear <- function(year) {
-        rows <- df[df$year == year,]
+
+        rows <- df[!is.na(df$year) && df$year == year,]
+
         if (nrow(rows) == 0) return(TRUE)
         if (nrow(rows) > 2) return(FALSE)
-        if (nrow(rows) == 1 && rows$sex == c("both")) return(TRUE)
-        if (nrow(rows) == 2 && sort(rows$sex) == sort(c("male", "female"))) return(TRUE)
+        if (nrow(rows) == 1 && (as.character(rows$sex) == c("both"))) return(TRUE)
+        if (nrow(rows) == 2 && sort(as.character(rows$sex)) == sort(c("male", "female"))) return(TRUE)
 
         FALSE
     }
@@ -132,6 +137,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
+    state$programDataValid <- shiny::reactive({
+        validateProgramData(state$program_data)
+    })
+
     state$program_data_human_readable <- shiny::reactive({
         mapHeadersToHumanReadable(state$program_data, c(programDataHeaders,sharedHeaders))
     })
@@ -148,6 +157,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
 
     output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
+    output$invalidProgramData <- shiny::reactive({ !state$programDataValid() })
 
     output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
     output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
@@ -160,6 +170,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
 
     shiny::outputOptions(output, "incompleteProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "invalidProgramData", suspendWhenHidden = FALSE)
+
     shiny::outputOptions(output, "anyProgramDataTot", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataTotPos", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
@@ -197,7 +209,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total Positive HTC Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total ANC Tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer)
+            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Sex", type = "dropdown", source = c("both", "female", "male"))
     })
 
     shiny::observeEvent(input$surveyData, {

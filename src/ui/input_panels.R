@@ -27,7 +27,10 @@ panelSurvey <- function() {
 
 panelProgram <- function() {
     shiny::div("", class="mb-3",
-        shiny::tags$p("Please provide programmatic data sourced from national testing programs. Where available please provide
+        shiny::tags$p("Please provide programmatic data sourced from national testing programs. For each year please
+        provide either sex aggregated data (1 row with sex = \"both\") or sex disaggregated data (2 rows with sex=\"male\" and sex=\"female\" respectively).
+        Where values are unknown, please just leave blank.
+        Where available please provide
         the following:"),
         shiny::tags$ul(
         shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
@@ -48,7 +51,7 @@ panelProgram <- function() {
         shiny::tags$p("You can copy
                         and paste data from Excel into the table below or upload a CSV file. The required column headers are:"),
         shiny::HTML("<p><strong>Country or region, Year, Total Tests, Total Positive Tests, Total HTC Tests, Total Positive HTC Tests, Total ANC Tests, Total Positive ANC Tests, Age Group, Sex, HIV Status</strong></p>"),
-        shiny::p("Where values are unknown, please just leave blank. The app will not accept an uploaded CSV with the wrong headers.
+        shiny::p("The app will not accept an uploaded CSV with the wrong headers.
         It may be useful to download the headers as a template:"),
         downloadButton("downloadProgramTemplate", "Download CSV template"),
         shiny::h3("Upload new data"),
@@ -61,7 +64,6 @@ panelProgram <- function() {
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted mb-1"),
         rhandsontable::rHandsontableOutput("hot_program")
     )
-    # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
 
 
@@ -75,6 +77,11 @@ panelReviewInput <- function() {
             shiny::span("Once you have reviewed your input data, you may want to "),
             shiny::tags$a(class = "shiny-download-link", href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
             shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+        ),
+        shiny::conditionalPanel(
+            condition = "output.invalidProgramData",
+            shiny::div("The programmatic data for your country is invalid. Please check the guidance and correct it.",
+            class = "mt-5 alert alert-danger", id="invalid-error")
         ),
         shiny::conditionalPanel(
             condition = "output.incompleteProgramData",

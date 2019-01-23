@@ -57,4 +57,3 @@ testthat::test_that("duplicated sex is invalid", {
 
     testthat::expect_false(result)
 })
-
