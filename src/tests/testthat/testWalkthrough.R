@@ -40,8 +40,8 @@ testthat::test_that("can walk through app", {
         tableSelector = ".outputs-aware",
         expectedValue = "2010")
     checkTopLeftTableCellHasThisValue(tabName = "Knowledge of status (absolute)",
-    tableSelector = ".outputs-nbaware",
-    expectedValue = "2010")
+        tableSelector = ".outputs-nbaware",
+        expectedValue = "2010")
     checkTopLeftTableCellHasThisValue(tabName = "ART coverage",
         tableSelector = ".outputs-art-coverage",
         expectedValue = "2010")
