@@ -41,8 +41,8 @@ testthat::test_that("can save digest from review tab", {
     # Save it from review tab
     editWorkingSetMetadata(wd, "from_review")
     switchTab(wd, "Review input data")
-    link = wd$findElement("css", inActivePane(".suggest-save a"))
-    expectTextEqual("download a digest file", link)
+    link = wd$findElement("css", inActivePane(".save-button a"))
+    expectTextEqual("Save your work", link)
 
     downloadFileFromLink(link, "Malawi.zip.shiny90")
 
@@ -63,9 +63,9 @@ testthat::test_that("can save digest from output tab", {
     runModel()
 
     editWorkingSetMetadata(wd, "from_outputs")
-    link = wd$findElement("css", inActivePane(".suggest-save a"))
+    link = wd$findElement("css", inActivePane(".save-button a"))
     waitForVisible(link)
-    expectTextEqual("download a digest file", link)
+    expectTextEqual("Download shiny90 outputs for Spectrum", link)
 
     downloadFileFromLink(link, "Malawi.zip.shiny90")
 
