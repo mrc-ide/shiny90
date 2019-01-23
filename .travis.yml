@@ -1,7 +1,7 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: true
 git:
   submodules:
     false
@@ -13,3 +13,6 @@ install:
   - ./scripts/bootstrap-dev.R
   - ./scripts/install_geckodriver.sh
 script: ./scripts/test
+cache:
+  directories:
+    - shiny90/packages
