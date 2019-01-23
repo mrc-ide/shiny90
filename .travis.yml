@@ -7,7 +7,6 @@ git:
   submodules:
     false
 before_install:
-  - mkdir ~/.ssh
   - echo $github_deploy_key > ~/.ssh/id_rsa
   - git submodule update --init --recursive
 r_github_packages:
