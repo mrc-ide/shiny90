@@ -7,7 +7,7 @@ git:
   submodules:
     false
 before_install:
-  - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files sample_files
+  - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files shiny90/sample_files
 r_github_packages:
   - mrc-ide/first90
   - andrewsali/shinycssloaders
