@@ -61,6 +61,21 @@ programDataHeaders <- list(tot= "Total Tests",
                             ancpos= "Total Positive ANC Tests"
 )
 
+validateProgramData <- function(df) {
+
+    validateYear <- function(year) {
+        rows <- df[df$year == year,]
+        if (nrow(rows) > 2) return(FALSE)
+        if (nrow(rows) == 1 && rows$sex == c("both")) return(TRUE)
+        if (nrow(rows) == 2 && rows$sex == c("male", "female")) return(TRUE)
+
+        FALSE
+    }
+
+    result <- lapply(seq(from=2010,to=2018,by = 1), validateYear)
+    all(result == TRUE)
+}
+
 castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
