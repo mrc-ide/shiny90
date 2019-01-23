@@ -12,7 +12,7 @@ Run
 ```
 
 to install R dependencies. If your system doesn't suppport bash, then instead 
-run `./bootstrap.R`.
+run `./scripts/bootstrap.R`.
 
 ## Run app
 To run the app: `./run.R`
