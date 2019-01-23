@@ -3,7 +3,12 @@
 language: R
 sudo: false
 cache: packages
-
+git:
+  submodules:
+    false
+before_install:
+  - echo -e "machine github.com\n  login ci-user\n  password $GITHUB_PAT" >~/.netrc
+  - git submodule update --init --recursive
 r_github_packages:
   - mrc-ide/first90
   - andrewsali/shinycssloaders
