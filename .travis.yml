@@ -7,8 +7,8 @@ git:
   submodules:
     false
 before_install:
-  - git config --global credential.helper cache
-  - echo -e https://littledice:$GITHUB_PAT@github.com >~/.git-credentials
+  - mkdir ~/.ssh
+  - echo $github_deploy_key > ~/.ssh/id_rsa
   - git submodule update --init --recursive
 r_github_packages:
   - mrc-ide/first90
