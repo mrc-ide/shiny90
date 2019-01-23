@@ -2,7 +2,7 @@ panelSurvey <- function() {
     shiny::div("",
         shiny::HTML("<p>Please provide survey data on the proportion of people ever tested by sex and age group.
          You can copy and paste from Excel or upload a new CSV file. The required column headers are:</p>
-         <p><strong>Survey Id, Country or region, Year, HIV Status, Sex, Age Group, Estimate, Standard Error,
+         <p><strong>Country or region, Survey Id, Year, Age Group, Sex, HIV Status, Estimate, Standard Error,
         Lower Confidence Interval,
         Upper Confidence Interval, Counts</strong></p> <p>Estimates, Standard Error, and Lower and Upper Confidence Intervals
         should all be given as percentages. Where values are unknown, please just leave blank.</p><p> The app will not accept an uploaded CSV with the wrong headers.
