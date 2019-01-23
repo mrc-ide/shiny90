@@ -29,10 +29,16 @@ panelModelOutputs <- function() {
                             shiny::div("", class = "col-md-6 col-sm-12", withSpinner(shiny::plotOutput(outputId = "outputs_menEverTested")))
                         )
                     ),
-                    shiny::tabPanel("Knowledge of status (first 90)",
+                    shiny::tabPanel("Knowledge of status (%)",
                         div("", class="output-table outputs-aware",
-                            select_options("aware"),
+                            select_options("aware",includeStatus = FALSE),
                             shiny::dataTableOutput("outputs_table_aware")
+                        )
+                    ),
+                    shiny::tabPanel("Knowledge of status (absolute)",
+                        div("", class="output-table outputs-nbaware",
+                            select_options("nbaware",includeStatus = FALSE),
+                            shiny::dataTableOutput("outputs_table_nbaware")
                         )
                     ),
                     shiny::tabPanel("Proportion ever tested",

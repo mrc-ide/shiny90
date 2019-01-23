@@ -140,16 +140,20 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
         }))
     })
     output$outputs_table_aware <- renderModelResultsTable(state, function(state) {
-        rbindlist(lapply(input$aware_status, function(status) {
-            rbindlist(lapply(input$aware_sex, function(sex) {
-                rbindlist(lapply(input$aware_agegr, function(age) {
-                    first90::tab_out_aware(state$mod, state$fp, simul = state$simul, age_grp = age, gender = sex)
-                }))
+        rbindlist(lapply(input$aware_sex, function(sex) {
+            rbindlist(lapply(input$aware_agegr, function(age) {
+                first90::tab_out_aware(state$mod, state$fp, simul = state$simul, age_grp = age, gender = sex)
+            }))
+        }))
+    })
+    output$outputs_table_nbaware <- renderModelResultsTable(state, function(state) {
+        rbindlist(lapply(input$nbaware_sex, function(sex) {
+            rbindlist(lapply(input$nbaware_agegr, function(age) {
+                first90::tab_out_nbaware(state$mod, state$fp, age_grp = age, gender = sex)
             }))
         }))
     })
     output$outputs_table_art_coverage <- renderModelResultsTable(state, function(state) {
-
         rbindlist(lapply(input$art_coverage_sex, function(sex) {
                 first90::tab_out_artcov(state$mod, state$fp, gender = sex)
         }))
