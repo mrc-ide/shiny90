@@ -11,4 +11,5 @@ before_install:
 install:
   - ./scripts/bootstrap
   - ./scripts/bootstrap-dev.R
+  - ./scripts/install_geckodriver.sh
 script: ./scripts/test
