@@ -7,7 +7,7 @@ git:
   submodules:
     false
 before_install:
-  - echo -e "machine github.com\n  login littledice\n  password $GITHUB_PAT" >~/.netrc
+  - echo -e https://littledice:$GITHUB_PAT@github.com >~/.git-credentials
   - git submodule update --init --recursive
 r_github_packages:
   - mrc-ide/first90
