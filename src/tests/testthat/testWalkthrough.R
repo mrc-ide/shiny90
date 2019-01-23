@@ -15,6 +15,7 @@ testthat::test_that("can walk through app", {
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
     switchTab(wd, "Upload programmatic data")
 
