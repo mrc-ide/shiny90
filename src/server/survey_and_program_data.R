@@ -65,9 +65,10 @@ validateProgramData <- function(df) {
 
     validateYear <- function(year) {
         rows <- df[df$year == year,]
+        if (nrow(rows) == 0) return(TRUE)
         if (nrow(rows) > 2) return(FALSE)
         if (nrow(rows) == 1 && rows$sex == c("both")) return(TRUE)
-        if (nrow(rows) == 2 && rows$sex == c("male", "female")) return(TRUE)
+        if (nrow(rows) == 2 && sort(rows$sex) == sort(c("male", "female"))) return(TRUE)
 
         FALSE
     }
