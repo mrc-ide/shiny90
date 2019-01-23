@@ -7,8 +7,8 @@ git:
   submodules:
     false
 before_install:
-  - echo $github_deploy_key > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-  - git submodule update --init --recursive
+  - echo $github_deploy_key > ~/.ssh/github_deploy_key && chmod 400 ~/.ssh/github_deploy_key
+  - GIT_SSH_COMMAND="ssh -i ~/.ssh/github_deploy_key" git submodule update --init --recursive
 r_github_packages:
   - mrc-ide/first90
   - andrewsali/shinycssloaders
