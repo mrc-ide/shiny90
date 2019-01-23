@@ -5,10 +5,13 @@ panelModelOutputs <- function() {
         shiny::conditionalPanel(
             condition = "output.modelRunState == 'converged'",
             shiny::div("", id="model-outputs",
-                shiny::div("", class="mb-5 suggest-save",
-                    shiny::span("Now that the model has been run, you can "),
-                    shiny::tags$a(href = "", class="shiny-download-link", id="digestDownload2", "download a digest file", target = "_blank", download = NA),
-                    shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+                shiny::div("", class="mb-3 suggest-save",
+                    shiny::span("Now that the model has been run, you can download the shiny90 outputs for importing 
+                                into Spectrum. This will download a file containing your input data and results. You can 
+                                also re-upload this file later to view your results again and change your input data.")
+                ),
+                shiny::div("", class="mb-5 save-button",
+                    downloadButtonWithCustomClass("digestDownload2", "Download shiny90 outputs for Spectrum")
                 ),
                 shiny::tabsetPanel(
                     shiny::tabPanel("Figures",

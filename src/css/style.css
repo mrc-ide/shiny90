@@ -95,6 +95,13 @@
     border-color: #e31837;
 }
 
+.btn.shiny-download-link.btn-red.btn-success,
+.btn.shiny-download-link.btn-red.btn-success:hover,
+.btn.shiny-download-link.btn-red.btn-success:active {
+    font-weight:normal;
+    color: white;
+}
+
 .main-content {
     height: calc(100vh - 60px);
 }
