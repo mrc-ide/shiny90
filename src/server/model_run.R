@@ -44,8 +44,9 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
     state$likelihood <- shiny::reactive({
         tryCatch({
             ageGroup <- c('15-24','25-34','35-49')
-            preparedSurveyData <- first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$country, ageGroup)
             preparedProgramData <- prepareProgramData(surveyAndProgramData$program_data)
+            preparedSurveyData <- first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$countryAndRegionName(), ageGroup)
+
             first90::prepare_hts_likdat(
                 preparedSurveyData,
                 preparedProgramData,
@@ -128,7 +129,7 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
                 state$spectrum_outputs <- first90::spectrum_output_table(state$mod, state$fp)
 
                 plotModelRunResults(output, state$surveyAsDataTable(), state$likelihood(),
-                                    state$fp, state$mod, spectrumFilesState$country, out_evertest, state$simul, state)
+                                    state$fp, state$mod, spectrumFilesState$countryAndRegionName(), out_evertest, state$simul, state)
 
             }, error = function(e) {
                 str(e)
