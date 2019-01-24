@@ -33,7 +33,7 @@ For unit tests:
 
 For Selenium tests:
 ```
-sudo ./install_geckodriver.sh
+sudo ./scripts/install_geckodriver.sh
 ./scripts/test
 ```
 

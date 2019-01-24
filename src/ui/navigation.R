@@ -20,9 +20,16 @@ panelWithTitle <- function(title, content) {
 enableNavLinks <- function(input, output, spectrumFilesState, modelRunState, surveyAndProgramData) {
     enableTabWhen("Upload survey data", function() { spectrumFilesState$anyDataSets() })
     enableTabWhen("Upload programmatic data", function() { spectrumFilesState$anyDataSets() })
-    enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() })
-    enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() && surveyAndProgramData$anyProgramData() && surveyAndProgramData$programDataValid() })
-    enableTabWhen("Advanced outputs", function() { modelRunState$state == "converged" })
+    enableTabWhen("Review input data", function() { spectrumFilesState$anyDataSets() &&
+                                                    surveyAndProgramData$anyProgramData() })
+    enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() &&
+                                            surveyAndProgramData$anyProgramData() &&
+                                            surveyAndProgramData$programDataValid() })
+    enableTabWhen("Advanced outputs", function() { modelRunState$state == "converged" &&
+                                                    spectrumFilesState$anyDataSets() &&
+                                                    surveyAndProgramData$anyProgramData() &&
+                                                    surveyAndProgramData$programDataValid() &&
+                                                    surveyAndProgramData$anySurveyData() })
 }
 
 enableTabWhen <- function(tabTitle, condition) {

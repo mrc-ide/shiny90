@@ -23,6 +23,13 @@ actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL,
         list(label), ...)
 }
 
+downloadButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL, type = "button") {
+  value <- shiny::restoreInput(id = inputId, default = NULL)
+  shiny::tags$a(id = inputId, label, href = "",
+                class = paste("btn btn-default btn-red btn-lg btn-success shiny-download-link", cssClasses),
+                download = NA, target = "_blank", ...)
+}
+
 modal <- function(title, id, cancelId, ...) {
     shiny::div("", class = "modal", id = id,
         shiny::div("", class = "modal-dialog",

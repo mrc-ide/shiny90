@@ -3,8 +3,10 @@ testthat::context("basic")
 
 testthat::test_that("warning is shown if incomplete program data is present", {
 
-    uploadSpectrumFileAndSwitchTab("Review input data", filename= "Angola_201805v4.PJNZ")
+    uploadSpectrumFileAndSwitchTab("Upload survey data", filename= "Angola_201805v4.PJNZ")
+    uploadFile(wd, filename = "fakesurvey_angola.csv", inputId="#surveyData")
 
+    switchTab(wd, "Review input data")
     warning <- wd$findElement("css", ".mt-5.alert.alert-warning")
 
     waitForVisible(warning)
@@ -17,6 +19,9 @@ testthat::test_that("warning is not shown if complete program data is present", 
     uploadSpectrumFileAndSwitchTab("Upload programmatic data")
     uploadFile(wd, filename = "testprogramdata_malawi.csv", inputId="#programData")
     Sys.sleep(2)
+
+    switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
     switchTab(wd, "Review input data")
     warning <- wd$findElement("css", ".mt-5.alert.alert-warning")
