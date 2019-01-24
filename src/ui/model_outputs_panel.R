@@ -75,9 +75,9 @@ select_options <- function(id, includeStatus = TRUE, includeAge = TRUE) {
     }
     if (includeAge){
         age <- shiny::selectizeInput(
-                        paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49'),
+                        paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49', "15+"),
                         multiple = TRUE,
-                        selected = "15-49")
+                        selected = "15+")
     }
     else{
         age <- NULL
