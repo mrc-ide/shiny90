@@ -65,9 +65,8 @@ castToNumeric <- function(dataframe, headers){
     mapColumnsToNumeric(dataframe, names(headers))
 }
 
-removeSpecialChars <- function(name) {
-    name <- gsub("\t", "", name)
-    iconv(name, "UTF-8", "ASCII//TRANSLIT")
+removeTabs <- function(name) {
+    gsub("\t", "", name)
 }
 
 createEmptySurveyData <- function(countryAndRegionName) {
@@ -184,7 +183,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         state$wrongSurveyHeaders <- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
         state$wrongSurveyCountry <- !state$wrongSurveyHeaders &&
-        nrow(newSurvey[removeSpecialChars(newSurvey[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newSurvey)
+        nrow(newSurvey[removeTabs(newSurvey[["Country or region"]]) == removeTabs(spectrumFilesState$countryAndRegionName()), ]) < nrow(newSurvey)
 
         if (!state$wrongSurveyHeaders && !state$wrongSurveyCountry){
             state$survey <- mapHeadersFromHumanReadable(newSurvey, c(surveyDataHeaders, sharedHeaders))
@@ -206,7 +205,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
         state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgram[removeSpecialChars(newProgram[["Country or region"]]) == removeSpecialChars(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
+        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgram[removeTabs(newProgram[["Country or region"]]) == removeTabs(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
             state$program_data <- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
