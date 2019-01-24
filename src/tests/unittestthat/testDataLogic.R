@@ -78,3 +78,15 @@ testthat::test_that("anySurveyData is true if one row with surveyid", {
 
     testthat::expect_true(result)
 })
+
+testthat::test_that("removeSpecialChars correctly strips special characters", {
+    
+    testthat::expect_equal(removeSpecialChars("Côte d'Ivoire"), "Cote d'Ivoire")
+  
+    testthat::expect_equal(removeSpecialChars("Togo - Centrale"), "Togo - Centrale")
+    
+    testthat::expect_equal(removeSpecialChars("\tMalawi\t"), "Malawi")
+    
+    testthat::expect_equal(removeSpecialChars("àáâãäå æ çčćž ß éĕěėëȩ öôø ùúûü"), 
+                                              "aaaaaa ae cccz ss eeeeee ooo uuuu")
+})
