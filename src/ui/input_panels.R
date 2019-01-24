@@ -1,13 +1,28 @@
 panelSurvey <- function() {
     shiny::div("",
-        shiny::HTML("<p>Please provide survey data on the proportion of people ever tested by sex and age group.
-         You can copy and paste from Excel or upload a new CSV file. The required column headers are:</p>
-         <p><strong>Country or region, Survey Id, Year, Age Group, Sex, HIV Status, Estimate, Standard Error,
-        Lower Confidence Interval,
-        Upper Confidence Interval, Counts</strong></p> <p>Estimates, Standard Error, and Lower and Upper Confidence Intervals
-        should all be given as percentages. Where values are unknown, please just leave blank.</p><p> The app will not accept an uploaded CSV with the wrong headers.
-        It may be useful to download the headers as a template:</p>"),
-        shiny::downloadButton("downloadSurveyTemplate", "Download template"),
+        shiny::tags$p("Please provide survey data on the proportion of people ever tested by sex and age group. 
+                      Where available please provide the following:"),
+        shiny::tags$ul(
+            shiny::HTML("<li><strong>Country or region</strong></li>"),
+            shiny::HTML("<li><strong>Survey Id</strong></li>"),
+            shiny::HTML("<li><strong>Year</strong></li>"),
+            shiny::HTML("<li><strong>Age Group</strong></li>"),
+            shiny::HTML("<li><strong>Sex</strong></li>"),
+            shiny::HTML("<li><strong>HIV Status:</strong> HIV status for the group surveyed, 
+                        either positive, negative or all.</li>"),
+            shiny::HTML("<li><strong>Estimate:</strong> As a percentage.</li>"),
+            shiny::HTML("<li><strong>Standard Error:</strong> As a percentage.</li>"),
+            shiny::HTML("<li><strong>Lower Confidence Interval:</strong> As a percentage.</li>"),
+            shiny::HTML("<li><strong>Upper Confidence Interval:</strong> As a percentage.</li>"),
+            shiny::HTML("<li><strong>Counts</strong></li>")
+        ),
+        shiny::tags$p("You can copy and paste from Excel or upload a new CSV file."),
+        shiny::tags$p("All columns are required. Where values are unknown, please just leave blank. 
+                      The app will not accept an uploaded CSV with the wrong headers. It may be
+                      useful to download the headers as a template:"),
+        shiny::downloadButton("downloadSurveyTemplate", "Download template", class = "mb-4"),
+        infoAlert("usePercentInfo", "Estimates, Standard Error and Lower and Upper Confidence Intervals should
+                  all be given as percentages (for example, enter percentage 87.56 rather than proportion 0.8756)."),
         shiny::h3("Upload new data"),
         errorAlert(id = "wrongSurveyHeadersError",
                     condition = "output.wrongSurveyHeaders",
@@ -27,6 +42,8 @@ panelProgram <- function() {
         shiny::tags$p("Please provide programmatic data sourced from national testing programs. Where available please provide
         the following:"),
         shiny::tags$ul(
+        shiny::HTML("<li><strong>Country or region</strong></li>"),
+        shiny::HTML("<li><strong>Year</strong></li>"),
         shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
                             This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
                             during antenatal care (ANC), and for which the clients received the results.</li>"),
@@ -36,17 +53,17 @@ panelProgram <- function() {
         shiny::HTML("<li><strong>Total HTC Tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of
                         ANC services,
                              and for which clients received the results. If only the overall total is available, please input NA.</li>"),
-        shiny::HTML("<li><strong>Total HTC Positive Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
+        shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
         shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
-        shiny::HTML("<li><strong>Total ANC Positive Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>")
+        shiny::HTML("<li><strong>Total Positive ANC Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
+        shiny::HTML("<li><strong>Age Group</strong></li>"),
+        shiny::HTML("<li><strong>Sex</strong></li>")
         ),
         shiny::p("*A person should only be counted as testing once even if up to three different assays are performed to confirm an HIV-positive diagnosis according to the national testing algorithm.
         A person who is tested twice during the year should be counted as contributing two tests."),
-        shiny::tags$p("You can copy
-                        and paste data from Excel into the table below or upload a CSV file. The required column headers are:"),
-        shiny::HTML("<p><strong>Country or region, Year, Total Tests, Total Positive Tests, Total HTC Tests, Total Positive HTC Tests, Total ANC Tests, Total Positive ANC Tests, Age Group, Sex, HIV Status</strong></p>"),
-        shiny::p("Where values are unknown, please just leave blank. The app will not accept an uploaded CSV with the wrong headers.
-        It may be useful to download the headers as a template:"),
+        shiny::tags$p("You can copy and paste data from Excel into the table below or upload a CSV file."),
+        shiny::p("All columns are required. Where values are unknown, please just leave blank. The app will 
+        not accept an uploaded CSV with the wrong headers. It may be useful to download the headers as a template:"),
         downloadButton("downloadProgramTemplate", "Download CSV template"),
         shiny::h3("Upload new data"),
         errorAlert(id = "wrongProgramHeadersError", condition="output.wrongProgramHeaders",

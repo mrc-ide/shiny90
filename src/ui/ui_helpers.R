@@ -57,3 +57,10 @@ errorAlert <- function(condition, id, message){
         )
     )
 }
+
+infoAlert <- function(id, message){
+    shiny::div("", id=id, class = "alert alert-info",
+        shiny::icon("info-circle", lib="font-awesome"),
+        shiny::span(message)
+    )
+}
