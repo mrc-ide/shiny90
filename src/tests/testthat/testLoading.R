@@ -72,7 +72,14 @@ testthat::test_that("can save digest from output tab", {
     # Load and check
     wd$navigate(appURL)
     loadDigestFromWelcome(wd, dir = "../../../selenium_files/")
-    expectTextEqual("Malawi", wd$findElement("css", "#workingSet_name"))
+
+    expectedName <- "Malawi"
+    nameElement <- wd$findElement("css", "#workingSet_name")
+    waitFor(function() {
+        getText(nameElement) == expectedName
+    })
+
+    expectTextEqual(expectedName, nameElement)
     expectTextEqual("from_outputs", wd$findElement("css", "#workingSet_notes"))
 
     switchTab(wd, "Run model")
@@ -110,7 +117,12 @@ testthat::test_that("can save and load regional data", {
     wd$navigate(appURL)
     loadDigestFromWelcome(wd, dir = "../../../selenium_files/", filename = "Togo-Centrale.zip.shiny90")
 
-    expectTextEqual("Togo - Centrale", wd$findElement("css", "#workingSet_name"))
+    expectedName <- "Togo - Centrale"
+    waitFor(function() {
+        getText(wd$findElement("css", "#workingSet_name")) == expectedName
+    })
+
+    expectTextEqual(expectedName, wd$findElement("css", "#workingSet_name"))
 
     switchTab(wd, "Upload survey data")
     switchTab(wd, "Upload programmatic data")
