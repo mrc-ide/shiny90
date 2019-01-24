@@ -68,14 +68,11 @@ validateProgramData <- function(df) {
 
     validateYear <- function(givenYear) {
 
-        rows <- df[!is.na(df$year) & df$year == givenYear,]
+        rows <- df[which(df$year == givenYear),]
 
-        if (nrow(rows) == 0) return(TRUE)
-        if (nrow(rows) > 2) return(FALSE)
-        if (nrow(rows) == 1 & identical(as.character(rows$sex),c("both"))) return(TRUE)
-        if (nrow(rows) == 2 & identical(sort(as.character(rows$sex)), sort(c("male", "female")))) return(TRUE)
-
-        FALSE
+        nrow(rows) == 0 |
+        identical(as.character(rows$sex),c("both")) |
+        identical(sort(as.character(rows$sex)), sort(c("male", "female")))
     }
 
     result <- lapply(seq(from=2010,to=2018,by=1), validateYear)

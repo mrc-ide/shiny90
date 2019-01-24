@@ -57,3 +57,13 @@ testthat::test_that("duplicated sex is invalid", {
 
     testthat::expect_false(result)
 })
+
+testthat::test_that("providing both sex aggregated and disaggregated data for multiple years is valid", {
+
+    df = data.frame(c(2010, 2011, 2011), c("both", "male", "female"))
+    colnames(df) <- c("year", "sex")
+
+    result <- validateProgramData(df)
+
+    testthat::expect_true(result)
+})
