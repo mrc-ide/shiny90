@@ -1,6 +1,8 @@
 # shiny90
 Shiny tool for the first 90 HIV model (https://github.com/mrc-ide/first90)
 
+[![Travis-CI Build Status](https://travis-ci.org/mrc-ide/shiny90.svg?branch=master)](https://travis-ci.org/mrc-ide/shiny90)
+
 ## Prerequisites
 * R
 
