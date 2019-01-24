@@ -1,3 +1,14 @@
+prepareProgramData <- function(program_data) {
+    if (is.null(program_data)) {
+        NULL
+    } else {
+        df <- program_data
+        df$agegr = "15-99"
+
+        df
+    }
+}
+
 modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramData) {
     output$modelRunState <- shiny::reactive({ state$state })
     shiny::outputOptions(output, "modelRunState", suspendWhenHidden = FALSE)
@@ -34,9 +45,10 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
         tryCatch({
             ageGroup <- c('15-24','25-34','35-49')
             preparedSurveyData <- first90::select_hts(state$surveyAsDataTable(), spectrumFilesState$country, ageGroup)
+            preparedProgramData <- prepareProgramData(surveyAndProgramData$program_data)
             first90::prepare_hts_likdat(
                 preparedSurveyData,
-                surveyAndProgramData$program_data,
+                preparedProgramData,
                 spectrumFilesState$combinedData()
             )
         }, error = function(e) {

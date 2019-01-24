@@ -41,12 +41,12 @@ mapHeadersFromHumanReadable <- function(dataframe, headers) {
 
 sharedHeaders <- list(country= "Country or region",
                         year= "Year",
-                        hivstatus= "HIV Status",
-                        sex= "Sex",
-                        agegr= "Age Group")
+                        sex= "Sex")
 
 surveyDataHeaders <- list(surveyid="Survey Id",
+                            hivstatus= "HIV Status",
                             outcome = "Outcome",
+                            agegr= "Age Group",
                             counts = "Counts",
                             est= "Estimate",
                             se= "Standard Error",
@@ -66,19 +66,19 @@ validateProgramData <- function(df) {
     if (is.null(df))
         return(FALSE)
 
-    validateYear <- function(year) {
+    validateYear <- function(specificYear) {
 
-        rows <- df[!is.na(df$year) && df$year == year,]
+        rows <- df[!is.na(df$year) & df$year == specificYear,]
 
         if (nrow(rows) == 0) return(TRUE)
         if (nrow(rows) > 2) return(FALSE)
-        if (nrow(rows) == 1 && (as.character(rows$sex) == c("both"))) return(TRUE)
-        if (nrow(rows) == 2 && sort(as.character(rows$sex)) == sort(c("male", "female"))) return(TRUE)
+        if (nrow(rows) == 1 & (as.character(rows$sex) == c("both"))) return(TRUE)
+        if (nrow(rows) == 2 & sort(as.character(rows$sex)) == sort(c("male", "female"))) return(TRUE)
 
         FALSE
     }
 
-    result <- lapply(seq(from=2010,to=2018,by = 1), validateYear)
+    result <- lapply(seq(from=2010,to=2018,by=1), validateYear)
     all(result == TRUE)
 }
 
@@ -120,6 +120,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             if (state$loadNewData){
                 state$survey <- createEmptySurveyData(spectrumFilesState$countryAndRegionName())
                 state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
+                drops <- c("agegr")
+                state$program_data <-  state$program_data[ , !(names(state$program_data) %in% drops)]
             }
             else {
                 state$loadNewData <- TRUE
