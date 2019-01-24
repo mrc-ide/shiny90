@@ -1,0 +1,22 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: required
+addons:
+  firefox:
+    latest
+git:
+  submodules:
+    false
+before_install:
+  - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files sample_files
+  - echo $github_pat > github_token
+  - export $(dbus-launch)
+install:
+  - ./scripts/bootstrap
+  - ./scripts/bootstrap-dev.R
+  - sudo ./scripts/install_geckodriver.sh
+script: ./scripts/test
+cache:
+  directories:
+    - shiny90/packages

@@ -15,6 +15,7 @@ testthat::test_that("can walk through app", {
     verifyPJNZFileUpload("Malawi_2018_version_8.PJNZ")
 
     switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
 
     switchTab(wd, "Upload programmatic data")
 
@@ -36,8 +37,11 @@ testthat::test_that("can walk through app", {
     checkTopLeftTableCellHasThisValue(tabName = "Proportion ever tested",
         tableSelector = ".outputs-ever-tested",
         expectedValue = "2010")
-    checkTopLeftTableCellHasThisValue(tabName = "Knowledge of status (first 90)",
+    checkTopLeftTableCellHasThisValue(tabName = "Knowledge of status (%)",
         tableSelector = ".outputs-aware",
+        expectedValue = "2010")
+    checkTopLeftTableCellHasThisValue(tabName = "Knowledge of status (absolute)",
+        tableSelector = ".outputs-nbaware",
         expectedValue = "2010")
     checkTopLeftTableCellHasThisValue(tabName = "ART coverage",
         tableSelector = ".outputs-art-coverage",

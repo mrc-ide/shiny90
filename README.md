@@ -1,6 +1,8 @@
 # shiny90
 Shiny tool for the first 90 HIV model (https://github.com/mrc-ide/first90)
 
+[![Travis-CI Build Status](https://travis-ci.org/mrc-ide/shiny90.svg?branch=master)](https://travis-ci.org/mrc-ide/shiny90)
+
 ## Prerequisites
 * R
 
@@ -8,11 +10,11 @@ Shiny tool for the first 90 HIV model (https://github.com/mrc-ide/first90)
 Run
 
 ```
-./bootstrap
+./scripts/bootstrap
 ```
 
 to install R dependencies. If your system doesn't suppport bash, then instead 
-run `./bootstrap.R`.
+run `./scripts/bootstrap.R`.
 
 ## Run app
 To run the app: `./run.R`
@@ -27,14 +29,14 @@ SHINY90_TEST_MODE=TRUE ./run.R
 
 For unit tests:
 ```
-./bootstrap-dev.R
-./unittest
+./scripts/bootstrap-dev.R
+./scripts/unittest
 ```
 
 For Selenium tests:
 ```
-sudo ./install_geckodriver.sh
-./test
+sudo ./scripts/install_geckodriver.sh
+./scripts/test
 ```
 
 They should also run at https://circleci.com/gh/mrc-ide/workflows/shiny90

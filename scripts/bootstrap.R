@@ -23,4 +23,4 @@ install.packages("testthat")
 
 
 devtools::install_github('andrewsali/shinycssloaders')
-devtools::install_github("mrc-ide/first90@subnational")
+devtools::install_github("mrc-ide/first90release")

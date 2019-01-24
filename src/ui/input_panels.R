@@ -1,14 +1,13 @@
 panelSurvey <- function() {
     shiny::div("",
-        shiny::HTML("<p>Available survey data on the proportion of people ever tested by sex and age group are included below.
-         You can edit the data in the browser, or copy and paste to Excel and edit the data there, then copy and paste back into the table below.
-         You can also replace the data entirely by uploading a new CSV file. The required column headers are:</p>
-         <p><strong>Survey Id, Country or region, Year, HIV Status, Sex, Age Group, Estimate, Standard Error,
+        shiny::HTML("<p>Please provide survey data on the proportion of people ever tested by sex and age group.
+         You can copy and paste from Excel or upload a new CSV file. The required column headers are:</p>
+         <p><strong>Country or region, Survey Id, Year, Age Group, Sex, HIV Status, Estimate, Standard Error,
         Lower Confidence Interval,
         Upper Confidence Interval, Counts</strong></p> <p>Estimates, Standard Error, and Lower and Upper Confidence Intervals
         should all be given as percentages. Where values are unknown, please just leave blank.</p><p> The app will not accept an uploaded CSV with the wrong headers.
-        It may be useful to download the existing survey data as a template:</p>"),
-        shiny::downloadButton("downloadSurveyTemplate", "Download survey data"),
+        It may be useful to download the headers as a template:</p>"),
+        shiny::downloadButton("downloadSurveyTemplate", "Download template"),
         shiny::h3("Upload new data"),
         errorAlert(id = "wrongSurveyHeadersError",
                     condition = "output.wrongSurveyHeaders",
@@ -17,10 +16,8 @@ panelSurvey <- function() {
                 condition = "output.wrongSurveyCountry",
                 message = "Error: You cannot upload survey data for a different country. This file has been ignored."),
         shiny::fileInput("surveyData", "Choose CSV File", accept = c("text/csv","text/comma-separated-values,text/plain",".csv")),
-        shiny::h3("Or edit data in place",
-        shiny::div(class="pull-right", actionButtonWithCustomClass("resetSurveyData", "Reset to built-in data", cssClasses ="btn-red"))),
-        shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel. If you make a mistake, you can re-set to the built
-        in data by clicking the button to the right.", class = "text-muted mb-1"),
+        shiny::h3("Or edit data in place"),
+        shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted mb-1"),
         rhandsontable::rHandsontableOutput("hot_survey")
     )
 }
@@ -71,10 +68,13 @@ panelReviewInput <- function() {
             Please review it, and go back and edit your data if anything doesn't look right.",
             class = "mb-3"
         ),
-        shiny::div("", class="suggest-save",
-            shiny::span("Once you have reviewed your input data, you may want to "),
-            shiny::tags$a(class = "shiny-download-link", href = "", "download a digest file", id = "digestDownload3", download = NA, target = "_blank"),
-            shiny::span("containing your input data and results. You can re-upload this file later to view your results again and change your input data.")
+        shiny::div("", class="suggest-save mb-3",
+            shiny::span("Please save your work. This downloads a file containing your input data and results. 
+                        If you get disconnected from the server, or if you want to return to the app later 
+                        and review your results, you can re-upload this file and resume where you left off.")
+        ),
+        shiny::div("", class="save-button",
+            downloadButtonWithCustomClass("digestDownload3", "Save your work")
         ),
         shiny::conditionalPanel(
             condition = "output.incompleteProgramData",
