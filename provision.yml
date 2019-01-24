@@ -16,5 +16,5 @@ packages:
 
 package_sources:
   github:
-  - mrc-ide/first90
+  - mrc-ide/first90release
   - andrewsali/shinycssloaders
