@@ -61,21 +61,25 @@ programDataHeaders <- list(tot= "Total Tests",
                             ancpos= "Total Positive ANC Tests"
 )
 
-validateProgramData <- function(df) {
+validateProgramData <- function(df, countryAndRegionName) {
 
     if (is.null(df))
         return(FALSE)
 
-    validateYear <- function(givenYear) {
+    validateRow <- function(givenYear) {
 
         rows <- df[which(df$year == givenYear),]
 
-        nrow(rows) == 0 |
-        identical(as.character(rows$sex),c("both")) |
-        identical(sort(as.character(rows$sex)), sort(c("male", "female")))
+        validSex <- nrow(rows) == 0 ||
+                    identical(as.character(rows$sex),c("both")) ||
+                    identical(sort(as.character(rows$sex)), sort(c("male", "female")))
+
+        validCountry <- all(as.character(rows$country) == countryAndRegionName)
+
+        validSex && validCountry
     }
 
-    result <- lapply(seq(from=2010,to=2018,by=1), validateYear)
+    result <- lapply(df$year, validateRow)
     all(result == TRUE)
 }
 
@@ -118,6 +122,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
                 state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
                 drops <- c("agegr")
                 state$program_data <-  state$program_data[ , !(names(state$program_data) %in% drops)]
+                state$program_data$country <- as.character(state$program_data$country)
             }
             else {
                 state$loadNewData <- TRUE
@@ -126,7 +131,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$programDataValid <- shiny::reactive({
-        validateProgramData(state$program_data)
+        validateProgramData(state$program_data, spectrumFilesState$countryAndRegionName())
     })
 
     state$program_data_human_readable <- shiny::reactive({
@@ -189,7 +194,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Country or region") %>%
             rhandsontable::hot_col("Total Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total Positive Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
