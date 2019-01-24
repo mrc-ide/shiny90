@@ -200,7 +200,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (is.null(inFile)){
             return(NULL)
         }
-        
+
         newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
         state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
@@ -243,10 +243,22 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
-    output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable(),
-                                                        glue::glue("survey-data-{spectrumFilesState$country}.csv"))
+    state$surveyTemplateFileName <- shiny::reactive({
+        str(spectrumFilesState$countryAndRegionName())
+        countryAndRegionName <- spectrumFilesState$countryAndRegionName()
+        gsub(" ", "", glue::glue("survey-data-{countryAndRegionName}.csv"), fixed=TRUE)
+    })
+
+    output$downloadSurveyTemplate <- shiny::downloadHandler(
+                                                filename = state$surveyTemplateFileName(),
+                                                contentType = "text/csv",
+                                                content = function(file) {
+                                                    write.csv(state$survey_data_human_readable(), file, row.names = FALSE, na = "")
+                                                }
+                                            )
+
     output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable(),
-                                                        glue::glue("program-data-{spectrumFilesState$country}.csv"))
+                                                        gsub(" ", "", glue::glue("program-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
 
     state
 }
@@ -255,10 +267,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 downloadTemplate <- function(dataframe, filename) {
 
     shiny::downloadHandler(
-        filename = filename,
+        filename =  gsub(" ", "", glue::glue("survey-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE),
             contentType = "text/csv",
             content = function(file) {
-                write.csv(dataframe, file, row.names = FALSE, na = "")
+                write.csv(state$survey_data_human_readable(), file, row.names = FALSE, na = "")
             }
     )
 }
