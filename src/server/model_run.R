@@ -214,7 +214,7 @@ plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, coun
     })
 
     output$outputs_firstAndSecond90 <- shiny::renderPlot({
-        first90::plot_out_90s(mod, fp, likdat, country, out_evertest, simul)
+        first90::plot_out_90s(mod, fp, likdat, country, out_evertest, surveyAsDataTable, simul)
     })
 
     output$outputs_womenEverTested <- shiny::renderPlot({
