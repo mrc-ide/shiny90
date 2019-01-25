@@ -20,7 +20,7 @@ panelSurvey <- function() {
         shiny::tags$p("All columns are required. Where values are unknown, please just leave blank. 
                       The app will not accept an uploaded CSV with the wrong headers. It may be
                       useful to download the headers as a template:"),
-        shiny::downloadButton("downloadSurveyTemplate", "Download template", class = "mb-4"),
+        shiny::downloadButton("downloadSurveyTemplate", "Download CSV template", class = "mb-4"),
         infoAlert("usePercentInfo", "Estimates, Standard Error and Lower and Upper Confidence Intervals should
                   all be given as percentages (for example, enter percentage 87.56 rather than proportion 0.8756)."),
         shiny::h3("Upload new data"),
