@@ -78,3 +78,31 @@ testthat::test_that("cannot upload program data for a different country", {
     waitForVisible(errorAlert)
     expectTextEqual("Error: You cannot upload program data for a different country. This file has been ignored.", errorAlert)
 })
+
+
+testthat::test_that("can download program data template with correct country name", {
+
+    uploadSpectrumFileAndSwitchTab("Upload programmatic data")
+
+    downloadLink <- wd$findElement("css", "#downloadProgramTemplate")
+    expectTextEqual("Download CSV template", downloadLink)
+
+    downloadLink$clickElement()
+    downloadPath <-file.path(downloadedFiles, "program-data-Malawi.csv")
+    waitForAndTryAgain(function() { file.exists(downloadPath) }, function() {
+        downloadLink$clickElement()
+    })
+
+    uploadNewSpectrumFile(wd)
+    switchTab(wd, "Upload programmatic data")
+
+    downloadLink <- wd$findElement("css", "#downloadProgramTemplate")
+    expectTextEqual("Download CSV template", downloadLink)
+
+    downloadLink$clickElement()
+    downloadPath <-file.path(downloadedFiles, "program-data-Togo-Centrale.csv")
+    waitForAndTryAgain(function() { file.exists(downloadPath) }, function() {
+        downloadLink$clickElement()
+    })
+
+})

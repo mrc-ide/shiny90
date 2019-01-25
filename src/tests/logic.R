@@ -46,6 +46,22 @@ uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Mal
     uploadFile(wd, dir, filename, "#spectrumFile")
 }
 
+uploadNewSpectrumFile <- function(wd, filename = "Togo_Centrale_2018.PJNZ") {
+    switchTab(wd, "Upload spectrum file(s)")
+
+    section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
+    waitForVisible(section)
+
+    files <- waitForThisManyChildren(section, "li", 1)
+    files[[1]]$findChildElement("css", "button")$clickElement()
+    files <- waitForThisManyChildren(section, "li", 0)
+
+    uploadSpectrumFile(wd, filename = filename)
+    waitForVisible(section)
+
+    expectTextEqual(filename, waitForChildElement(section, "li > span"))
+}
+
 verifyPJNZFileUpload <- function(filename) {
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
 

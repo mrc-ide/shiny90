@@ -7,7 +7,7 @@ panelSurvey <- function() {
         Upper Confidence Interval, Counts</strong></p> <p>Estimates, Standard Error, and Lower and Upper Confidence Intervals
         should all be given as percentages. Where values are unknown, please just leave blank.</p><p> The app will not accept an uploaded CSV with the wrong headers.
         It may be useful to download the headers as a template:</p>"),
-        shiny::downloadButton("downloadSurveyTemplate", "Download template"),
+        shiny::downloadButton("downloadSurveyTemplate", "Download CSV template"),
         shiny::h3("Upload new data"),
         errorAlert(id = "wrongSurveyHeadersError",
                     condition = "output.wrongSurveyHeaders",

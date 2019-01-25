@@ -44,3 +44,30 @@ testthat::test_that("cannot upload a csv for a different country", {
     errorAlert <- wd$findElement("css", "#wrongSurveyCountryError")
     expectTextEqual("Error: You cannot upload survey data for a different country. This file has been ignored.", errorAlert)
 })
+
+testthat::test_that("can download survey data template with correct country name", {
+
+    uploadSpectrumFileAndSwitchTab("Upload survey data")
+
+    downloadLink <- wd$findElement("css", "#downloadSurveyTemplate")
+    expectTextEqual("Download CSV template", downloadLink)
+
+    downloadLink$clickElement()
+    downloadPath <-file.path(downloadedFiles, "survey-data-Malawi.csv")
+    waitForAndTryAgain(function() { file.exists(downloadPath) }, function() {
+        downloadLink$clickElement()
+    })
+
+    uploadNewSpectrumFile(wd)
+    switchTab(wd, "Upload survey data")
+
+    downloadLink <- wd$findElement("css", "#downloadSurveyTemplate")
+    expectTextEqual("Download CSV template", downloadLink)
+
+    downloadLink$clickElement()
+    downloadPath <-file.path(downloadedFiles, "survey-data-Togo-Centrale.csv")
+    waitForAndTryAgain(function() { file.exists(downloadPath) }, function() {
+        downloadLink$clickElement()
+    })
+
+})
