@@ -42,12 +42,12 @@ uploadFile <- function(wd, dir="../../../sample_files/", filename, inputId) {
 }
 
 uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Malawi_2018_version_8.PJNZ") {
-    expectTextEqual("Upload spectrum file(s)", wd$findElement("css", inActivePane(".panelTitle")))
+    expectTextEqual("Upload Spectrum file(s)", wd$findElement("css", inActivePane(".panelTitle")))
     uploadFile(wd, dir, filename, "#spectrumFile")
 }
 
 uploadNewSpectrumFile <- function(wd, filename = "Togo_Centrale_2018.PJNZ") {
-    switchTab(wd, "Upload spectrum file(s)")
+    switchTab(wd, "Upload Spectrum file(s)")
 
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
