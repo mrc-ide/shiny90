@@ -77,3 +77,23 @@ testthat::test_that("can create empty program data with expected headers", {
     testthat::expect_true(all(df$country == "Malawi"))
     testthat::expect_true(all(is.na(df$anc)))
 })
+
+testthat::test_that("cast to numeric casts given headers", {
+
+    headers <- list(n = "N", s = "S")
+
+    b = c(TRUE, TRUE, FALSE)
+    n = c("2", "3", "5")
+    s = c("NA", "NA", "6.3216")
+
+    df = data.frame(b, n, s)
+    colnames(df) <- c("b", "n", "s")
+
+    result <- castToNumeric(df, headers)
+
+    testthat::expect_false(is.numeric(result$b))
+    testthat::expect_true(is.numeric(result$n))
+    testthat::expect_true(is.numeric(result$s))
+    testthat::expect_equal(result$s[1], as.numeric(NA))
+    testthat::expect_equal(result$s[3], 6.3216)
+})

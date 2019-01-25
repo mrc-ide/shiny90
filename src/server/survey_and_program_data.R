@@ -1,5 +1,33 @@
 library(magrittr)
 
+as.num = function(x) {
+
+    x[x == "NA"] <- NA
+
+    if (is.factor(x)){
+        x = as.character(x)
+    }
+
+    as.numeric(x)
+}
+
+mapColumnToNumeric <- function(dataframe, key) {
+    dataframe[[key]] = as.num(dataframe[[key]])
+    dataframe
+}
+
+mapColumnsToNumeric <- function(dataframe, colnames) {
+
+    for (key in colnames){
+        dataframe <- mapColumnToNumeric(dataframe, key)
+    }
+    dataframe
+}
+
+castToNumeric <- function(dataframe, headers){
+    mapColumnsToNumeric(dataframe, names(headers))
+}
+
 mapHeaders <- function(dataframe, from, to) {
     i <- match(from, names(dataframe))
     j <- !is.na(i)
