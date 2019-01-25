@@ -1,7 +1,7 @@
 library(methods)
 context("basic")
 
-testthat::test_that("program data filename is correctly created", {
+testthat::test_that("template filenames is correctly created", {
 
     spectrumFilesState <<- c()
     spectrumFilesState$countryAndRegionName <<- function() {
