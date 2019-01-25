@@ -47,7 +47,7 @@ uploadSpectrumFile <- function(wd, dir="../../../sample_files/", filename = "Mal
 }
 
 uploadNewSpectrumFile <- function(wd, filename = "Togo_Centrale_2018.PJNZ") {
-    switchTab(wd, "Upload spectrum file(s)")
+    switchTab(wd, "Upload Spectrum file(s)")
 
     section <- wd$findElement("css", ".uploadedSpectrumFilesSection")
     waitForVisible(section)
