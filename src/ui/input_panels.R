@@ -60,7 +60,6 @@ panelProgram <- function() {
         shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
         shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
         shiny::HTML("<li><strong>Total Positive ANC Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
-        shiny::HTML("<li><strong>Age Group:</strong> 15-24, 25-34, 35-49, 50+, 15-49 or 15+.</li>"),
         shiny::HTML("<li><strong>Sex:</strong> Male, female or both.</li>")
         ),
         shiny::p("*A person should only be counted as testing once even if up to three different assays are performed to confirm an HIV-positive diagnosis according to the national testing algorithm.
