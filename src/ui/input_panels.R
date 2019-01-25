@@ -39,7 +39,10 @@ panelSurvey <- function() {
 
 panelProgram <- function() {
     shiny::div("", class="mb-3",
-        shiny::tags$p("Please provide programmatic data sourced from national testing programs. Where available please provide
+        shiny::tags$p("Please provide programmatic data sourced from national testing programs. For each year please
+        provide either sex aggregated data (1 row with sex = \"both\") or sex disaggregated data (2 rows with sex=\"male\" and sex=\"female\" respectively).
+        Where values are unknown, please just leave blank.
+        Where available please provide
         the following:"),
         shiny::tags$ul(
         shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
@@ -76,7 +79,6 @@ panelProgram <- function() {
         shiny::div("Hint: Select rows and use ctrl-c to copy to clipboard. Use ctrl-v to paste rows from excel.", class = "text-muted mb-1"),
         rhandsontable::rHandsontableOutput("hot_program")
     )
-    # TODO: Should always have (blank rows if no data) years from 2005 - current year
 }
 
 
@@ -93,6 +95,11 @@ panelReviewInput <- function() {
         ),
         shiny::div("", class="save-button",
             downloadButtonWithCustomClass("digestDownload3", "Save your work")
+        ),
+        shiny::conditionalPanel(
+            condition = "output.invalidProgramData",
+            shiny::div("The programmatic data for your country is invalid. Please check the guidance and correct it.",
+            class = "mt-5 alert alert-danger", id="invalid-error")
         ),
         shiny::conditionalPanel(
             condition = "output.incompleteProgramData",
