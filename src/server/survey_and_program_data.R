@@ -1,29 +1,5 @@
 library(magrittr)
 
-as.num = function(x) {
-
-    x[x == "NA"] <- NA
-
-    if (is.factor(x)){
-        x = as.character(x)
-    }
-
-    as.numeric(x)
-}
-
-mapColumnToNumeric <- function(dataframe, key) {
-    dataframe[[key]] = as.num(dataframe[[key]])
-    dataframe
-}
-
-mapColumnsToNumeric <- function(dataframe, colnames) {
-
-    for (key in colnames){
-        dataframe <- mapColumnToNumeric(dataframe, key)
-    }
-    dataframe
-}
-
 mapHeaders <- function(dataframe, from, to) {
     i <- match(from, names(dataframe))
     j <- !is.na(i)
@@ -83,10 +59,6 @@ validateProgramData <- function(df, countryAndRegionName) {
     all(result == TRUE)
 }
 
-castToNumeric <- function(dataframe, headers){
-    mapColumnsToNumeric(dataframe, names(headers))
-}
-
 removeTabs <- function(name) {
     gsub("\t", "", name)
 }
@@ -109,6 +81,19 @@ anySurveyData <- function(df) {
     !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }
 
+createEmptyProgramData <- function(countryAndRegionName) {
+    data.frame(country = countryAndRegionName,
+                year = 2010:2018,
+                sex = 'both',
+                tot = NA,
+                totpos = NA,
+                vct = NA,
+                vctpos = NA,
+                anc = NA,
+                ancpos = NA,
+                stringsAsFactors = FALSE)
+}
+
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     state$touched <- FALSE
@@ -119,10 +104,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
                 state$survey <- createEmptySurveyData(spectrumFilesState$countryAndRegionName())
-                state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
-                drops <- c("agegr")
-                state$program_data <-  state$program_data[ , !(names(state$program_data) %in% drops)]
-                state$program_data$country <- as.character(state$program_data$country)
+                state$program_data <- createEmptyProgramData(spectrumFilesState$countryAndRegionName())
             }
             else {
                 state$loadNewData <- TRUE

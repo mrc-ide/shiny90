@@ -33,26 +33,6 @@ testthat::test_that("mapHeadersFromHumanReadable maps headers", {
     testthat::expect_equal(colnames(result), c("a", "b", "c"))
 })
 
-testthat::test_that("cast to numeric casts given headers", {
-
-    headers <- list(n = "N", s = "S")
-
-    b = c(TRUE, TRUE, FALSE)
-    n = c("2", "3", "5")
-    s = c("NA", "NA", "6.3216")
-
-    df = data.frame(b, n, s)
-    colnames(df) <- c("b", "n", "s")
-
-    result <- castToNumeric(df, headers)
-
-    testthat::expect_false(is.numeric(result$b))
-    testthat::expect_true(is.numeric(result$n))
-    testthat::expect_true(is.numeric(result$s))
-    testthat::expect_equal(result$s[1], as.numeric(NA))
-    testthat::expect_equal(result$s[3], 6.3216)
-})
-
 testthat::test_that("anySurveyData is false if not all rows have a survey id", {
 
     df <- createEmptySurveyData("Malawi")
@@ -77,4 +57,23 @@ testthat::test_that("anySurveyData is true if one row with surveyid", {
     result <- anySurveyData(df)
 
     testthat::expect_true(result)
+})
+
+testthat::test_that("program data headers are correct", {
+
+    actualHeaders <- c(names(sharedHeaders),names(programDataHeaders))
+    expectedHeaders <- c("country", "year", "sex", "tot", "totpos", "vct", "vctpos", "anc", "ancpos")
+    testthat::expect_true(identical(actualHeaders, expectedHeaders))
+})
+
+
+testthat::test_that("can create empty program data with expected headers", {
+
+    df <- createEmptyProgramData("Malawi")
+
+    expectedHeaders <- c(names(sharedHeaders),names(programDataHeaders))
+    testthat::expect_true(identical(colnames(df), expectedHeaders))
+
+    testthat::expect_true(all(df$country == "Malawi"))
+    testthat::expect_true(all(is.na(df$anc)))
 })
