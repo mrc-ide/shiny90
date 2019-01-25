@@ -249,17 +249,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         gsub(" ", "", glue::glue("survey-data-{countryAndRegionName}.csv"), fixed=TRUE)
     })
 
-    output$downloadSurveyTemplate <- shiny::downloadHandler(
-                                                filename = state$surveyTemplateFileName(),
-                                                contentType = "text/csv",
-                                                content = function(file) {
-                                                    write.csv(state$survey_data_human_readable(), file, row.names = FALSE, na = "")
-                                                }
-                                            )
+    shiny::observeEvent(spectrumFilesState$countryAndRegionName(), {
+        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable,
+            gsub(" ", "", glue::glue("survey-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
 
-    output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable(),
-                                                        gsub(" ", "", glue::glue("program-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
-
+        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable,
+            gsub(" ", "", glue::glue("program-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
+    })
+    
     state
 }
 
@@ -267,10 +264,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 downloadTemplate <- function(dataframe, filename) {
 
     shiny::downloadHandler(
-        filename =  gsub(" ", "", glue::glue("survey-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE),
+        filename =  filename,
             contentType = "text/csv",
             content = function(file) {
-                write.csv(state$survey_data_human_readable(), file, row.names = FALSE, na = "")
+                write.csv(dataframe(), file, row.names = FALSE, na = "")
             }
     )
 }
