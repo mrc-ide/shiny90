@@ -243,23 +243,17 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
-    state$surveyTemplateFileName <- shiny::reactive({
-        str(spectrumFilesState$countryAndRegionName())
-        countryAndRegionName <- spectrumFilesState$countryAndRegionName()
-        gsub(" ", "", glue::glue("survey-data-{countryAndRegionName}.csv"), fixed=TRUE)
-    })
-
     shiny::observeEvent(spectrumFilesState$countryAndRegionName(), {
-        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable,
-            gsub(" ", "", glue::glue("survey-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
-
-        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable,
-            gsub(" ", "", glue::glue("program-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE))
+        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable, templateFileName("survey"))
+        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable, templateFileName("program"))
     })
     
     state
 }
 
+templateFileName <- function(dataType) {
+    gsub(" ", "", glue::glue("{dataType}-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE)
+}
 
 downloadTemplate <- function(dataframe, filename) {
 
