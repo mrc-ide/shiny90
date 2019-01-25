@@ -84,6 +84,11 @@ panelReviewInput <- function() {
             class = "mt-5 alert alert-danger", id="invalid-error")
         ),
         shiny::conditionalPanel(
+          condition = "output.invalidSurveyData",
+          shiny::div("The survey data for your country is invalid. Please check the guidance and correct it.",
+                     class = "mt-5 alert alert-danger", id="invalid-error")
+        ),
+        shiny::conditionalPanel(
             condition = "output.incompleteProgramData",
                 shiny::div("The programmatic data for your country is incomplete. Please fill in missing values if you have them.",
                 class = "mt-5 alert alert-warning", id="incomplete-warning")

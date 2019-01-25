@@ -87,6 +87,14 @@ validateProgramData <- function(df, countryAndRegionName) {
     all(result == TRUE)
 }
 
+validateSurveyData <- function(df, countryAndRegionName) {
+  if (is.null(df)) {
+    return(FALSE)
+  } else {
+    return(all(df$country == countryAndRegionName))
+  }
+}
+
 removeTabs <- function(name) {
     gsub("\t", "", name)
 }
@@ -143,6 +151,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$programDataValid <- shiny::reactive({
         validateProgramData(state$program_data, spectrumFilesState$countryAndRegionName())
     })
+    
+    state$surveyDataValid <- shiny::reactive({
+      validateSurveyData(state$program_data, spectrumFilesState$countryAndRegionName())
+    })
 
     state$program_data_human_readable <- shiny::reactive({
         mapHeadersToHumanReadable(state$program_data, c(programDataHeaders,sharedHeaders))
@@ -162,12 +174,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
     output$invalidProgramData <- shiny::reactive({ !state$programDataValid() })
-
+    
     output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
     output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
     output$anyProgramDataAnc <- shiny::reactive({ state$anyProgramDataAnc() })
     output$anyProgramDataAncPos <- shiny::reactive({ state$anyProgramDataAncPos() })
 
+    output$invalidSurveyData <- shiny::reactive({ !state$surveyDataValid() })
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
     output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
@@ -181,6 +194,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataAncPos", suspendWhenHidden = FALSE)
 
+    shiny::outputOptions(output, "invalidSurveyData", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongProgramHeaders", suspendWhenHidden = FALSE)
@@ -193,7 +207,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Country or region") %>%
             rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
             rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
