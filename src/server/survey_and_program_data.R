@@ -85,12 +85,12 @@ createEmptyProgramData <- function(countryAndRegionName) {
     data.frame(country = countryAndRegionName,
                 year = 2010:2018,
                 sex = 'both',
-                tot = NA,
-                totpos = NA,
-                vct = NA,
-                vctpos = NA,
-                anc = NA,
-                ancpos = NA,
+                tot = NA_integer_,
+                totpos = NA_integer_,
+                vct = NA_integer_,
+                vctpos = NA_integer_,
+                anc = NA_integer_,
+                ancpos = NA_integer_,
                 stringsAsFactors = FALSE)
 }
 
