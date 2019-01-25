@@ -3,18 +3,18 @@ panelSurvey <- function() {
         shiny::tags$p("Please provide survey data on the proportion of people ever tested by sex and age group. 
                       Where available please provide the following:"),
         shiny::tags$ul(
-            shiny::HTML("<li><strong>Country or region</strong></li>"),
+            shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
             shiny::HTML("<li><strong>Survey Id</strong></li>"),
-            shiny::HTML("<li><strong>Year</strong></li>"),
-            shiny::HTML("<li><strong>Age Group</strong></li>"),
-            shiny::HTML("<li><strong>Sex</strong></li>"),
-            shiny::HTML("<li><strong>HIV Status:</strong> HIV status for the group surveyed, 
-                        either positive, negative or all.</li>"),
-            shiny::HTML("<li><strong>Estimate:</strong> As a percentage.</li>"),
+            shiny::HTML("<li><strong>Year:</strong> Year in which survey was conducted; year of survey fieldwork
+                        midpoint if survey spanned multiple years.</li>"),
+            shiny::HTML("<li><strong>Age Group:</strong> 15-24, 25-34, 35-49, 50+, 15-49 or 15+.</li>"),
+            shiny::HTML("<li><strong>Sex</strong> Male, female or both.</li>"),
+            shiny::HTML("<li><strong>HIV Status:</strong> Positive, negative or all.</li>"),
+            shiny::HTML("<li><strong>Estimate:</strong> Estimate for proportion ever tested for HIV; as a percentage (e.g. 87.6 rather than proportion 0.876).</li>"),
             shiny::HTML("<li><strong>Standard Error:</strong> As a percentage.</li>"),
             shiny::HTML("<li><strong>Lower Confidence Interval:</strong> As a percentage.</li>"),
             shiny::HTML("<li><strong>Upper Confidence Interval:</strong> As a percentage.</li>"),
-            shiny::HTML("<li><strong>Counts</strong></li>")
+            shiny::HTML("<li><strong>Counts:</strong> Unweighted counts of survey respondents in stratification group.</li>")
         ),
         shiny::tags$p("You can copy and paste from Excel or upload a new CSV file."),
         shiny::tags$p("All columns are required. Where values are unknown, please just leave blank. 
@@ -42,8 +42,9 @@ panelProgram <- function() {
         shiny::tags$p("Please provide programmatic data sourced from national testing programs. Where available please provide
         the following:"),
         shiny::tags$ul(
-        shiny::HTML("<li><strong>Country or region</strong></li>"),
-        shiny::HTML("<li><strong>Year</strong></li>"),
+        shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
+        shiny::HTML("<li><strong>Year:</strong> Year in which the survey was conducted; year of survey fieldwork
+                            midpoint if survey spanned multiple years.</li>"),
         shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
                             This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
                             during antenatal care (ANC), and for which the clients received the results.</li>"),
@@ -56,8 +57,8 @@ panelProgram <- function() {
         shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
         shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
         shiny::HTML("<li><strong>Total Positive ANC Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
-        shiny::HTML("<li><strong>Age Group</strong></li>"),
-        shiny::HTML("<li><strong>Sex</strong></li>")
+        shiny::HTML("<li><strong>Age Group:</strong> 15-24, 25-34, 35-49, 50+, 15-49 or 15+.</li>"),
+        shiny::HTML("<li><strong>Sex:</strong> Male, female or both.</li>")
         ),
         shiny::p("*A person should only be counted as testing once even if up to three different assays are performed to confirm an HIV-positive diagnosis according to the national testing algorithm.
         A person who is tested twice during the year should be counted as contributing two tests."),
