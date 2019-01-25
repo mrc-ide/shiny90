@@ -243,7 +243,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (is.null(inFile)){
             return(NULL)
         }
-        
+
         newProgram <- read.csv(inFile$datapath, check.names=FALSE)
 
         state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
@@ -286,22 +286,25 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         }
     })
 
-    output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable(),
-                                                        glue::glue("survey-data-{spectrumFilesState$country}.csv"))
-    output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable(),
-                                                        glue::glue("program-data-{spectrumFilesState$country}.csv"))
-
+    shiny::observeEvent(spectrumFilesState$countryAndRegionName(), {
+        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable, templateFileName("survey", spectrumFilesState))
+        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable, templateFileName("program", spectrumFilesState))
+    })
+    
     state
 }
 
+templateFileName <- function(dataType, spectrumFilesState) {
+    gsub(" ", "", glue::glue("{dataType}-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE)
+}
 
 downloadTemplate <- function(dataframe, filename) {
 
     shiny::downloadHandler(
-        filename = filename,
+        filename =  filename,
             contentType = "text/csv",
             content = function(file) {
-                write.csv(dataframe, file, row.names = FALSE, na = "")
+                write.csv(dataframe(), file, row.names = FALSE, na = "")
             }
     )
 }
