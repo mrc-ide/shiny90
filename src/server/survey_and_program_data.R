@@ -244,14 +244,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     shiny::observeEvent(spectrumFilesState$countryAndRegionName(), {
-        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable, templateFileName("survey"))
-        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable, templateFileName("program"))
+        output$downloadSurveyTemplate <- downloadTemplate(state$survey_data_human_readable, templateFileName("survey", spectrumFilesState))
+        output$downloadProgramTemplate <- downloadTemplate(state$program_data_human_readable, templateFileName("program", spectrumFilesState))
     })
     
     state
 }
 
-templateFileName <- function(dataType) {
+templateFileName <- function(dataType, spectrumFilesState) {
     gsub(" ", "", glue::glue("{dataType}-data-{spectrumFilesState$countryAndRegionName()}.csv"), fixed=TRUE)
 }
 
