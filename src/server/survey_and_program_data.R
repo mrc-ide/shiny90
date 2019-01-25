@@ -1,29 +1,5 @@
 library(magrittr)
 
-as.num = function(x) {
-
-    x[x == "NA"] <- NA
-
-    if (is.factor(x)){
-        x = as.character(x)
-    }
-
-    as.numeric(x)
-}
-
-mapColumnToNumeric <- function(dataframe, key) {
-    dataframe[[key]] = as.num(dataframe[[key]])
-    dataframe
-}
-
-mapColumnsToNumeric <- function(dataframe, colnames) {
-
-    for (key in colnames){
-        dataframe <- mapColumnToNumeric(dataframe, key)
-    }
-    dataframe
-}
-
 mapHeaders <- function(dataframe, from, to) {
     i <- match(from, names(dataframe))
     j <- !is.na(i)
@@ -41,12 +17,12 @@ mapHeadersFromHumanReadable <- function(dataframe, headers) {
 
 sharedHeaders <- list(country= "Country or region",
                         year= "Year",
-                        hivstatus= "HIV Status",
-                        sex= "Sex",
-                        agegr= "Age Group")
+                        sex= "Sex")
 
 surveyDataHeaders <- list(surveyid="Survey Id",
+                            hivstatus= "HIV Status",
                             outcome = "Outcome",
+                            agegr= "Age Group",
                             counts = "Counts",
                             est= "Estimate",
                             se= "Standard Error",
@@ -61,8 +37,26 @@ programDataHeaders <- list(tot= "Total Tests",
                             ancpos= "Total Positive ANC Tests"
 )
 
-castToNumeric <- function(dataframe, headers){
-    mapColumnsToNumeric(dataframe, names(headers))
+validateProgramData <- function(df, countryAndRegionName) {
+
+    if (is.null(df))
+        return(FALSE)
+
+    validateRow <- function(givenYear) {
+
+        rows <- df[which(df$year == givenYear),]
+
+        validSex <- nrow(rows) == 0 ||
+                    identical(as.character(rows$sex),c("both")) ||
+                    identical(sort(as.character(rows$sex)), sort(c("male", "female")))
+
+        validCountry <- all(as.character(rows$country) == countryAndRegionName)
+
+        validSex && validCountry
+    }
+
+    result <- lapply(df$year, validateRow)
+    all(result == TRUE)
 }
 
 removeTabs <- function(name) {
@@ -87,6 +81,19 @@ anySurveyData <- function(df) {
     !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }
 
+createEmptyProgramData <- function(countryAndRegionName) {
+    data.frame(country = countryAndRegionName,
+                year = 2010:2018,
+                sex = 'both',
+                tot = NA_integer_,
+                totpos = NA_integer_,
+                vct = NA_integer_,
+                vctpos = NA_integer_,
+                anc = NA_integer_,
+                ancpos = NA_integer_,
+                stringsAsFactors = FALSE)
+}
+
 surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     state$touched <- FALSE
@@ -97,12 +104,16 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         if (!is.null(spectrumFilesState$countryAndRegionName())){
             if (state$loadNewData){
                 state$survey <- createEmptySurveyData(spectrumFilesState$countryAndRegionName())
-                state$program_data <- castToNumeric(first90::select_prgmdata(NULL, spectrumFilesState$countryAndRegionName(), NULL), programDataHeaders)
+                state$program_data <- createEmptyProgramData(spectrumFilesState$countryAndRegionName())
             }
             else {
                 state$loadNewData <- TRUE
             }
         }
+    })
+
+    state$programDataValid <- shiny::reactive({
+        validateProgramData(state$program_data, spectrumFilesState$countryAndRegionName())
     })
 
     state$program_data_human_readable <- shiny::reactive({
@@ -122,6 +133,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
 
     output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
+    output$invalidProgramData <- shiny::reactive({ !state$programDataValid() })
 
     output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
     output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
@@ -134,6 +146,8 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     output$wrongProgramCountry <- shiny::reactive({ state$wrongProgramCountry })
 
     shiny::outputOptions(output, "incompleteProgramData", suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, "invalidProgramData", suspendWhenHidden = FALSE)
+
     shiny::outputOptions(output, "anyProgramDataTot", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataTotPos", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
@@ -162,13 +176,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_program <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$program_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
+            rhandsontable::hot_col("Country or region") %>%
             rhandsontable::hot_col("Total Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total Positive Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total HTC Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total Positive HTC Tests", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Total ANC Tests", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer)
+            rhandsontable::hot_col("Total Positive ANC Tests", type="numeric", renderer = number_renderer) %>%
+            rhandsontable::hot_col("Sex", type = "dropdown", source = c("both", "female", "male"))
     })
 
     shiny::observeEvent(input$surveyData, {
