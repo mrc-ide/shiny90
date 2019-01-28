@@ -56,8 +56,10 @@ panelProgram <- function() {
         shiny::HTML("<li><strong>Total HTC Tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of
                         ANC services,
                              and for which clients received the results. If only the overall total is available, please input NA.</li>"),
-        shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
-        shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
+        shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.
+        If only the overall total number of positive tests performed is available, please input NA.</li>"),
+        shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.
+        If only the overal total number of positive tests performed is available, please input NA.</li>"),
         shiny::HTML("<li><strong>Total Positive ANC Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
         shiny::HTML("<li><strong>Sex:</strong> Male, female or both.</li>")
         ),
