@@ -46,8 +46,7 @@ panelProgram <- function() {
         the following:"),
         shiny::tags$ul(
         shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
-        shiny::HTML("<li><strong>Year:</strong> Year in which the survey was conducted; year of survey fieldwork
-                            midpoint if survey spanned multiple years.</li>"),
+        shiny::HTML("<li><strong>Year:</strong> Calendar year in which the HIV tests were performed.</li>"),
         shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
                             This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
                             during antenatal care (ANC), and for which the clients received the results.</li>"),
