@@ -14,7 +14,6 @@ before_install:
   - git clone https://$github_pat@github.com/mrc-ide/shiny90_sample_files sample_files
   - cd sample_files && git checkout $submodule_commit
   - cd ../
-  - echo $github_pat > github_token
   - export $(dbus-launch)
 install:
   - ./scripts/bootstrap
