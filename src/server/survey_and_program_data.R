@@ -87,6 +87,14 @@ validateProgramData <- function(df, countryAndRegionName) {
     all(result == TRUE)
 }
 
+validateSurveyData <- function(df, countryAndRegionName) {
+  !is.null(df) && 
+    nrow(df) > 0 && 
+    all(c("surveyid", "country") %in% names(df)) &&
+    all(!is.na(df$surveyid)) && 
+    all(df$country == countryAndRegionName)
+}
+
 removeTabs <- function(name) {
     gsub("\t", "", name)
 }
@@ -102,11 +110,8 @@ createEmptySurveyData <- function(countryAndRegionName) {
                 se=rep(NA_real_, 1),
                 ci_l=rep(NA_real_, 1),
                 ci_u=rep(NA_real_, 1),
-                counts=rep(NA_integer_, 1))
-}
-
-anySurveyData <- function(df) {
-    !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
+                counts=rep(NA_integer_, 1),
+                stringsAsFactors = FALSE)
 }
 
 createEmptyProgramData <- function(countryAndRegionName) {
@@ -143,6 +148,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     state$programDataValid <- shiny::reactive({
         validateProgramData(state$program_data, spectrumFilesState$countryAndRegionName())
     })
+    
+    state$surveyDataValid <- shiny::reactive({
+      validateSurveyData(state$survey, spectrumFilesState$countryAndRegionName())
+    })
 
     state$program_data_human_readable <- shiny::reactive({
         mapHeadersToHumanReadable(state$program_data, c(programDataHeaders,sharedHeaders))
@@ -153,7 +162,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
-    state$anySurveyData <- shiny::reactive({ anySurveyData(state$survey) })
 
     state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
     state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
@@ -162,12 +170,13 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
     output$invalidProgramData <- shiny::reactive({ !state$programDataValid() })
-
+    
     output$anyProgramDataTot <- shiny::reactive({ state$anyProgramDataTot() })
     output$anyProgramDataTotPos <- shiny::reactive({ state$anyProgramDataTotPos() })
     output$anyProgramDataAnc <- shiny::reactive({ state$anyProgramDataAnc() })
     output$anyProgramDataAncPos <- shiny::reactive({ state$anyProgramDataAncPos() })
 
+    output$invalidSurveyData <- shiny::reactive({ !state$surveyDataValid() })
     output$wrongSurveyHeaders <- shiny::reactive({ state$wrongSurveyHeaders })
     output$wrongSurveyCountry <- shiny::reactive({ state$wrongSurveyCountry })
     output$wrongProgramHeaders <- shiny::reactive({ state$wrongProgramHeaders })
@@ -181,6 +190,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     shiny::outputOptions(output, "anyProgramDataAnc", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "anyProgramDataAncPos", suspendWhenHidden = FALSE)
 
+    shiny::outputOptions(output, "invalidSurveyData", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyHeaders", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongSurveyCountry", suspendWhenHidden = FALSE)
     shiny::outputOptions(output, "wrongProgramHeaders", suspendWhenHidden = FALSE)
@@ -193,13 +203,15 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
 
     output$hot_survey <- rhandsontable::renderRHandsontable({
         rhandsontable::rhandsontable(state$survey_data_human_readable(), rowHeaders = NULL, stretchH = "all") %>%
-            rhandsontable::hot_col("Country or region", readOnly = TRUE) %>%
-            rhandsontable::hot_col("Age Group", allowInvalid = TRUE)  %>%
+            rhandsontable::hot_col("Country or region") %>%
+            rhandsontable::hot_col("Age Group", type = "dropdown", source = c("15-24", "25-34", "35-49", "50+", "15-49", "15+"))  %>%
             rhandsontable::hot_col("Estimate", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Standard Error", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Lower Confidence Interval", type="numeric", renderer = number_renderer) %>%
             rhandsontable::hot_col("Upper Confidence Interval", type="numeric", renderer = number_renderer) %>%
-            rhandsontable::hot_col("Year", type="numeric", format = "0")
+            rhandsontable::hot_col("Year", type="numeric", format = "0") %>%
+            rhandsontable::hot_col("Sex", type = "dropdown", source = c("both", "female", "male")) %>%
+            rhandsontable::hot_col("HIV Status", type = "dropdown", source = c("positive", "negative", "all"))
     })
 
     output$hot_program <- rhandsontable::renderRHandsontable({
@@ -221,7 +233,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        newSurvey <- read.csv(inFile$datapath, check.names=FALSE)
+        newSurvey <- read.csv(inFile$datapath, check.names=FALSE, stringsAsFactors = FALSE)
 
         state$wrongSurveyHeaders <- !identical(sort(names(newSurvey)), sort(names(state$survey_data_human_readable())))
 
@@ -244,7 +256,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        newProgram <- read.csv(inFile$datapath, check.names=FALSE)
+        newProgram <- read.csv(inFile$datapath, check.names=FALSE, stringsAsFactors = FALSE)
 
         state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
 

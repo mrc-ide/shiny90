@@ -33,32 +33,6 @@ testthat::test_that("mapHeadersFromHumanReadable maps headers", {
     testthat::expect_equal(colnames(result), c("a", "b", "c"))
 })
 
-testthat::test_that("anySurveyData is false if not all rows have a survey id", {
-
-    df <- createEmptySurveyData("Malawi")
-    result <- anySurveyData(df)
-
-    testthat::expect_false(result)
-})
-
-testthat::test_that("anySurveyData is false if no rows", {
-
-    df <- data.frame(surveyid=character())
-
-    result <- anySurveyData(df)
-
-    testthat::expect_false(result)
-})
-
-testthat::test_that("anySurveyData is true if one row with surveyid", {
-
-    df <- data.frame(surveyid=c("someid"))
-
-    result <- anySurveyData(df)
-
-    testthat::expect_true(result)
-})
-
 testthat::test_that("program data headers are correct", {
 
     actualHeaders <- c(names(sharedHeaders),names(programDataHeaders))
