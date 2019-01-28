@@ -24,14 +24,12 @@ enableNavLinks <- function(input, output, spectrumFilesState, modelRunState, sur
                                                     surveyAndProgramData$anyProgramData() })
     enableTabWhen("Run model", function() { spectrumFilesState$anyDataSets() &&
                                             surveyAndProgramData$anyProgramData() &&
-                                            surveyAndProgramData$anySurveyData() &&
                                             surveyAndProgramData$programDataValid() &&
                                             surveyAndProgramData$surveyDataValid()})
     enableTabWhen("Advanced outputs", function() { modelRunState$state == "converged" &&
                                                     spectrumFilesState$anyDataSets() &&
                                                     surveyAndProgramData$anyProgramData() &&
                                                     surveyAndProgramData$programDataValid() &&
-                                                    surveyAndProgramData$anySurveyData() &&
                                                     surveyAndProgramData$surveyDataValid()})
 }
 

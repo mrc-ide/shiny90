@@ -88,11 +88,11 @@ validateProgramData <- function(df, countryAndRegionName) {
 }
 
 validateSurveyData <- function(df, countryAndRegionName) {
-  if (is.null(df)) {
-    return(FALSE)
-  } else {
-    return(all(df$country == countryAndRegionName))
-  }
+  !is.null(df) && 
+    nrow(df) > 0 && 
+    all(c("surveyid", "country") %in% names(df)) &&
+    all(!is.na(df$surveyid)) && 
+    all(df$country == countryAndRegionName)
 }
 
 removeTabs <- function(name) {
@@ -112,10 +112,6 @@ createEmptySurveyData <- function(countryAndRegionName) {
                 ci_u=rep(NA_real_, 1),
                 counts=rep(NA_integer_, 1),
                 stringsAsFactors = FALSE)
-}
-
-anySurveyData <- function(df) {
-    !is.null(df) && nrow(df) > 0 && all(!is.na(df$surveyid))
 }
 
 createEmptyProgramData <- function(countryAndRegionName) {
@@ -154,7 +150,7 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
     
     state$surveyDataValid <- shiny::reactive({
-      validateSurveyData(state$program_data, spectrumFilesState$countryAndRegionName())
+      validateSurveyData(state$survey, spectrumFilesState$countryAndRegionName())
     })
 
     state$program_data_human_readable <- shiny::reactive({
@@ -166,7 +162,6 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
     })
 
     state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
-    state$anySurveyData <- shiny::reactive({ anySurveyData(state$survey) })
 
     state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
     state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
