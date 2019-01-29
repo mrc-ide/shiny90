@@ -8,7 +8,10 @@ spectrumFiles <- function(input, output, state) {
     state$combinedData <- shiny::reactive({
         if (state$anyDataSets()) {
             pjnz_in <- lapply(state$dataSets, function(x) {x$data})
-            first90::prepare_inputs_from_extracts(pjnz_in)
+            fp <- first90::prepare_inputs_from_extracts(pjnz_in)
+            fp$popadjust <- FALSE
+
+            fp
         }
         else {
             NULL

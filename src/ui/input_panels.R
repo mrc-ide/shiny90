@@ -1,20 +1,20 @@
 panelSurvey <- function() {
     shiny::div("",
-        shiny::tags$p("Please provide survey data on the proportion of people ever tested by sex and age group. 
+        shiny::tags$p("Please provide survey data on the proportion of people ever tested by sex and age group, and HIV serostatus (if available).
                       Where available please provide the following:"),
         shiny::tags$ul(
             shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
-            shiny::HTML("<li><strong>Survey Id</strong></li>"),
+            shiny::HTML("<li><strong>Survey Id:</strong> Provide a unique identifier for your survey (each survey must have a unique name).</li>"),
             shiny::HTML("<li><strong>Year:</strong> Year in which survey was conducted; year of survey fieldwork
                         midpoint if survey spanned multiple years.</li>"),
             shiny::HTML("<li><strong>Age Group:</strong> 15-24, 25-34, 35-49, 50+, 15-49 or 15+.</li>"),
-            shiny::HTML("<li><strong>Sex</strong> Male, female or both.</li>"),
-            shiny::HTML("<li><strong>HIV Status:</strong> Positive, negative or all.</li>"),
+            shiny::HTML("<li><strong>Sex</strong> \"male\", \"female\" or \"both\".</li>"),
+            shiny::HTML("<li><strong>HIV Status:</strong> \"positive\", \"negative\" or \"all\".</li>"),
             shiny::HTML("<li><strong>Estimate:</strong> Estimate for proportion ever tested for HIV; as a percentage (e.g. 87.6 rather than proportion 0.876).</li>"),
-            shiny::HTML("<li><strong>Standard Error:</strong> As a percentage.</li>"),
-            shiny::HTML("<li><strong>Lower Confidence Interval:</strong> As a percentage.</li>"),
-            shiny::HTML("<li><strong>Upper Confidence Interval:</strong> As a percentage.</li>"),
-            shiny::HTML("<li><strong>Counts:</strong> Unweighted counts of survey respondents in stratification group.</li>")
+            shiny::HTML("<li><strong>Standard Error:</strong> Standard Error of the estimate (as a percentage). Should take into account survey design effects.</li>"),
+            shiny::HTML("<li><strong>Lower Confidence Interval:</strong> Lower limit of the 95% confidence interval of the survey estimate  (as a percentage).</li>"),
+            shiny::HTML("<li><strong>Upper Confidence Interval:</strong>  Upper limit of the 95% confidence interval of the survey estimate (as a percentage).</li>"),
+            shiny::HTML("<li><strong>Counts:</strong> Unweighted counts of the number of survey respondents included in the stratification group.</li>")
         ),
         shiny::tags$p("You can copy and paste from Excel or upload a new CSV file."),
         shiny::tags$p("All columns are required. Where values are unknown, please just leave blank. 
@@ -46,8 +46,7 @@ panelProgram <- function() {
         the following:"),
         shiny::tags$ul(
         shiny::HTML("<li><strong>Country or region:</strong> Must exactly match country or region in top left panel.</li>"),
-        shiny::HTML("<li><strong>Year:</strong> Year in which the survey was conducted; year of survey fieldwork
-                            midpoint if survey spanned multiple years.</li>"),
+        shiny::HTML("<li><strong>Year:</strong> Calendar year in which the HIV tests were performed.</li>"),
         shiny::HTML("<li><strong>Total Tests:</strong> This is the annual number of tests performed at the national level among the population aged 15+ years of age.
                             This number should be equal to the total number of tests administered as part of HIV Testing and Counseling (HTC) and
                             during antenatal care (ANC), and for which the clients received the results.</li>"),
@@ -56,7 +55,7 @@ panelProgram <- function() {
                             pregnant women.</li>"),
         shiny::HTML("<li><strong>Total HTC Tests:</strong> Total annual number of tests performed in the population aged 15+ years outside of
                         ANC services,
-                             and for which clients received the results. If only the overall total is available, please input NA.</li>"),
+                             and for which clients received the results.</li>"),
         shiny::HTML("<li><strong>Total Positive HTC Tests</strong>: Annual number of tests that were found to be positive for HIV outside of ANC services.</li>"),
         shiny::HTML("<li><strong>Total ANC Tests:</strong> Annual number of pregnant women tested for HIV (and that received their results) as part of ANC services.</li>"),
         shiny::HTML("<li><strong>Total Positive ANC Tests:</strong> Annual number of pregnant women found to be HIV positive during ANC services.</li>"),
