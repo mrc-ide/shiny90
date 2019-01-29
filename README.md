@@ -17,6 +17,7 @@ to install R dependencies. If your system doesn't suppport bash, then instead
 run `./scripts/bootstrap.R`.
 
 ## Run app
+### Unix
 To run the app: `./run.R`
 
 To run the app with an inaccurate model for quick testing:
@@ -24,6 +25,11 @@ To run the app with an inaccurate model for quick testing:
 ```
 SHINY90_TEST_MODE=TRUE ./run.R
 ```
+
+### Windows
+1. Install R for windows: https://cran.r-project.org/bin/windows/base/
+2. Run `scripts/bootstrap.bat` by double clicking on it - this will install dependencies
+3. Run `launch.bat` by double clicking it to launch the app
 
 ## Tests
 
