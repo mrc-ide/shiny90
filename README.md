@@ -4,20 +4,20 @@ Shiny tool for the first 90 HIV model (https://github.com/mrc-ide/first90)
 [![Travis-CI Build Status](https://travis-ci.com/mrc-ide/shiny90.svg?branch=master)](https://travis-ci.com/mrc-ide/shiny90)
 
 ## Prerequisites
-* R
+1. Make sure you have R installed and added to your path
+2. If you are on Windows you will also need Rtools to install dependencies from Github:
+http://stat.sfu.ca/statgen/resources/r-tools-for-building-packages-on-windows.html
 
 ## Install dependencies
 Run
 
 ```
-./scripts/bootstrap
+./scripts/bootstrap.R
 ```
 
-to install R dependencies. If your system doesn't suppport bash, then instead 
-run `./scripts/bootstrap.R`.
+to install R dependencies.
 
 ## Run app
-### Unix
 To run the app: `./run.R`
 
 To run the app with an inaccurate model for quick testing:
@@ -25,11 +25,6 @@ To run the app with an inaccurate model for quick testing:
 ```
 SHINY90_TEST_MODE=TRUE ./run.R
 ```
-
-### Windows
-1. Install R for windows: https://cran.r-project.org/bin/windows/base/
-2. Run `scripts/bootstrap.bat` by double clicking on it - this will install dependencies
-3. Run `launch.bat` by double clicking it to launch the app
 
 ## Tests
 
@@ -59,12 +54,7 @@ ls sample_files
 ```
 
 # Build a USB stick
-
-```r
-install.packages("drat")
-drat:::add("mrc-ide")
-install.packages(c("provisionr", "buildr", "nomad"))
-
-source("scripts/build_library.R")
-build_usb("destination")
+**You must be on the Imperial Dide network for this to work**
+```
+./scripts/build_usb.sh
 ```

@@ -19,12 +19,12 @@
 # recognised; for version number x.y.z, R packages are built for the
 # most recent 'z' so only different values of x.y will produce
 # distinct packages.
-r_version: ~
+r_version: "3.5.2"
 
 # The target platform to download binaries binaries for.  By default
 # this downloads for all platforms, but you can specify "windows" to
 # download only windows binaries or "source" to download only source
-target: ~
+target: "windows"
 
 # Download all "suggested" dependencies of the package list?  By
 # default this is false but set to true and (potentially many)
@@ -45,5 +45,5 @@ package_sources: ~
 # all downloaded.
 git: false
 r: true
-rstudio: true
-rtools: true
+rstudio: false
+rtools: false

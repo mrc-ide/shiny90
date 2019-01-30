@@ -4,7 +4,7 @@
 ## * nomad from reconhub/nomad
 ## * drat from CRAN
 
-build_usb <- function(destination, path = ".", r_version = "3.5") {
+build_usb <- function(destination, path = ".", r_version = "3.5.2") {
   if (file.exists(destination)) {
     message("Skipping building CRAN")
   } else {
@@ -23,7 +23,7 @@ build_library <- function(destination, r_version = "3.5") {
 
   src <- provisionr::package_sources(repos = paste0("file://", destination))
   packages <- readLines(file.path(destination, "package_list.txt"))
-  res <- provisionr::provision_library(packages, path_lib,
+  res <- provisionr::provision_library(packages, path_lib, version = "3.5.2",
                                        platform = "windows", src = src,
                                        allow_missing = TRUE)
 
