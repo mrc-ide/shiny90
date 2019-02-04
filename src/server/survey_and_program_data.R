@@ -35,6 +35,13 @@ mapHeaders <- function(dataframe, from, to) {
     dataframe
 }
 
+importProgramData <- function(newProgramData) {
+    newProgramData <- mapHeadersFromHumanReadable(newProgramData, c(programDataHeaders, sharedHeaders))
+    newProgramData <- castToNumeric(newProgramData, programDataHeaders)
+    newProgramData$sex <- tolower(newProgramData$sex)
+    newProgramData
+}
+
 mapHeadersToHumanReadable <- function(dataframe, headers) {
     mapHeaders(dataframe, names(headers), unname(headers))
 }
@@ -256,14 +263,14 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
             return(NULL)
         }
 
-        newProgram <- read.csv(inFile$datapath, check.names=FALSE, stringsAsFactors = FALSE)
+        newProgramData <- read.csv(inFile$datapath, check.names=FALSE, stringsAsFactors = FALSE)
 
-        state$wrongProgramHeaders <- !identical(sort(names(newProgram)), sort(names(state$program_data_human_readable())))
+        state$wrongProgramHeaders <- !identical(sort(names(newProgramData)), sort(names(state$program_data_human_readable())))
 
-        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgram[removeTabs(newProgram[["Country or region"]]) == removeTabs(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgram)
+        state$wrongProgramCountry <- !state$wrongProgramHeaders && nrow(newProgramData[removeTabs(newProgramData[["Country or region"]]) == removeTabs(spectrumFilesState$countryAndRegionName()), ]) < nrow(newProgramData)
 
         if (!state$wrongProgramHeaders && !state$wrongProgramCountry){
-            state$program_data <- castToNumeric(mapHeadersFromHumanReadable(newProgram, c(programDataHeaders, sharedHeaders)), programDataHeaders)
+            state$program_data <- importProgramData(newProgramData)
             state$touched <- TRUE
         }
 
