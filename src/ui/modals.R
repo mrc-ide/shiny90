@@ -3,7 +3,7 @@ loadDigestModal <- function() {
         title = "Load digest file",
         id = "digestModal",
         cancelId = "cancelDigestUpload",
-        shiny::fileInput("digestUpload", "Choose a Shiny 90 digest file", accept = ".zip.shiny90")
+        shiny::fileInput("digestUpload", "Choose a Shiny 90 digest file", accept = "zip.shiny90")
     )
 }
 
