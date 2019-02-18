@@ -30,8 +30,62 @@ testthat::test_that("warning is not shown if complete program data is present", 
         !isVisible(warning)
     })
 
-    rows <- wd$findElements("css", "#hot_program .ht_master tbody tr")
-    testthat::expect_equal(length(rows), 3)
+    testthat::expect_false(isVisible(warning))
+})
+
+testthat::test_that("error is shown if invalid program data is present", {
+
+    uploadSpectrumFileAndSwitchTab("Upload programmatic data")
+    uploadFile(wd, filename = "inconsistent_programdata_malawi.csv", inputId="#programData")
+    Sys.sleep(2)
+
+    switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
+
+    switchTab(wd, "Review input data")
+    error <- wd$findElement("css", ".mt-5.alert.alert-danger")
+
+    waitForVisible(error)
+
+    expectTextEqual("The programmatic data for your country is invalid. Please check the guidance and correct it.", error)
+})
+
+testthat::test_that("error is not shown if valid program data is present", {
+
+    uploadSpectrumFileAndSwitchTab("Upload programmatic data")
+    uploadFile(wd, filename = "testprogramdata_malawi.csv", inputId="#programData")
+    Sys.sleep(2)
+
+    switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
+
+    switchTab(wd, "Review input data")
+    error <- wd$findElement("css", ".mt-5.alert.alert-danger")
+
+    waitFor(function() {
+        !isVisible(error)
+    })
+
+    testthat::expect_false(isVisible(error))
+})
+
+testthat::test_that("error is not shown if program data has uppercase sex values", {
+
+    uploadSpectrumFileAndSwitchTab("Upload programmatic data")
+    uploadFile(wd, filename = "testprogramdata_uppercasesex_malawi.csv", inputId="#programData")
+    Sys.sleep(2)
+
+    switchTab(wd, "Upload survey data")
+    uploadFile(wd, filename = "fakesurvey_malawi.csv", inputId="#surveyData")
+
+    switchTab(wd, "Review input data")
+    error <- wd$findElement("css", ".mt-5.alert.alert-danger")
+
+    waitFor(function() {
+        !isVisible(error)
+    })
+
+    testthat::expect_false(isVisible(error))
 })
 
 testthat::test_that("can upload a new set of program data for the same country", {

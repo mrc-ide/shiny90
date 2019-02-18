@@ -4,7 +4,8 @@ mainView <- function() {
             shiny::fluidPage(
                 shiny::div("", class = "pull-right text-right",
                     shiny::tags$small("",
-                        shiny::a("About this program and the underlying model", href = "#")
+                        shiny::a("About this program and the underlying model", target="_blank",
+                                    href = "http://biorxiv.org/cgi/content/short/532010v1")
                     )
                 ),
                 shiny::div("",
