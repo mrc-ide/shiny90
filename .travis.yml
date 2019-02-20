@@ -16,7 +16,7 @@ before_install:
   - cd ../
   - export $(dbus-launch)
 install:
-  - ./scripts/bootstrap
+  - ./scripts/bootstrap.R
   - ./scripts/bootstrap-dev.R
   - sudo ./scripts/install_geckodriver.sh
 script: ./scripts/test

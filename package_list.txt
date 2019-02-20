@@ -10,5 +10,6 @@ data.table
 ggplot2
 memoise
 magrittr
-first90release
+first90
 shinycssloaders
+zip

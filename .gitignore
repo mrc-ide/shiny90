@@ -12,3 +12,5 @@ selenium_screenshots/*
 */.Rhistory
 .Rproj.user
 *.Rproj
+usb/*
+compiled/*

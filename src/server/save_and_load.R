@@ -85,7 +85,7 @@ downloadDigest <- function(workingSet, spectrumFilesState, surveyAndProgramData,
             withDir(scratch, {
                 paths <- writeFilesForDigest(workingSet, spectrumFilesState,
                                              surveyAndProgramData, modelRunState, readmeTemplate)
-                zip(file, paths)
+                zip::zip(file, paths)
             })
             unlink(scratch, recursive = TRUE)
         }
