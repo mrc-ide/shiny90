@@ -12,3 +12,4 @@ memoise
 magrittr
 first90
 shinycssloaders
+zip
