@@ -77,6 +77,9 @@ validateProgramData <- function(df, countryAndRegionName) {
     if (is.null(df))
         return(FALSE)
 
+    if (nrow(df) == 0)
+        return(FALSE)
+
     validateRow <- function(givenYear) {
 
         rows <- df[which(df$year == givenYear),]
@@ -168,12 +171,10 @@ surveyAndProgramData <- function(input, output, state, spectrumFilesState) {
         mapHeadersToHumanReadable(state$survey, c(surveyDataHeaders,sharedHeaders))
     })
 
-    state$anyProgramData <- shiny::reactive({ !is.null(state$program_data) && nrow(state$program_data) > 0 })
-
-    state$anyProgramDataTot <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$tot)) })
-    state$anyProgramDataTotPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$totpos)) })
-    state$anyProgramDataAnc <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$anc)) })
-    state$anyProgramDataAncPos <- shiny::reactive({ !is.null(state$program_data) && !all(is.na(state$program_data$ancpos)) })
+    state$anyProgramDataTot <- shiny::reactive({ state$programDataValid() && !all(is.na(state$program_data$tot)) })
+    state$anyProgramDataTotPos <- shiny::reactive({ state$programDataValid() && !all(is.na(state$program_data$totpos)) })
+    state$anyProgramDataAnc <- shiny::reactive({ state$programDataValid() && !all(is.na(state$program_data$anc)) })
+    state$anyProgramDataAncPos <- shiny::reactive({ state$programDataValid() && !all(is.na(state$program_data$ancpos)) })
 
     output$incompleteProgramData <- shiny::reactive({ !state$anyProgramDataTot() || !state$anyProgramDataTotPos() })
     output$invalidProgramData <- shiny::reactive({ !state$programDataValid() })
