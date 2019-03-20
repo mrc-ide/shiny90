@@ -92,7 +92,8 @@ panelReviewInput <- function() {
                         and review your results, you can re-upload this file and resume where you left off.")
         ),
         shiny::div("", class="save-button",
-            downloadButtonWithCustomClass("digestDownload3", "Save your work")
+            downloadButtonWithCustomClass("digestDownload3", "Save your work", 
+                                          font_awesome_icon = "download")
         ),
         shiny::conditionalPanel(
             condition = "output.invalidProgramData",

@@ -10,8 +10,19 @@ panelModelOutputs <- function() {
                                 into Spectrum. This will download a file containing your input data and results. You can 
                                 also re-upload this file later to view your results again and change your input data.")
                 ),
-                shiny::div("", class="mb-5 save-button",
-                    downloadButtonWithCustomClass("digestDownload2", "Download shiny90 outputs for Spectrum")
+                shiny::div("", class="mb-3 save-button",
+                    downloadButtonWithCustomClass("digestDownload2", "Download shiny90 outputs for Spectrum", 
+                                                  font_awesome_icon = "download")
+                ),
+                shiny::div("", class="mb-3 download-text",
+                    shiny::span("You can download all generated plots as a PDF or download all output tables 
+                                 as an XLSX.")
+                ),
+                shiny::div("", class="mb-5 download-buttons",
+                    downloadButtonWithCustomClass("plotsDownload", "Download plots as PDF", 
+                                                  emphasis = "medium", font_awesome_icon = "chart-area"),
+                    downloadButtonWithCustomClass("tablesDownload", "Download tables as XLSX", 
+                                                  emphasis = "medium", font_awesome_icon = "table")
                 ),
                 shiny::tabsetPanel(
                     shiny::tabPanel("Figures",
