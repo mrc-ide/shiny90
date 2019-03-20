@@ -23,10 +23,17 @@ actionButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL,
         list(label), ...)
 }
 
-downloadButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL, type = "button") {
+downloadButtonWithCustomClass <- function (inputId, label, ..., cssClasses = NULL, type = "button", emphasis = "high", font_awesome_icon = NULL) {
+  if (emphasis == "high") {
+    classes <- paste("btn btn-default btn-red btn-lg btn-success shiny-download-link", cssClasses)
+  } else if (emphasis == "medium") {
+    classes <- paste("btn btn-default shiny-download-link", cssClasses)
+  } else {
+    classes <- cssClasses
+  }
   value <- shiny::restoreInput(id = inputId, default = NULL)
-  shiny::tags$a(id = inputId, label, href = "",
-                class = paste("btn btn-default btn-red btn-lg btn-success shiny-download-link", cssClasses),
+  icon <- shiny::icon(font_awesome_icon)
+  shiny::tags$a(id = inputId, icon, label, href = "", class = classes, 
                 download = NA, target = "_blank", ...)
 }
 
