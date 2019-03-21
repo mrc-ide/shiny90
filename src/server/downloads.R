@@ -36,18 +36,8 @@ downloadTables <- function(input, workingSet, spectrumFilesState, surveyAndProgr
 writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState, readmeTemplate, path) {
   pdf(file = path)
   on.exit(dev.off())
-  if (spectrumFilesState$anyDataPop()) {
-    first90::plot_pjnz_pop(spectrumFilesState$pjnz_summary())
-  }
-  if (spectrumFilesState$anyDataPlhiv()) {
-    first90::plot_pjnz_plhiv(spectrumFilesState$pjnz_summary())
-  }
-  if (spectrumFilesState$anyDataPrv()) {
-    first90::plot_pjnz_prv(spectrumFilesState$pjnz_summary())
-  }
-  if (spectrumFilesState$anyDataInc()) {
-    first90::plot_pjnz_inc(spectrumFilesState$pjnz_summary())
-  }
+  layout(matrix(seq_len(4), ncol = 2, byrow = TRUE))
+  on.exit(layout(1), add = TRUE)
   if (surveyAndProgramData$anyProgramDataTot()) {
     first90::plot_input_tot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
   }
@@ -59,6 +49,18 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
   }
   if (surveyAndProgramData$anyProgramDataAncPos()) {
     first90::plot_input_ancpos(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
+  }
+  if (spectrumFilesState$anyDataPrv()) {
+    first90::plot_pjnz_prv(spectrumFilesState$pjnz_summary())
+  }
+  if (spectrumFilesState$anyDataInc()) {
+    first90::plot_pjnz_inc(spectrumFilesState$pjnz_summary())
+  }
+  if (spectrumFilesState$anyDataPop()) {
+    first90::plot_pjnz_pop(spectrumFilesState$pjnz_summary())
+  }
+  if (spectrumFilesState$anyDataPlhiv()) {
+    first90::plot_pjnz_plhiv(spectrumFilesState$pjnz_summary())
   }
   if (modelRunState$state == "converged" && !is.null(modelRunState$optim)) {
     mod <- modelRunState$mod
@@ -77,9 +79,10 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
     first90::plot_out_90s(mod, fp, likdat, country, out_evertest, surveyAsDataTable, simul)
     first90::plot_out_evertest_fbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
     first90::plot_out_evertest_mbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
-    first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2018)
+    
     first90::plot_retest_test_neg(mod, fp, likdat, country)
     first90::plot_retest_test_pos(mod, fp, likdat, country)
+    first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2018)
   }
 }
 
