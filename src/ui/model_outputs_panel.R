@@ -77,7 +77,7 @@ select_options <- function(id, includeStatus = TRUE, includeAge = TRUE) {
 
     if (includeStatus){
         status <- shiny::selectizeInput(
-                        paste0(id, '_status'),'HIV Status', choices = c("positive", 'negative','all'),
+                        paste0(id, '_status'),'HIV Status', choices = hiv_status_options(),
                         multiple = TRUE,
                         selected = "positive")
     }
@@ -86,7 +86,7 @@ select_options <- function(id, includeStatus = TRUE, includeAge = TRUE) {
     }
     if (includeAge){
         age <- shiny::selectizeInput(
-                        paste0(id, '_agegr'), 'Age group', choices = c("15-24", '25-34','35-49', '15-49', "15+"),
+                        paste0(id, '_agegr'), 'Age group', choices = agegr_options(),
                         multiple = TRUE,
                         selected = "15+")
     }
@@ -94,11 +94,23 @@ select_options <- function(id, includeStatus = TRUE, includeAge = TRUE) {
         age <- NULL
     }
     list(shiny::selectizeInput(
-            paste0(id, '_sex'), 'Sex', choices = c("both", "male", "female"),
+            paste0(id, '_sex'), 'Sex', choices = sex_options(),
             multiple = TRUE,
             selected = "both"
         ),
         age,
         status
     )
+}
+
+sex_options <- function() {
+  c("both", "male", "female")
+}
+
+agegr_options <- function() {
+  c("15-24", '25-34','35-49', '15-49', "15+")
+}
+
+hiv_status_options <- function() {
+  c("positive", 'negative','all')
 }

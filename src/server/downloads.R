@@ -1,6 +1,6 @@
-handleDownloads <- function(input, output, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
+handleDownloads <- function(output, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
   output$plotsDownload <- downloadPlots(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
-  output$tablesDownload <- downloadTables(input, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
+  output$tablesDownload <- downloadTables(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
 }
 
 downloadPlots <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
@@ -18,7 +18,7 @@ downloadPlots <- function(workingSet, spectrumFilesState, surveyAndProgramData, 
   )
 }
 
-downloadTables <- function(input, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
+downloadTables <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState) {
   
   shiny::downloadHandler(
     filename = function() {
@@ -27,7 +27,7 @@ downloadTables <- function(input, workingSet, spectrumFilesState, surveyAndProgr
     },
     contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     content = function(file) {
-      writeTablesForDownload(input, workingSet, spectrumFilesState, surveyAndProgramData,
+      writeTablesForDownload(workingSet, spectrumFilesState, surveyAndProgramData,
                              modelRunState, readmeTemplate, file)
     }
   )
@@ -86,12 +86,23 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
   }
 }
 
-writeTablesForDownload <- function(input, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState, readmeTemplate, path) {
+writeTablesForDownload <- function(workingSet, spectrumFilesState, surveyAndProgramData, modelRunState, readmeTemplate, path) {
+  params <- list(
+    aware_sex = sex_options(),
+    aware_agegr = agegr_options(),
+    nbaware_sex = sex_options(),
+    nbaware_agegr = agegr_options(),
+    art_coverage_sex = sex_options(),
+    ever_test_status = hiv_status_options(),
+    ever_test_sex = sex_options(),
+    ever_test_agegr = agegr_options()
+  )
+    
   sheets <- list(
-    "Knowledge of status (%)" = getTableAware(input)(modelRunState),
-    "Knowledge of status (absolute)" = getTableNbAware(input)(modelRunState),
-    "ART coverage" = getTableArtCoverage(input)(modelRunState),
-    "Proportion ever tested" = getTableEverTested(input)(modelRunState),
+    "Knowledge of status (%)" = getTableAware(params)(modelRunState),
+    "Knowledge of status (absolute)" = getTableNbAware(params)(modelRunState),
+    "ART coverage" = getTableArtCoverage(params)(modelRunState),
+    "Proportion ever tested" = getTableEverTested(params)(modelRunState),
     "Estimated parameters" = first90::optimized_par(modelRunState$optim),
     "Pregnant women" = first90::tab_out_pregprev(modelRunState$mod, modelRunState$fp)
   )
