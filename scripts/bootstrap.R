@@ -19,5 +19,5 @@ install.packages("memoise")
 install.packages("writexl")
 install.packages("zip")
 
-devtools::install_github('andrewsali/shinycssloaders')
+install.packages('shinycssloaders')
 devtools::install_github("mrc-ide/first90release")
