@@ -13,7 +13,9 @@ profile <- RSelenium::makeFirefoxProfile(list(
     # This is an enum, '2' means use the value in the next parameter
     "browser.download.dir" = downloadedFiles,
     "browser.download.folderList" = 2L,
-    "browser.helperApps.neverAsk.saveToDisk" = "application/zip;text/csv"
+    "browser.helperApps.neverAsk.saveToDisk" = 
+      "application/zip;text/csv;application/pdf;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "pdfjs.disabled" = TRUE
 ))
 wd <- RSelenium::remoteDriver(
     browserName = "firefox",

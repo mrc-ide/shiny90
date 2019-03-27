@@ -14,6 +14,7 @@ source("src/helpers.R")
 
 # Server (alphabetical)
 source("src/server/data_tables.R")
+source("src/server/downloads.R")
 source("src/server/model_outputs.R")
 source("src/server/model_run.R")
 source("src/server/plot_inputs.R")

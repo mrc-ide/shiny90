@@ -31,6 +31,7 @@ server <- function(input, output, session) {
     modelRunState <- modelRun(input, output, loadState$modelRunState, spectrumFilesState, surveyAndProgramData)
 
     handleSave(output, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
+    handleDownloads(output, workingSet, spectrumFilesState, surveyAndProgramData, modelRunState)
     enableNavLinks(input, output, spectrumFilesState, modelRunState, surveyAndProgramData)
 
 
