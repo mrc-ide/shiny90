@@ -13,7 +13,7 @@ packages:
   - magrittr
   - first90
   - shinycssloaders
-  - wrietxl
+  - writexl
 package_sources:
   github:
   - mrc-ide/first90release
