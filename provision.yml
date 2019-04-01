@@ -14,6 +14,7 @@ packages:
   - first90
   - shinycssloaders
   - writexl
+  - zip
 package_sources:
   github:
   - mrc-ide/first90release
