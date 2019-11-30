@@ -20,4 +20,4 @@ install.packages("writexl")
 install.packages("zip")
 
 install.packages('shinycssloaders')
-devtools::install_github("mrc-ide/first90release")
+devtools::install_github("mrc-ide/first90release@2020update")
