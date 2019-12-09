@@ -7,7 +7,6 @@ local({r <- getOption("repos")
 
 install.packages("tidyr")
 install.packages("numDeriv")
-install.packages("shiny")
 install.packages("shinyjs")
 install.packages("glue")
 install.packages("devtools")
@@ -21,3 +20,4 @@ install.packages("zip")
 
 install.packages('shinycssloaders')
 devtools::install_github("mrc-ide/first90release@2020update")
+devtools::install_github("rstudio/shiny")
