@@ -17,7 +17,7 @@ install.packages("ggplot2")
 install.packages("memoise")
 install.packages("writexl")
 install.packages("zip")
-install.packages("shiny")
 
 install.packages('shinycssloaders')
 devtools::install_github("mrc-ide/first90release@v1.3.2")
+devtools::install_github("rstudio/shiny")
