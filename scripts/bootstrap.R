@@ -20,4 +20,4 @@ install.packages("zip")
 
 install.packages('shinycssloaders')
 devtools::install_github("mrc-ide/first90release@v1.3.2")
-devtools::install_github("rstudio/shiny")
+devtools::install_github("rstudio/shiny@89be4bd")
