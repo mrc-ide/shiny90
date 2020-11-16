@@ -37,7 +37,6 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
   pdf(file = path)
   on.exit(dev.off())
   layout(matrix(seq_len(4), ncol = 2, byrow = TRUE))
-  on.exit(layout(1), add = TRUE)
   if (surveyAndProgramData$anyProgramDataTot()) {
     first90::plot_input_tot(surveyAndProgramData$program_data, spectrumFilesState$combinedData())
   }
@@ -70,7 +69,7 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
     out_evertest <- first90::get_out_evertest(mod, fp)
     simul <- modelRunState$simul
     surveyAsDataTable <- modelRunState$surveyAsDataTable()
-    
+
     first90::plot_out_nbtest(mod, fp, likdat, country, simul)
     first90::plot_out_nbpostest(mod, fp, likdat, country, simul)
     first90::plot_out_evertestneg(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
@@ -79,7 +78,7 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
     first90::plot_out_90s(mod, fp, likdat, country, out_evertest, surveyAsDataTable, simul)
     first90::plot_out_evertest_fbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
     first90::plot_out_evertest_mbyage(mod, fp, likdat, country, surveyAsDataTable, out_evertest, simul)
-    
+
     first90::plot_retest_test_neg(mod, fp, likdat, country)
     first90::plot_retest_test_pos(mod, fp, likdat, country)
     first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2018)
