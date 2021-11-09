@@ -9,7 +9,6 @@ spectrumFiles <- function(input, output, state) {
         if (state$anyDataSets()) {
             pjnz_in <- lapply(state$dataSets, function(x) {x$data})
             fp <- first90::prepare_inputs_from_extracts(pjnz_in)
-            fp$popadjust <- FALSE
 
             fp
         }
