@@ -17,5 +17,5 @@ packages:
 package_sources:
   github:
   - mrc-ide/first90release@v1.5.0
-  - rstudio/shiny
+  - rstudio/shiny@main
 
