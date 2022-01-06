@@ -1,0 +1,19 @@
+name: Test Shiny90
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          token:  ${{ secrets.CI_TOKEN }}
+          submodules: true
+      - name: Prepare Firefox
+        uses: browser-actions/setup-firefox@latest
+      - name: Install Geckodriver
+        run: ./scripts/install_geckodriver.sh
+      - name: Install dependencies
+        run: ./scripts/bootstrap.R & ./scripts/bootstrap-dev.R
+      - name: Test
+        run: ./scripts/test
