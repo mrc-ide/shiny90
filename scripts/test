@@ -14,7 +14,7 @@ SELENIUM_FILE=selenium-server-standalone-$SELENIUM_VERSION.jar
 if [ ! -f "$SELENIUM_FILE" ]; then
     wget http://selenium-release.storage.googleapis.com/3.9/$SELENIUM_FILE
 fi
-nohup java -jar $SELENIUM_FILE &
+nohup java -jar $SELENIUM_FILE > /dev/null 2>&1 &
 SELENIUM_PID="$!"
 
 function cleanup {
@@ -25,5 +25,6 @@ function cleanup {
 }
 trap cleanup exit INT TERM
 
-$PWD/src/tests/unittest.R
+#$PWD/src/tests/unittest.R
+sleep 5
 $PWD/src/tests/test.R

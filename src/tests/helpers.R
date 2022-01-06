@@ -29,7 +29,7 @@ wd <- RSelenium::remoteDriver(
         profile
     )
 )
-wd$open(silent = TRUE)
+wd$open()
 print(glue::glue("Downloads will be saved to {downloadedFiles}"))
 
 getText <- function(element) {
@@ -93,7 +93,7 @@ numberScreenshot <- local({
     }
 })
 
-waitFor <- function(predicate, timeout = 7) {
+waitFor <- function(predicate, timeout = 15) {
     waited <- 0
     while (!predicate()) {
          Sys.sleep(0.25)
@@ -107,7 +107,7 @@ waitFor <- function(predicate, timeout = 7) {
     }
 }
 
-waitForAndTryAgain <- function(predicate, failureCallBack, maxTries = 2, timeout = 5) {
+waitForAndTryAgain <- function(predicate, failureCallBack, maxTries = 5, timeout = 10) {
     waited <- 0
     tries <- 0
     while (!predicate()) {
