@@ -9,9 +9,6 @@ jobs:
         with:
           token:  ${{ secrets.CI_TOKEN }}
           submodules: true
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
       - name: Install libcurl
@@ -28,6 +25,8 @@ jobs:
         run: rm .Renviron && ./scripts/bootstrap.R && ./scripts/bootstrap-dev.R
       - name: Print R package info
         run : R -e "installed.packages()[, 3]"
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Test
         run: ./scripts/test
       - uses: actions/upload-artifact@v2
