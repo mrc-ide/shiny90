@@ -115,5 +115,5 @@ calculateHessianInner <- function(opt, likdat, spectrumData) {
     })
 }
 
-fitModel <- fitModelInner
-calculateHessian <- calculateHessianInner
+fitModel <- memoise::memoise(fitModelInner)
+calculateHessian <- memoise::memoise(calculateHessianInner)
