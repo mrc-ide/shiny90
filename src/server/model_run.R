@@ -22,14 +22,11 @@ modelRun <- function(input, output, state, spectrumFilesState, surveyAndProgramD
 
     shiny::outputOptions(output, "showAdvancedOptions", suspendWhenHidden = FALSE)
 
-    # the model fitting code expects survey data as a data table and program data as a data frame
-    # it could presumably be re-written to deal with survey data as a data frame but for now we're just
-    # converting survey data to the expected format
     state$surveyAsDataTable <- shiny::reactive({
         if (is.null(surveyAndProgramData$survey)) {
             NULL
         } else {
-            dt <- data.table::as.data.table(surveyAndProgramData$survey, keep.rownames = TRUE)
+            dt <- surveyAndProgramData$survey
             dt$ci_l = dt$ci_l/100
             dt$ci_u = dt$ci_u/100
             dt$est = dt$est/100
@@ -150,9 +147,9 @@ renderOutputs <- function(input, output, state, spectrumFilesState) {
 
 getTableEverTested <- function(input) {
   func <- function(state) {
-    rbindlist(lapply(input$ever_test_status, function(status) {
-      rbindlist(lapply(input$ever_test_sex, function(sex) {
-        rbindlist(lapply(input$ever_test_agegr, function(age) {
+    data.table::rbindlist(lapply(input$ever_test_status, function(status) {
+      data.table::rbindlist(lapply(input$ever_test_sex, function(sex) {
+        data.table::rbindlist(lapply(input$ever_test_agegr, function(age) {
           first90::tab_out_evertest(state$mod, state$fp, age_grp = age, simul = state$simul, hiv = status, gender = sex)
         }))
       }))
@@ -162,8 +159,8 @@ getTableEverTested <- function(input) {
 
 getTableAware <- function(input) {
   func <- function(state) {
-    rbindlist(lapply(input$aware_sex, function(sex) {
-      rbindlist(lapply(input$aware_agegr, function(age) {
+    data.table::rbindlist(lapply(input$aware_sex, function(sex) {
+      data.table::rbindlist(lapply(input$aware_agegr, function(age) {
         first90::tab_out_aware(state$mod, state$fp, simul = state$simul, age_grp = age, gender = sex)
       }))
     }))
@@ -172,8 +169,8 @@ getTableAware <- function(input) {
 
 getTableNbAware <- function(input) {
   func <- function(state) {
-    rbindlist(lapply(input$nbaware_sex, function(sex) {
-      rbindlist(lapply(input$nbaware_agegr, function(age) {
+    data.table::rbindlist(lapply(input$nbaware_sex, function(sex) {
+      data.table::rbindlist(lapply(input$nbaware_agegr, function(age) {
         first90::tab_out_nbaware(state$mod, state$fp, age_grp = age, gender = sex)
       }))
     }))
@@ -182,7 +179,7 @@ getTableNbAware <- function(input) {
 
 getTableArtCoverage <- function(input) {
   func <- function(state) {
-    rbindlist(lapply(input$art_coverage_sex, function(sex) {
+    data.table::rbindlist(lapply(input$art_coverage_sex, function(sex) {
       first90::tab_out_artcov(state$mod, state$fp, gender = sex)
     }))
   }
