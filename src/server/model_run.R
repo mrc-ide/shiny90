@@ -255,7 +255,7 @@ plotModelRunResults <- function(output, surveyAsDataTable, likdat, fp, mod, coun
     })
 
     output$outputs_prv_pos_yld <- shiny::renderPlot({
-        first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2021)
+        first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2022)
     })
 
     output$outputs_retest_neg <- shiny::renderPlot({

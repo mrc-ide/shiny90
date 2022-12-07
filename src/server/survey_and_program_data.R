@@ -126,7 +126,7 @@ createEmptySurveyData <- function(countryAndRegionName) {
 
 createEmptyProgramData <- function(countryAndRegionName) {
     data.frame(country = countryAndRegionName,
-                year = 2010:2021,
+                year = 2010:2022,
                 sex = 'both',
                 tot = NA_integer_,
                 totpos = NA_integer_,
