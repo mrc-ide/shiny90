@@ -81,7 +81,8 @@ writePlotsForDownload <- function(workingSet, spectrumFilesState, surveyAndProgr
 
     first90::plot_retest_test_neg(mod, fp, likdat, country)
     first90::plot_retest_test_pos(mod, fp, likdat, country)
-    first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2021)
+    browser()
+    first90::plot_prv_pos_yld(mod, fp, likdat, country, yr_pred = 2022)
   }
 }
 
