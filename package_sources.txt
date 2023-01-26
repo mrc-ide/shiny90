@@ -1,2 +1,2 @@
-mrc-ide/first90release@v1.6.4
+mrc-ide/first90release@v1.6.5
 rstudio/shiny
