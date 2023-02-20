@@ -19,5 +19,5 @@ install.packages("writexl")
 install.packages("zip")
 
 install.packages('shinycssloaders')
-devtools::install_github("mrc-ide/first90release@v1.6.5")
+devtools::install_github("mrc-ide/first90release@v1.6.6")
 devtools::install_github("rstudio/shiny")
