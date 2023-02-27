@@ -1,0 +1,36 @@
+name: Test Shiny90
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          token:  ${{ secrets.CI_TOKEN }}
+          submodules: true
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+      - name: Install libcurl
+        run: sudo apt-get update -y && sudo apt-get install -y libcurl4-openssl-dev
+      - name: Install Firefox
+        uses: browser-actions/setup-firefox@latest
+      - name: Install Geckodriver
+        uses: browser-actions/setup-geckodriver@latest
+      - name: Launch dbus
+        run: export $(dbus-launch)
+      - name: Install dependencies
+        env:
+          GITHUB_PAT: ${{ secrets.CI_TOKEN }}
+        run: rm .Renviron && ./scripts/bootstrap.R && ./scripts/bootstrap-dev.R
+      - name: Print R package info
+        run : R -e "installed.packages()[, 3]"
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+      - name: Test
+        run: ./scripts/test
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: screenshots
+          path: selenium_screenshots
