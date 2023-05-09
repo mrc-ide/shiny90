@@ -16,4 +16,4 @@ packages:
   - zip
 package_sources:
   github:
-  - mrc-ide/first90release@v1.6.7
+  - mrc-ide/first90release@v1.6.8
